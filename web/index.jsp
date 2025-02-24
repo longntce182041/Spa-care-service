@@ -13,7 +13,7 @@
 
         <link rel="stylesheet" href="css/owl.carousel.min.css">
         <link rel="stylesheet" href="css/owl.theme.default.min.css">
-        <link rel="stylesheet" href="css/magnific-popup.css">
+        <link rel="stylesheet" href="css/agnific-popup.css">
 
 
         <link rel="stylesheet" href="css/bootstrap-datepicker.css">
