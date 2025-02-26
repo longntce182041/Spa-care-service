@@ -8,7 +8,8 @@
 <%@page import="jakarta.servlet.http.HttpSession"%>
 <%@page import="jakarta.servlet.http.HttpServletRequest"%>
 <%
-    String username = (session != null) ? (String) session.getAttribute("username") : null;
+    // Remove the duplicate declaration of the session variable
+    String username = (session != null) ? (String) session.getAttribute("user") : null;
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,11 +33,6 @@
        <div class="wrap">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 d-flex align-items-center">
-                        <p class="mb-0 phone pl-md-2">
-                            
-                        </p>
-                    </div>
                     <div class="col-md-6 d-flex justify-content-md-end">
                         <div class="social-media">
                             <p class="mb-0 d-flex">
@@ -79,7 +75,7 @@
                             </div>
                         </li>
                     <% } else { %>
-                        <li class="nav-item"><a href="Login.jsp" class="nav-link">Login</a></li>
+                    <li class="nav-item"><a href="login.jsp" class="nav-link">Login</a></li>
                     <% } %>
                 </ul>
             </div>
