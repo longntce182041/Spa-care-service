@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +34,7 @@ public class ChangePasswordServlet extends HttpServlet {
             HttpSession session = request.getSession(false);
             String username = (session != null) ? (String) session.getAttribute("username") : null;
             if (username == null) {
-                response.sendRedirect("Login.jsp");
+                response.sendRedirect("login.jsp");
                 return;
             }
 
@@ -44,6 +46,10 @@ public class ChangePasswordServlet extends HttpServlet {
                 response.sendRedirect("changePassword.jsp?error=password_mismatch");
                 return;
             }
+
+            // Hash the input passwords
+            String hashedCurrentPassword = hashPassword(currentPassword);
+            String hashedNewPassword = hashPassword(newPassword);
 
             Connection conn = null;
             PreparedStatement pstmt = null;
@@ -58,14 +64,14 @@ public class ChangePasswordServlet extends HttpServlet {
 
                 if (rs.next()) {
                     String dbPassword = rs.getString("password");
-                    if (!dbPassword.equals(currentPassword)) {
+                    if (!dbPassword.equals(hashedCurrentPassword)) {
                         response.sendRedirect("changePassword.jsp?error=incorrect_current_password");
                         return;
                     }
 
                     sql = "UPDATE Users SET password = ? WHERE username = ?";
                     pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, newPassword);
+                    pstmt.setString(1, hashedNewPassword);
                     pstmt.setString(2, username);
                     pstmt.executeUpdate();
 
@@ -95,6 +101,20 @@ public class ChangePasswordServlet extends HttpServlet {
                     DBConnect.closeConnection(conn);
                 }
             }
+        }
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashedBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
 
