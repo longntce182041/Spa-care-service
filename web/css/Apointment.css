@@ -1,0 +1,108 @@
+/* General styles */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h2, h3 {
+    text-align: center;
+    color: #4CAF50;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+table th, table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+}
+
+.btn-green {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-green:hover {
+    background-color: #45a049;
+}
+
+.btn-yellow {
+    background-color: #ffeb3b;
+    color: black;
+}
+
+.btn-yellow:hover {
+    background-color: #fdd835;
+}
+
+.btn-red {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-red:hover {
+    background-color: #e53935;
+}
+
+.delete-icon {
+    color: #f44336;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.delete-icon:hover {
+    color: #e53935;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.back-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.back-button:hover {
+    background-color: #45a049;
+}
