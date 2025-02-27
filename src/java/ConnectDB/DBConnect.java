@@ -2,27 +2,26 @@ package ConnectDB;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-/**
- * Database connection utility class.
- */
 public class DBConnect {
 
-    // Method to establish a connection
-    public static Connection getConnection() throws SQLException {
+    // Phương thức để thiết lập kết nối
+    public static Connection getConnection() {
         Connection connection = null;
 
         try {
-            // Register JDBC driver for SQL Server
+            // Đăng ký driver JDBC cho SQL Server
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-            // Connection string, username, and password
-            String url = "jdbc:sqlserver://localhost\\MSI:1433;databaseName=PetiqueSpa;encrypt=false";
-            String user = "long";
-            String password = "123";
+            // Chuỗi kết nối, tên người dùng và mật khẩu
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=PetiqueSpa;encrypt=false";
+            String user = "sa";
+            String password = "MyStrongPass123";
 
-            // Open a connection to the database
+            // Mở kết nối đến cơ sở dữ liệu
             connection = DriverManager.getConnection(url, user, password);
             System.out.println("Database connection successful!");
         } catch (ClassNotFoundException e) {
@@ -36,7 +35,7 @@ public class DBConnect {
         return connection;
     }
 
-    // Method to close the connection
+    // Phương thức để đóng kết nối
     public static void closeConnection(Connection connection) {
         if (connection != null) {
             try {

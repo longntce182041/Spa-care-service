@@ -1,14 +1,7 @@
-<%-- 
-    Document   : about
-    Created on : Feb 25, 2025, 5:04:40 PM
-    Author     : Nguyen Thanh Long - CE182041 
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
+    <title>Petique Spa - Free Bootstrap 4 Template by Colorlib</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -44,7 +37,7 @@
 						<div class="social-media">
 			    		<p class="mb-0 d-flex">
 			    			<a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-facebook"><i class="sr-only">Facebook</i></span></a>
-			    			<a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-twitter"><i class="sr-only">Twitter</i></span></a>
+		spa	    			<a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-twitter"><i class="sr-only">Twitter</i></span></a>
 			    			<a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-instagram"><i class="sr-only">Instagram</i></span></a>
 			    			<a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-dribbble"><i class="sr-only">Dribbble</i></span></a>
 			    		</p>
@@ -55,7 +48,7 @@
 		</div>
 		<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 	    <div class="container">
-	    	<a class="navbar-brand" href="index.jsp"><span class="flaticon-pawprint-1 mr-2"></span>Petique</a>
+	    	<a class="navbar-brand" href="index.jsp"><span class="flaticon-pawprint-1 mr-2"></span>Petique Spa</a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="fa fa-bars"></span> Menu
 	      </button>
@@ -69,6 +62,15 @@
 	          <li class="nav-item"><a href="pricing.jsp" class="nav-link">Pricing</a></li>
 	          <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
 	          <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
+                  <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="fa fa-user"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="login.jsp">Login</a>
+                                <a class="dropdown-item" href="register.jsp">Sign up</a>
+                            </div>
+                        </li>
 	        </ul>
 	      </div>
 	    </div>
@@ -451,7 +453,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-6 col-lg-3 mb-4 mb-md-0">
-						<h2 class="footer-heading">Petsitting</h2>
+						<h2 class="footer-heading">Petique spa</h2>
 						<p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
 						<ul class="ftco-footer-social p-0">
               <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><span class="fa fa-twitter"></span></a></li>

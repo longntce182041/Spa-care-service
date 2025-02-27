@@ -1,7 +1,7 @@
 <%-- 
     Document   : profile
-    Created on : Feb 25, 2025, 10:23:45 PM
-    Author     : Nguyen Thanh Long - CE182041 
+    Created on : 26 thg 2, 2025, 15:12:48
+    Author     : Tran Phan Trung Kien - CE180170
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/Style_profile.css">
+    
 </head>
 <body>
     <div class="container-fluid">

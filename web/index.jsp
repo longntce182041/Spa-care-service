@@ -1,31 +1,17 @@
-<%-- 
-    Document   : index
-    Created on : Feb 25, 2025, 4:37:52 PM
-    Author     : Nguyen Thanh Long - CE182041 
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <title>Petique Spa</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
         <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
-
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
         <link rel="stylesheet" href="css/animate.css">
-
         <link rel="stylesheet" href="css/owl.carousel.min.css">
         <link rel="stylesheet" href="css/owl.theme.default.min.css">
         <link rel="stylesheet" href="css/agnific-popup.css">
-
-
         <link rel="stylesheet" href="css/bootstrap-datepicker.css">
         <link rel="stylesheet" href="css/jquery.timepicker.css">
-
         <link rel="stylesheet" href="css/flaticon.css">
         <link rel="stylesheet" href="css/style.css">
     </head>
@@ -36,7 +22,7 @@
                 <div class="row">
                     <div class="col-md-6 d-flex align-items-center">
                         <p class="mb-0 phone pl-md-2">
-                            
+
                         </p>
                     </div>
                     <div class="col-md-6 d-flex justify-content-md-end">
@@ -62,7 +48,7 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active"><a href="index.jsp" class="nav-link">Home</a></li>
                         <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
-                        <li class="nav-item"><a href="vet.jsp" class="nav-link">Veterinarian</a></li>
+                        <li class="nav-item"><a href="Staffdashboard.jsp" class="nav-link">Staff</a></li>
                         <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
                         <li class="nav-item"><a href="gallery.jsp" class="nav-link">Gallery</a></li>
                         <li class="nav-item"><a href="pricing.jsp" class="nav-link">Pricing</a></li>
@@ -73,8 +59,8 @@
                                 <span class="fa fa-user"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="Login.jsp">Login</a>
-                                <a class="dropdown-item" href="regsiter.jsp">Sign up</a>
+                                <a class="dropdown-item" href="login.jsp">Login</a>
+                                <a class="dropdown-item" href="register.jsp">Sign up</a>
                             </div>
                         </li>
                     </ul>
@@ -772,7 +758,7 @@
                     <div class="col-md-12 text-center">
 
                         <p class="copyright"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            
+
                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
                     </div>
                 </div>
