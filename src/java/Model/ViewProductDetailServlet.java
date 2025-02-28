@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import ConnectDB.DBConnect;
 
 /**
  *
@@ -30,10 +31,11 @@ public class ViewProductDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         String productId = request.getParameter("id");
         Product product = null;
+        Connection conn = null;
 
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost\\HLONG:1433;databaseName=PetiqueSpa;encrypt=false", "sa", "123");
+            DBConnect dbConnect = new DBConnect();
+            conn = dbConnect.getConnection();
             String sql = "SELECT * FROM Products WHERE product_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, Integer.parseInt(productId));

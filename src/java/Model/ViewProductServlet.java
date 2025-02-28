@@ -20,7 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
+import ConnectDB.DBConnect;
 
 /**
  *
@@ -33,10 +33,11 @@ public class ViewProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         List<Product> products = new ArrayList<>();
+        Connection conn = null;
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost\\HLONG:1433;databaseName=PetiqueSpa;encrypt=false", "sa", "123");
-            String sql = "SELECT * FROM Products";  // Đảm bảo bảng đúng tên
+         DBConnect dbConnect = new DBConnect();
+            conn = dbConnect.getConnection();
+            String sql = "SELECT * FROM Products";  
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
