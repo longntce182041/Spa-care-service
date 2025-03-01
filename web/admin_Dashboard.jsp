@@ -5,6 +5,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page session="true" %>
+<%
+    String role = (String) session.getAttribute("role");
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -44,8 +48,8 @@
                         <li class="active">
                             <a href="admin_Dashboard.jsp">Dashboard</a>
                         </li>
-                        <li>
-                            <a href="ManageProducts.jsp">Manage Products</a>
+                        <li >
+                            <a href="ViewProductServlet">Manage Products</a>
                         </li>
                         <li>
                             <a href="ManageCategories.jsp">Manage Categories</a>
@@ -74,6 +78,10 @@
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
                                 <a class="nav-link" href="profile.jsp"><i class="fa fa-user"></i> Profile</a>
+                                <% if ("admin".equalsIgnoreCase(role)) { %>
+                                    <a class="nav-link" href="changePassword.jsp"><i class="fa fa-key"></i> Change Password</a>
+                                <% } %>
+                                
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="logout.jsp"><i class="fa fa-sign-out"></i> Logout</a>

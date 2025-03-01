@@ -69,7 +69,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .card-body .btn {
     margin-top: 10px;
 }
-
+.content-box{
+    margin-top: 20px;
+    padding-top: 30px;
+}
 
  body {
                 background: url('images/space-time-continuum.jpg') no-repeat center center fixed;

@@ -20,7 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
+import ConnectDB.DBConnect;
 
 /**
  *
@@ -30,25 +30,25 @@ import java.util.List;
 public class ViewProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<Product> products = new ArrayList<>();
+        Connection conn = null;
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost\\HLONG:1433;databaseName=PetiqueSpa;encrypt=false", "sa", "123");
-            String sql = "SELECT * FROM Products";  // Đảm bảo bảng đúng tên
+            DBConnect dbConnect = new DBConnect();
+            conn = dbConnect.getConnection();
+            String sql = "SELECT * FROM Products";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Product product = new Product(
-                    rs.getInt("product_id"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getDouble("price"),
-                    rs.getInt("stock_quantity"),
-                    rs.getString("image_url")
-                );
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock_quantity"),
+                        rs.getString("image_url"));
                 products.add(product);
             }
             request.setAttribute("products", products);
@@ -58,6 +58,95 @@ public class ViewProductServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        request.getRequestDispatcher("viewproduct.jsp").forward(request, response);
+        request.getRequestDispatcher("ManageProducts.jsp").forward(request, response);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if (action != null) {
+            switch (action) {
+                case "add":
+                    addProduct(request, response);
+                    break;
+                case "delete":
+                    deleteProduct(request, response);
+                    break;
+                case "update":
+                    updateProduct(request, response);
+                    break;
+                default:
+                    doGet(request, response);
+                    break;
+            }
+        } else {
+            doGet(request, response);
+        }
+    }
+
+    private void addProduct(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String name = request.getParameter("name");
+        String description = request.getParameter("description");
+        double price = Double.parseDouble(request.getParameter("price"));
+        int stockQuantity = Integer.parseInt(request.getParameter("stockQuantity"));
+        String imageUrl = request.getParameter("imageUrl");
+
+        try (Connection conn = DBConnect.getConnection()) {
+            String sql = "INSERT INTO Products (name, description, price, stock_quantity, image_url) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, description);
+            stmt.setDouble(3, price);
+            stmt.setInt(4, stockQuantity);
+            stmt.setString(5, imageUrl);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.sendRedirect("ViewProductServlet");
+    }
+
+    private void deleteProduct(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int productId = Integer.parseInt(request.getParameter("productId"));
+
+        try (Connection conn = DBConnect.getConnection()) {
+            String sql = "DELETE FROM Products WHERE product_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, productId);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.sendRedirect("ViewProductServlet");
+    }
+
+    private void updateProduct(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        String name = request.getParameter("name");
+        String description = request.getParameter("description");
+        double price = Double.parseDouble(request.getParameter("price"));
+        int stockQuantity = Integer.parseInt(request.getParameter("stockQuantity"));
+        String imageUrl = request.getParameter("imageUrl");
+
+        try (Connection conn = DBConnect.getConnection()) {
+            String sql = "UPDATE Products SET name = ?, description = ?, price = ?, stock_quantity = ?, image_url = ? WHERE product_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, description);
+            stmt.setDouble(3, price);
+            stmt.setInt(4, stockQuantity);
+            stmt.setString(5, imageUrl);
+            stmt.setInt(6, productId);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.sendRedirect("ViewProductServlet");
     }
 }
