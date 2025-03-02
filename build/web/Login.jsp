@@ -49,7 +49,8 @@
         </form>
         
         <!-- Register link -->
-        <a href="register.jsp" class="register-link">Don't have an account? Sign up</a>
+        <a href="register.jsp" class="register-link">Don't have an account? Sign up</a><br>
+        <a href="forgot-password.jsp" class="register-link">Forgot password</a>
         <a href="index.jsp" class="btn btn-secondary w-100 mt-3">Back to home page</a>
     </div>
 
