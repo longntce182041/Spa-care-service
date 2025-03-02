@@ -40,7 +40,7 @@
             <label for="image_url">URL hình ảnh:</label>
             <input type="text" id="image_url" name="image_url" required><br>
             <button type="submit" class="btn btn-primary">Import</button>
-            <a href="StaffWarehouse.jsp" class="btn btn-secondary">Cancel</a>
+            <a href="Staffdashboard.jsp" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </body>

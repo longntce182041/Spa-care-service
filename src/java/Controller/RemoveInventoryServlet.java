@@ -22,10 +22,10 @@ public class RemoveInventoryServlet extends HttpServlet {
 
         if (isDeleted) {
             // Nếu sản phẩm bị xóa, chuyển hướng đến trang dashboard
-            response.sendRedirect("StaffWarehouse.jsp");
+            response.sendRedirect("Staffdashboard.jsp");
         } else {
             // Nếu sản phẩm không bị xóa, chuyển hướng đến trang dashboard
-            response.sendRedirect("StaffWarehouse.jsp");
+            response.sendRedirect("Staffdashboard.jsp");
         }
     }
 }
