@@ -51,40 +51,34 @@
             </div>
         </div>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-        <div class="container">
-            <a class="navbar-brand" href="HomePage.jsp"><span class="flaticon-pawprint-1 mr-2"></span>Petique Spa</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="fa fa-bars"></span> Menu
-            </button>
-            <div class="collapse navbar-collapse" id="ftco-nav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active"><a href="homepage.jsp" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
-                    <li class="nav-item"><a href="vet.jsp" class="nav-link">Veterinarian</a></li>
-                    <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
-                    <li class="nav-item"><a href="gallery.jsp" class="nav-link">Gallery</a></li>
-                    <li class="nav-item"><a href="pricing.jsp" class="nav-link">Pricing</a></li>
-                    <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
-                    <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
-                    <% if (username != null) { %>
+            <div class="container">
+                <a class="navbar-brand" href="index.jsp"><span class="flaticon-pawprint-1 mr-2"></span>Petique Spa</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="fa fa-bars"></span> Menu
+                </button>
+                <div class="collapse navbar-collapse" id="ftco-nav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active"><a href="index.jsp" class="nav-link">Home</a></li>
+                        <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
+                        <li class="nav-item"><a href="Staffdashboard.jsp" class="nav-link">Staff</a></li>
+                        <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
+                        <li class="nav-item"><a href="appointment.jsp" class="nav-link">Appointment</a></li>
+                        <li class="nav-item"><a href="pricing.jsp" class="nav-link">Pricing</a></li>
+                        <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
+                        <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-user nav-item">  </i>
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="fa fa-user"></span>
                             </a>
-                           
-                            <div class="dropdown-menu" aria-labelledby="profileDropdown">
-                                <a class="dropdown-item-text"> <%= username %> </a>
-                                <a class="dropdown-item" href="profile.jsp">Profile</a>
-                                <a class="dropdown-item" href="index.jsp">Logout</a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="login.jsp">Login</a>
+                                <a class="dropdown-item" href="register.jsp">Sign up</a>
                             </div>
                         </li>
-                    <% } else { %>
-                        <li class="nav-item"><a href="Login.jsp" class="nav-link">Login</a></li>
-                    <% } %>
-                </ul>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
     <!-- END nav -->
     <div class="hero-wrap js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
         <div class="overlay"></div>

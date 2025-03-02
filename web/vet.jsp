@@ -54,11 +54,11 @@
                 </button>
                 <div class="collapse navbar-collapse" id="ftco-nav">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a href="index.jsp" class="nav-link">Home</a></li>
+                        <li class="nav-item active"><a href="index.jsp" class="nav-link">Home</a></li>
                         <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
-                        <li class="nav-item active"><a href="vet.jsp" class="nav-link">Veterinarian</a></li>
+                        <li class="nav-item"><a href="Staffdashboard.jsp" class="nav-link">Staff</a></li>
                         <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
-                        <li class="nav-item"><a href="gallery.jsp" class="nav-link">Gallery</a></li>
+                        <li class="nav-item"><a href="appointment.jsp" class="nav-link">Appointment</a></li>
                         <li class="nav-item"><a href="pricing.jsp" class="nav-link">Pricing</a></li>
                         <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
                         <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>

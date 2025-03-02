@@ -1,11 +1,11 @@
 <%@ page import="java.sql.*, java.util.*, DAO.InventoryDAO, Model.Inventory" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <title>Staff Warehouse Dashboard</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
         <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/animate.css">
@@ -22,8 +22,8 @@
         <div class="container">
             <h2>Staff Warehouse Dashboard</h2>
             <div class="actions">
-                <a href="add_inventory.jsp" class="btn btn-success">Stock Receiving</a> <!-- Liên kết đến trang nhập hàng -->
-                <a href="remove_inventory.jsp" class="btn btn-success">Stock Delivering</a> <!-- Liên kết đến trang xuất hàng -->
+                <a href="add_inventory.jsp" class="btn btn-primary">Stock Receiving</a> <!-- Liên kết đến trang nhập hàng -->
+                <a href="remove_inventory.jsp" class="btn btn-primary">Stock Delivering</a> <!-- Liên kết đến trang xuất hàng -->
             </div>
             <table class="inventory-table table table-striped table-hover">
                 <thead class="thead-dark">
@@ -33,6 +33,7 @@
                         <th>Loại</th>
                         <th>Số lượng</th>
                         <th>Hình ảnh</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,11 +48,14 @@
                         <td><%= item.getType()%></td>
                         <td><%= item.getQuantity()%></td>
                         <td><img src="<%= item.getimage_url()%>" alt="Product Image" style="width: 100px; height: auto;"></td>
+                        <td>
+                            <a href="edit_inventory.jsp?inventoryId=<%= item.getInventoryId()%>" class="btn btn-primary">Edit</a>
+                        </td>
                     </tr>
                     <% }%>
                 </tbody>
             </table>
-            <a href="index.jsp" class="btn btn-success">Back to home page</a>
+            <a href="index.jsp" class="btn btn-primary">Back to home page</a>
         </div>
 
         <script src="js/jquery.min.js"></script>

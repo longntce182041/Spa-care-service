@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.*;
 
 public class InventoryDAO {
+
     public List<Inventory> getAllInventory() {
         List<Inventory> list = new ArrayList<>();
         Connection conn = null;
@@ -19,20 +20,24 @@ public class InventoryDAO {
 
             while (rs.next()) {
                 list.add(new Inventory(
-                    rs.getInt("inventory_id"),
-                    rs.getInt("product_id"),
-                    rs.getInt("staff_id"),
-                    rs.getInt("quantity"),
-                    rs.getString("type"),
-                    rs.getString("image_url")
+                        rs.getInt("inventory_id"),
+                        rs.getInt("product_id"),
+                        rs.getInt("staff_id"),
+                        rs.getInt("quantity"),
+                        rs.getString("type"),
+                        rs.getString("image_url")
                 ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
                 DBConnect.closeConnection(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -59,7 +64,9 @@ public class InventoryDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (stmt != null) stmt.close();
+                if (stmt != null) {
+                    stmt.close();
+                }
                 DBConnect.closeConnection(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -116,15 +123,52 @@ public class InventoryDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmtUpdate != null) stmtUpdate.close();
-                if (stmtSelect != null) stmtSelect.close();
-                if (stmtDelete != null) stmtDelete.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmtUpdate != null) {
+                    stmtUpdate.close();
+                }
+                if (stmtSelect != null) {
+                    stmtSelect.close();
+                }
+                if (stmtDelete != null) {
+                    stmtDelete.close();
+                }
                 DBConnect.closeConnection(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         return false; // Sản phẩm không bị xóa
+    }
+
+    public void updateInventory(Inventory inventory) {
+        String sql = "UPDATE Inventory SET product_id = ?, staff_id = ?, quantity = ?, type = ?, image_url = ? WHERE inventory_id = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = DBConnect.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, inventory.getProductId());
+            stmt.setInt(2, inventory.getStaffId());
+            stmt.setInt(3, inventory.getQuantity());
+            stmt.setString(4, inventory.getType());
+            stmt.setString(5, inventory.getimage_url());
+            stmt.setInt(6, inventory.getInventoryId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                DBConnect.closeConnection(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
