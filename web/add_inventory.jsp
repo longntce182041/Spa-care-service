@@ -39,8 +39,8 @@
             <input type="text" id="type" name="type" required><br>
             <label for="image_url">URL hình ảnh:</label>
             <input type="text" id="image_url" name="image_url" required><br>
-            <button type="submit" class="btn btn-green">Import</button>
-            <a href="Staffdashboard.jsp" class="btn btn-green">Cancel</a>
+            <button type="submit" class="btn btn-primary">Import</button>
+            <a href="StaffWarehouse.jsp" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </body>

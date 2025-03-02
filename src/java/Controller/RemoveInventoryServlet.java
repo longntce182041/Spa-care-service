@@ -1,4 +1,4 @@
-package Servlet;
+package Controller;
 
 import DAO.InventoryDAO;
 import jakarta.servlet.ServletException;
@@ -22,10 +22,10 @@ public class RemoveInventoryServlet extends HttpServlet {
 
         if (isDeleted) {
             // Nếu sản phẩm bị xóa, chuyển hướng đến trang dashboard
-            response.sendRedirect("Staffdashboard.jsp");
+            response.sendRedirect("StaffWarehouse.jsp");
         } else {
             // Nếu sản phẩm không bị xóa, chuyển hướng đến trang dashboard
-            response.sendRedirect("Staffdashboard.jsp");
+            response.sendRedirect("StaffWarehouse.jsp");
         }
     }
 }

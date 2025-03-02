@@ -1,4 +1,4 @@
-package Servlet;
+package Controller;
 
 import DAO.InventoryDAO;
 import Model.Inventory;
@@ -26,6 +26,6 @@ public class UpdateInventoryServlet extends HttpServlet {
         Inventory inventory = new Inventory(inventoryId, productId, staffId, quantity, type, image_url);
         inventoryDAO.updateInventory(inventory);
 
-        response.sendRedirect("Staffdashboard.jsp");
+        response.sendRedirect("StaffWarehouse.jsp");
     }
 }

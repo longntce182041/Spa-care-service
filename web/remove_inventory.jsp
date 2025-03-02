@@ -36,8 +36,8 @@
             </select><br>
             <label for="quantity">Số lượng:</label>
             <input type="number" id="quantity" name="quantity" required><br>
-            <button type="submit" class="btn btn-green">Export</button>
-            <a href="Staffdashboard.jsp" class="btn btn-green">Cancel</a>
+            <button type="submit" class="btn btn-primary">Export</button>
+            <a href="StaffWarehouse.jsp" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </body>

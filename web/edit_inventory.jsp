@@ -54,7 +54,7 @@
                     <input type="text" class="form-control" id="image_url" name="image_url" value="<%= inventory.getimage_url()%>" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
-                <a href="Staffdashboard.jsp" class="btn btn-secondary">Cancel</a>
+                <a href="StaffWarehouse.jsp" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
 

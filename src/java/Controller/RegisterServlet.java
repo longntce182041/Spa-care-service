@@ -1,4 +1,4 @@
-package Servlet;
+package Controller;
 
 import ConnectDB.DBConnect;
 import Controller.EmailUtil;

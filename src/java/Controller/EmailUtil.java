@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.*;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;

@@ -1,4 +1,4 @@
-package Servlet;
+package Controller;
 
 import DAO.AppointmentDAO;
 import jakarta.servlet.ServletException;
