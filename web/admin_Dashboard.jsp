@@ -98,7 +98,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Manage Products</h5>
                                     <p class="card-text">View and manage all products.</p>
-                                    <a href="ManageProducts.jsp" class="btn btn-light">Go to Products</a>
+                                    <a href="ManageProductsServlet" class="btn btn-light">Go to Products</a>
                                 </div>
                             </div>
                         </div>
