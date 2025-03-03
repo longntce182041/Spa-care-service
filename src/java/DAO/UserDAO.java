@@ -60,4 +60,17 @@ public class UserDAO {
         }
         return false;
     }
+    // Cập nhật trạng thái xác thực và đặt lại mã xác minh
+
+    public boolean resetVerifiedCode(String email) {
+        String query = "UPDATE Users SET is_verified = 1, verification_code = NULL WHERE email = ?";
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, email);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

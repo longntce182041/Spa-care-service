@@ -83,8 +83,10 @@ public class ResetPasswordServlet extends HttpServlet {
             return;
         }
 
+        String hashedPassword = Integer.toHexString(newPassword.hashCode());
+
         // Cập nhật mật khẩu mới
-        if (userDAO.updatePassword(email, newPassword)) {
+        if (userDAO.updatePassword(email, hashedPassword)) {
             response.sendRedirect("Login.jsp?success=Password changed successfully");
         } else {
             response.sendRedirect("reset-password.jsp?email=" + email + "&error=Failed to update password");

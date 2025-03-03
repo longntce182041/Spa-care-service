@@ -73,8 +73,8 @@
                                 <span class="fa fa-user"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="login.jsp">Login</a>
-                                <a class="dropdown-item" href="regsiter.jsp">Sign up</a>
+                                <a class="dropdown-item" href="Login.jsp">Login</a>
+                                <a class="dropdown-item" href="register.jsp">Sign up</a>
                             </div>
                         </li>
                     </ul>

@@ -35,15 +35,10 @@ public class ViewProductServlet extends HttpServlet {
         List<Product> products = new ArrayList<>();
         Connection conn = null;
         try {
-<<<<<<< HEAD
             DBConnect dbConnect = new DBConnect();
             conn = dbConnect.getConnection();
             String sql = "SELECT * FROM Products";
-=======
-         DBConnect dbConnect = new DBConnect();
-            conn = dbConnect.getConnection();
-            String sql = "SELECT * FROM Products";  
->>>>>>> b3b1548ae41bd73a1be59fc9fd80ae0d79b4f11d
+
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 

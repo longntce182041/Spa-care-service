@@ -18,8 +18,8 @@ public class DBConnect {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
             // Connection string, username, and password
-            String url = "jdbc:sqlserver://localhost\\MSI:1433;databaseName=PetiqueSpa;encrypt=false";
-            String user = "long";
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=PetiqueSpa;encrypt=false";
+            String user = "sa";
             String password = "123";
 
             // Open a connection to the database
