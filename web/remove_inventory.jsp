@@ -2,7 +2,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Xuất hàng</title>
+    <title>Stock Delivering</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -20,9 +20,9 @@
 </head>
 <body>
     <div class="container">
-        <h2>Xuất hàng</h2>
+        <h2>Stock Delivering</h2>
         <form action="RemoveInventoryServlet" method="post" class="form-container">
-            <label for="inventoryId">Mã kho:</label>
+            <label for="inventoryId">Inventory ID:</label>
             <select id="inventoryId" name="inventoryId" required>
                 <%
                     InventoryDAO inventoryDAO = new InventoryDAO();
@@ -34,7 +34,7 @@
                     }
                 %>
             </select><br>
-            <label for="quantity">Số lượng:</label>
+            <label for="quantity">Quantity:</label>
             <input type="number" id="quantity" name="quantity" required><br>
             <button type="submit" class="btn btn-primary">Export</button>
             <a href="Staffdashboard.jsp" class="btn btn-secondary">Cancel</a>

@@ -29,10 +29,10 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Sản phẩm</th>
-                        <th>Loại</th>
-                        <th>Số lượng</th>
-                        <th>Hình ảnh</th>
+                        <th>Product ID</th>
+                        <th>Type</th>
+                        <th>Quantity</th>
+                        <th>Images</th>
                         <th>Action</th>
                     </tr>
                 </thead>

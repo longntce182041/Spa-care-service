@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Nhập hàng</title>
+    <title>Stock Receiving</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Nhập hàng</h2>
+        <h2>Stock Receiving</h2>
         <%
             String error = request.getParameter("error");
             if (error != null) {
@@ -29,15 +29,15 @@
             }
         %>
         <form action="AddInventoryServlet" method="post" class="form-container">
-            <label for="productId">Mã sản phẩm:</label>
+            <label for="productId">Product ID:</label>
             <input type="text" id="productId" name="productId" required><br>
-            <label for="staffId">Mã nhân viên:</label>
+            <label for="staffId">Staff ID:</label>
             <input type="text" id="staffId" name="staffId" required><br>
-            <label for="quantity">Số lượng:</label>
+            <label for="quantity">Quantity:</label>
             <input type="number" id="quantity" name="quantity" required><br>
-            <label for="type">Loại:</label>
+            <label for="type">Type:</label>
             <input type="text" id="type" name="type" required><br>
-            <label for="image_url">URL hình ảnh:</label>
+            <label for="image_url">Images URL:</label>
             <input type="text" id="image_url" name="image_url" required><br>
             <button type="submit" class="btn btn-primary">Import</button>
             <a href="Staffdashboard.jsp" class="btn btn-secondary">Cancel</a>
