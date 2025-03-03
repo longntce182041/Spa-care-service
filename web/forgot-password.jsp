@@ -28,7 +28,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100">Send OTP</button>
                             </form>
-                            <a href="Login.jsp" class="btn btn-secondary w-100 mt-3">Back to Login</a>
+                            <a href="login.jsp" class="btn btn-secondary w-100 mt-3">Back to Login</a>
                         </div>
                     </div>
                 </div>

@@ -65,6 +65,9 @@
                         <li>
                             <a href="ManageStaff.jsp">Manage Staff</a>
                         </li>
+                        <li>
+                            <a href="PromotionServlet">Manage Promotion</a>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -140,8 +143,8 @@
                                             </c:forEach>
                                         </c:catch>
                                         <c:if test="${not empty error}">
-                                            <script>console.error("Lỗi khi render sản phẩm: ${error}");</script>
-                                        </c:if>
+                                        <script>console.error("Lỗi khi render sản phẩm: ${error}");</script>
+                                    </c:if>
                                     </tbody>
                                 </table>
                             </div>

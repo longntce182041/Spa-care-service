@@ -85,7 +85,7 @@ public class ResetPasswordServlet extends HttpServlet {
 
         // Cập nhật mật khẩu mới
         if (userDAO.updatePassword(email, newPassword)) {
-            response.sendRedirect("Login.jsp?success=Password changed successfully");
+            response.sendRedirect("login.jsp?success=Password changed successfully");
         } else {
             response.sendRedirect("reset-password.jsp?email=" + email + "&error=Failed to update password");
         }

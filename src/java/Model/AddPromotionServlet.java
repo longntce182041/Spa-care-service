@@ -19,29 +19,29 @@ import java.sql.PreparedStatement;
 @WebServlet("/AddPromotionServlet")
 public class AddPromotionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Connection conn = null;
-        try {
-            DBConnect dbConnect = new DBConnect();
-            conn = dbConnect.getConnection();
+        try (Connection conn = new DBConnect().getConnection()) {
             String sql = "INSERT INTO Promotion (name, description, discount_type, discount_value, start_date, end_date, min_order_value, max_discount, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            
-            stmt.setString(1, request.getParameter("name"));
-            stmt.setString(2, request.getParameter("description"));
-            stmt.setString(3, request.getParameter("discount_type"));
-            stmt.setDouble(4, Double.parseDouble(request.getParameter("discount_value")));
-            stmt.setDate(5, Date.valueOf(request.getParameter("start_date")));
-            stmt.setDate(6, Date.valueOf(request.getParameter("end_date")));
-            stmt.setDouble(7, Double.parseDouble(request.getParameter("min_order_value")));
-            stmt.setObject(8, request.getParameter("max_discount").isEmpty() ? null : Double.parseDouble(request.getParameter("max_discount")));
-            stmt.setBoolean(9, request.getParameter("is_active") != null);
-            
-            stmt.executeUpdate();
-            conn.close();
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                
+                stmt.setString(1, request.getParameter("name"));
+                stmt.setString(2, request.getParameter("description"));
+                stmt.setString(3, request.getParameter("discountType"));
+                String discountValue = request.getParameter("discountValue");
+                stmt.setDouble(4, (discountValue != null && !discountValue.isEmpty()) ? Double.parseDouble(discountValue) : 0.0);
+                String startDate = request.getParameter("startDate");
+                String endDate = request.getParameter("endDate");
+                stmt.setDate(5, (startDate != null && !startDate.isEmpty()) ? Date.valueOf(startDate) : null);
+                stmt.setDate(6, (endDate != null && !endDate.isEmpty()) ? Date.valueOf(endDate) : null);
+                String minOrderValue = request.getParameter("minOrderValue");
+                stmt.setDouble(7, (minOrderValue != null && !minOrderValue.isEmpty()) ? Double.parseDouble(minOrderValue) : 0.0);
+                String maxDiscount = request.getParameter("maxDiscount");
+                stmt.setObject(8, (maxDiscount != null && !maxDiscount.isEmpty()) ? Double.parseDouble(maxDiscount) : null);
+                stmt.setBoolean(9, request.getParameter("isActive") != null);
+                stmt.executeUpdate();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         response.sendRedirect("PromotionServlet");
     }
 }
-
