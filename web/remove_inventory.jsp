@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="css/jquery.timepicker.css">
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/staffdashboard.css"> <!-- Liên kết tệp CSS mới -->
+    <link rel="stylesheet" href="css/staffwarehouse.css"> <!-- Liên kết tệp CSS mới -->
 </head>
 <body>
     <div class="container">
@@ -37,7 +37,7 @@
             <label for="quantity">Quantity:</label>
             <input type="number" id="quantity" name="quantity" required><br>
             <button type="submit" class="btn btn-primary">Export</button>
-            <a href="Staffdashboard.jsp" class="btn btn-secondary">Cancel</a>
+            <a href="StaffWarehouse.jsp" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </body>

@@ -27,6 +27,8 @@
         <link rel="stylesheet" href="css/jquery.timepicker.css">
         <link rel="stylesheet" href="css/flaticon.css">
         <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/staffwarehouse.css">
+        
     </head>
     <body>
         <div class="container">
@@ -35,11 +37,11 @@
                 <input type="hidden" name="inventoryId" value="<%= inventory.getInventoryId()%>">
                 <div class="form-group">
                     <label for="productId">Product ID:</label>
-                    <input type="text" class="form-control" id="productId" name="productId" value="<%= inventory.getProductId()%>" required>
+                    <input type="text" class="form-control" id="productId" name="productId" value="<%= inventory.getProductId()%>" readonly>
                 </div>
                 <div class="form-group">
                     <label for="staffId">Staff ID:</label>
-                    <input type="text" class="form-control" id="staffId" name="staffId" value="<%= inventory.getStaffId()%>" required>
+                    <input type="text" class="form-control" id="staffId" name="staffId" value="<%= inventory.getStaffId()%>" readonly>
                 </div>
                 <div class="form-group">
                     <label for="quantity">Quantity:</label>
@@ -54,7 +56,7 @@
                     <input type="text" class="form-control" id="image_url" name="image_url" value="<%= inventory.getimage_url()%>" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
-                <a href="Staffdashboard.jsp" class="btn btn-secondary">Cancel</a>
+                <a href="StaffWarehouse.jsp" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
 

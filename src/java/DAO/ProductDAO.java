@@ -6,6 +6,8 @@ import java.sql.*;
 import java.util.*;
 
 public class ProductDAO {
+
+    // Lấy tất cả sản phẩm
     public List<Product> getAllProducts() {
         List<Product> list = new ArrayList<>();
         Connection conn = null;
@@ -41,6 +43,45 @@ public class ProductDAO {
         return list;
     }
 
+    // Lấy sản phẩm theo ID
+    public Product getProductById(int productId) {
+        Product product = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.getConnection();
+            String sql = "SELECT * FROM Products WHERE product_id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, productId);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                product = new Product(
+                    rs.getInt("product_id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getDouble("price"),
+                    rs.getInt("stock_quantity"),
+                    rs.getString("image_url")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                DBConnect.closeConnection(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return product;
+    }
+
+    // Kiểm tra sự tồn tại của sản phẩm
     public boolean productExists(int productId) {
         String sql = "SELECT COUNT(*) FROM Products WHERE product_id = ?";
         Connection conn = null;

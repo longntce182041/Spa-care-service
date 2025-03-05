@@ -1,95 +1,82 @@
-/* Đặt màu nền và kiểu chữ cho toàn bộ trang */
 body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #f0f8f5;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
-
-/* Đặt kiểu chữ và căn giữa cho tiêu đề */
-h2 {
-    text-align: center;
-    color: #2e8b57;
-    margin-top: 20px;
-    font-size: 2.5em;
-}
-
-/* Đặt kiểu cho container */
-.container {
-    width: 90%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
-
-/* Đặt kiểu cho các nút */
-.actions {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 16px;
+    background: url('images/space-time-continuum.jpg') no-repeat center center fixed;
+    background-size: cover;
     color: #fff;
-    background-color: #2e8b57;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
-
-.btn:hover {
-    background-color: #276a45;
+.navbar {
+    background: rgba(0, 0, 0, 0.8);
 }
-
-/* Đặt kiểu cho bảng */
-.inventory-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 1em;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+.navbar-brand {
+    color: #fff;
 }
-
-.inventory-table thead tr {
-    background-color: #2e8b57;
-    color: #ffffff;
-    text-align: left;
+.navbar-nav .nav-link {
+    color: #fff;
+}
+.navbar-nav .nav-link:hover {
+    color: #00bd56;
+}
+#sidebar {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    min-height: 100vh;
+}
+#sidebar .navbar-brand {
+    color: #fff;
+    font-size: 1.5rem;
     font-weight: bold;
 }
-
-.inventory-table th, .inventory-table td {
-    padding: 12px 15px;
+#sidebar .components {
+    padding: 0px;
+}
+#sidebar .components li {
+    padding: 10px;
+}
+#sidebar .components li a {
+    color: #adb5bd;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    transition: background 0.3s, color 0.3s;
+}
+#sidebar .components li a:hover, #sidebar .components li.active a {
+    background: #00bd56;
+    color: #fff;
+}
+#content {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    min-height: 100vh;
+    border-radius: 10px;
+}
+.card {
+    background: rgba(0, 0, 0, 0.8);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+.card-header {
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid #00bd56;
+    font-weight: bold;
+    color: #fff;
+}
+.card-body {
     text-align: center;
+    color: #fff;
 }
-
-.inventory-table tbody tr {
-    border-bottom: 1px solid #dddddd;
+.btn-light {
+    background: #00bd56;
+    color: #fff;
 }
-
-.inventory-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+.btn-light:hover {
+    background: #fff;
+    color: #00bd56;
 }
-
-.inventory-table tbody tr:last-of-type {
-    border-bottom: 2px solid #2e8b57;
-}
-
-.inventory-table tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-.inventory-table img {
-    max-width: 100px;
-    height: auto;
-    border-radius: 5px;
+.content-box {
+    margin-top: 20px;
+    padding-top: 30px;
 }

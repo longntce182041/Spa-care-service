@@ -27,7 +27,7 @@ public class AddInventoryServlet extends HttpServlet {
         if (productDAO.productExists(productId)) {
             Inventory inventory = new Inventory(0, productId, staffId, quantity, type, image_url);
             inventoryDAO.addInventory(inventory);
-            response.sendRedirect("Staffdashboard.jsp"); // Quay lại trang dashboard
+            response.sendRedirect("StaffWarehouse.jsp"); // Quay lại trang dashboard
         } else {
             // Nếu product_id không tồn tại, hiển thị thông báo lỗi
             response.sendRedirect("add_inventory.jsp?error=Product ID does not exist");

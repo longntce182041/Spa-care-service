@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="css/jquery.timepicker.css">
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/staffdashboard.css"> <!-- Liên kết tệp CSS mới -->
+    <link rel="stylesheet" href="css/staffwarehouse.css"> <!-- Liên kết tệp CSS mới -->
 </head>
 <body>
     <div class="container">
@@ -40,7 +40,7 @@
             <label for="image_url">Images URL:</label>
             <input type="text" id="image_url" name="image_url" required><br>
             <button type="submit" class="btn btn-primary">Import</button>
-            <a href="Staffdashboard.jsp" class="btn btn-secondary">Cancel</a>
+            <a href="StaffWarehouse.jsp" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </body>
