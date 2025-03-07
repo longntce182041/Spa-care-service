@@ -1,9 +1,11 @@
 package Model;
 
 public class OrderDetail {
+
     private int orderDetailId;
     private int orderId;
     private int productId;
+    private int serviceId;
     private int quantity;
     private double price;
 
@@ -30,6 +32,14 @@ public class OrderDetail {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public int getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(int serviceId) {
+        this.serviceId = serviceId;
     }
 
     public int getQuantity() {

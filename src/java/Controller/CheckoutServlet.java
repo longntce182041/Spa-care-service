@@ -23,6 +23,7 @@ public class CheckoutServlet extends HttpServlet {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
         if (cart == null || cart.isEmpty()) {
+            System.out.println("Cart is empty or null");
             response.sendRedirect("Shop.jsp");
             return;
         }
@@ -35,10 +36,19 @@ public class CheckoutServlet extends HttpServlet {
 
         // Tạo đối tượng Order
         Order order = new Order();
-        order.setCustomerId(1); // Giả sử customer_id là 1, bạn có thể thay đổi theo logic của bạn
         order.setTotalPrice(cart.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum());
         order.setStatus("Pending");
         order.setPromotionId(null); // Giả sử không có promotion, bạn có thể thay đổi theo logic của bạn
+        order.setUserId(1); // Giả sử user_id là 1, bạn có thể thay đổi theo logic của bạn
+        order.setProductId(cart.get(0).getProduct().getProductId()); // Lấy product_id từ sản phẩm đầu tiên trong giỏ hàng
+        order.setName(name);
+        order.setPhone(phone);
+        order.setEmail(email);
+        order.setAddress(address);
+        order.setPaymentMethod(paymentMethod);
+
+        // In ra console để kiểm tra
+        System.out.println("Order: " + order);
 
         // Tạo danh sách OrderDetail từ giỏ hàng
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -50,9 +60,24 @@ public class CheckoutServlet extends HttpServlet {
             orderDetails.add(orderDetail);
         }
 
+        // In ra console để kiểm tra
+        for (OrderDetail detail : orderDetails) {
+            System.out.println("OrderDetail: " + detail);
+        }
+
         // Lưu thông tin đơn hàng và các mục đơn hàng vào cơ sở dữ liệu
         OrderDAO orderDAO = new OrderDAO();
         int orderId = orderDAO.saveOrder(order, orderDetails);
+
+        // Kiểm tra orderId
+        System.out.println("Order ID: " + orderId);
+
+        // Nếu orderId là 0, có nghĩa là lưu thông tin đơn hàng không thành công
+        if (orderId == 0) {
+            System.out.println("Failed to save order");
+            response.sendRedirect("Shop.jsp");
+            return;
+        }
 
         // Xóa giỏ hàng sau khi đặt hàng thành công
         session.removeAttribute("cart");
@@ -60,11 +85,6 @@ public class CheckoutServlet extends HttpServlet {
 
         // Chuyển thông tin đơn hàng đến trang xác nhận đơn hàng
         request.setAttribute("orderId", orderId);
-        request.setAttribute("name", name);
-        request.setAttribute("address", address);
-        request.setAttribute("phone", phone);
-        request.setAttribute("email", email);
-        request.setAttribute("paymentMethod", paymentMethod);
 
         // Chuyển hướng đến trang xác nhận đơn hàng
         request.getRequestDispatcher("OrderConfirmation.jsp").forward(request, response);

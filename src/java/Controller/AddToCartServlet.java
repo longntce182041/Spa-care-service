@@ -17,6 +17,10 @@ import java.util.List;
 public class AddToCartServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int productId = Integer.parseInt(request.getParameter("productId"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
@@ -45,6 +49,9 @@ public class AddToCartServlet extends HttpServlet {
 
         session.setAttribute("cart", cart);
         session.setAttribute("cartCount", cart.size());
-        response.sendRedirect("Cart.jsp");
+
+        // Trả về số lượng sản phẩm trong giỏ hàng
+        response.setContentType("application/json");
+        response.getWriter().write("{\"cartCount\": " + cart.size() + "}");
     }
 }

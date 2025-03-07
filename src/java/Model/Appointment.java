@@ -5,16 +5,16 @@ import java.sql.Timestamp;
 public class Appointment {
 
     private int appointmentId;
-    private int customerId;
+    private int userId; // Thêm thuộc tính userId
     private int petId;
     private int serviceId;
     private int staffId;
     private Timestamp appointmentDate;
     private String status;
 
-    public Appointment(int appointmentId, int customerId, int petId, int serviceId, int staffId, Timestamp appointmentDate, String status) {
+    public Appointment(int appointmentId, int userId, int petId, int serviceId, int staffId, Timestamp appointmentDate, String status) {
         this.appointmentId = appointmentId;
-        this.customerId = customerId;
+        this.userId = userId; // Khởi tạo thuộc tính userId
         this.petId = petId;
         this.serviceId = serviceId;
         this.staffId = staffId;
@@ -31,12 +31,12 @@ public class Appointment {
         this.appointmentId = appointmentId;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getPetId() {

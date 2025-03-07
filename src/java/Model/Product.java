@@ -7,18 +7,24 @@ public class Product {
     private double price;
     private int stockQuantity;
     private String image_url;
+    private int categoryId;
 
-    public Product(int productId, String name, String description, double price, int stockQuantity, String image_url) {
+    // Constructor mặc định
+    public Product() {
+    }
+
+    // Constructor với các tham số
+    public Product(int productId, String name, String description, double price, int stockQuantity, String image_url, int categoryId) {
         this.productId = productId;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.image_url = image_url;
+        this.categoryId = categoryId;
     }
 
-    // Getters and Setters
-
+    // Getters và setters
     public int getProductId() {
         return productId;
     }
@@ -63,7 +69,15 @@ public class Product {
         return image_url;
     }
 
-    public void setimage_url(String image_url) {
+    public void setimage_url(String imageUrl) {
         this.image_url = image_url;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 }

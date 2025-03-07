@@ -21,7 +21,7 @@ public class AppointmentDAO {
             while (rs.next()) {
                 list.add(new Appointment(
                         rs.getInt("appointment_id"),
-                        rs.getInt("customer_id"),
+                        rs.getInt("user_id"), // Lấy thông tin user_id
                         rs.getInt("pet_id"),
                         rs.getInt("service_id"),
                         rs.getInt("staff_id"),
