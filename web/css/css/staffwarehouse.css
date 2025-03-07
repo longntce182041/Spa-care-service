@@ -1,0 +1,95 @@
+/* Đặt màu nền và kiểu chữ cho toàn bộ trang */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f0f8f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Đặt kiểu chữ và căn giữa cho tiêu đề */
+h2 {
+    text-align: center;
+    color: #2e8b57;
+    margin-top: 20px;
+    font-size: 2.5em;
+}
+
+/* Đặt kiểu cho container */
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+/* Đặt kiểu cho các nút */
+.actions {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #2e8b57;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #276a45;
+}
+
+/* Đặt kiểu cho bảng */
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.inventory-table thead tr {
+    background-color: #2e8b57;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.inventory-table th, .inventory-table td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.inventory-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.inventory-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.inventory-table tbody tr:last-of-type {
+    border-bottom: 2px solid #2e8b57;
+}
+
+.inventory-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.inventory-table img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 5px;
+}

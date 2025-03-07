@@ -1,0 +1,87 @@
+/* Định dạng chung */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container chính */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề trang */
+h1 {
+    color: #007bff;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Định dạng danh sách nhóm */
+.list-group {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Mục trong danh sách */
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    padding: 15px 20px;
+    font-size: 16px;
+}
+
+/* Tô màu xen kẽ giữa các mục */
+.list-group-item:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+/* Tiêu đề nhỏ */
+h6 {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Văn bản phụ */
+small.text-muted {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Tổng tiền */
+.list-group-item strong {
+    font-size: 18px;
+    color: #28a745;
+}
+
+/* Ảnh sản phẩm */
+.list-group-item img {
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Nút điều hướng */
+.btn-primary {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+    margin-bottom: 50px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
