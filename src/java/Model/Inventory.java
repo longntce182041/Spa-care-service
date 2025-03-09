@@ -1,21 +1,22 @@
 package Model;
 
 public class Inventory {
-
     private int inventoryId;
     private int productId;
     private int staffId;
     private int quantity;
     private String type;
-    private String image_url;
+    private String imageUrl;
+    private int categoryId;
 
-    public Inventory(int inventoryId, int productId, int staffId, int quantity, String type, String image_url) {
+    public Inventory(int inventoryId, int productId, int staffId, int quantity, String type, String imageUrl, int categoryId) {
         this.inventoryId = inventoryId;
         this.productId = productId;
         this.staffId = staffId;
         this.quantity = quantity;
         this.type = type;
-        this.image_url = image_url;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
     }
 
     // Getters and Setters
@@ -59,11 +60,19 @@ public class Inventory {
         this.type = type;
     }
 
-    public String getimage_url() {
-        return image_url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setimage_url(String image_url) {
-        this.image_url = image_url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 }

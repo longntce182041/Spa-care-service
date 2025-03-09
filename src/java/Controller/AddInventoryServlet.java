@@ -21,16 +21,17 @@ public class AddInventoryServlet extends HttpServlet {
         int staffId = Integer.parseInt(request.getParameter("staffId"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String type = request.getParameter("type");
-        String image_url = request.getParameter("image_url");
+        String imageUrl = request.getParameter("image_url");
+        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 
         // Kiểm tra sự tồn tại của product_id trong bảng Products
         if (productDAO.productExists(productId)) {
-            Inventory inventory = new Inventory(0, productId, staffId, quantity, type, image_url);
+            Inventory inventory = new Inventory(0, productId, staffId, quantity, type, imageUrl, categoryId);
             inventoryDAO.addInventory(inventory);
             response.sendRedirect("StaffWarehouse.jsp"); // Quay lại trang dashboard
         } else {
             // Nếu product_id không tồn tại, hiển thị thông báo lỗi
-            response.sendRedirect("add_inventory.jsp?error=Product ID does not exist");
+            response.sendRedirect("StaffWarehouse.jsp?error=Product ID does not exist");
         }
     }
 }

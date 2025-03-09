@@ -25,7 +25,8 @@ public class InventoryDAO {
                         rs.getInt("staff_id"),
                         rs.getInt("quantity"),
                         rs.getString("type"),
-                        rs.getString("image_url")
+                        rs.getString("image_url"),
+                        rs.getInt("category_id")
                 ));
             }
         } catch (SQLException e) {
@@ -46,8 +47,50 @@ public class InventoryDAO {
         return list;
     }
 
+    public Inventory getInventoryById(int inventoryId) {
+        Inventory inventory = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.getConnection();
+            String sql = "SELECT * FROM Inventory WHERE inventory_id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, inventoryId);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                inventory = new Inventory(
+                        rs.getInt("inventory_id"),
+                        rs.getInt("product_id"),
+                        rs.getInt("staff_id"),
+                        rs.getInt("quantity"),
+                        rs.getString("type"),
+                        rs.getString("image_url"),
+                        rs.getInt("category_id")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                DBConnect.closeConnection(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return inventory;
+    }
+
     public void addInventory(Inventory inventory) {
-        String sql = "INSERT INTO Inventory (product_id, staff_id, quantity, type, image_url) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Inventory (product_id, staff_id, quantity, type, image_url, category_id) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -58,7 +101,8 @@ public class InventoryDAO {
             stmt.setInt(2, inventory.getStaffId());
             stmt.setInt(3, inventory.getQuantity());
             stmt.setString(4, inventory.getType());
-            stmt.setString(5, inventory.getimage_url());
+            stmt.setString(5, inventory.getImageUrl());
+            stmt.setInt(6, inventory.getCategoryId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -144,7 +188,7 @@ public class InventoryDAO {
     }
 
     public void updateInventory(Inventory inventory) {
-        String sql = "UPDATE Inventory SET product_id = ?, staff_id = ?, quantity = ?, type = ?, image_url = ? WHERE inventory_id = ?";
+        String sql = "UPDATE Inventory SET product_id = ?, staff_id = ?, quantity = ?, type = ?, image_url = ?, category_id = ? WHERE inventory_id = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -155,8 +199,9 @@ public class InventoryDAO {
             stmt.setInt(2, inventory.getStaffId());
             stmt.setInt(3, inventory.getQuantity());
             stmt.setString(4, inventory.getType());
-            stmt.setString(5, inventory.getimage_url());
-            stmt.setInt(6, inventory.getInventoryId());
+            stmt.setString(5, inventory.getImageUrl());
+            stmt.setInt(6, inventory.getCategoryId());
+            stmt.setInt(7, inventory.getInventoryId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

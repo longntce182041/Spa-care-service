@@ -21,9 +21,10 @@ public class UpdateInventoryServlet extends HttpServlet {
         int staffId = Integer.parseInt(request.getParameter("staffId"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String type = request.getParameter("type");
-        String image_url = request.getParameter("image_url");
+        String imageUrl = request.getParameter("image_url");
+        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 
-        Inventory inventory = new Inventory(inventoryId, productId, staffId, quantity, type, image_url);
+        Inventory inventory = new Inventory(inventoryId, productId, staffId, quantity, type, imageUrl, categoryId);
         inventoryDAO.updateInventory(inventory);
 
         response.sendRedirect("StaffWarehouse.jsp");

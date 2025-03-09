@@ -46,6 +46,10 @@
                         <label class="custom-control-label" for="qr">QR Code/Banking</label>
                     </div>
                 </div>
+                <div id="qr-code-container" style="display: none;">
+                    <h4 class="mb-3">Scan this QR code to pay with MOMO</h4>
+                    <img id="qr-code" src="images/QRcode.jpg" alt="MOMO QR Code">
+                </div>
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Place Order</button>
             </form>
         </div>
@@ -84,3 +88,16 @@
 </div>
 
 <jsp:include page="footer.jsp" />
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('input[name="paymentMethod"]').change(function () {
+            if ($(this).val() === 'QR') {
+                $('#qr-code-container').show();
+            } else {
+                $('#qr-code-container').hide();
+            }
+        });
+    });
+</script>

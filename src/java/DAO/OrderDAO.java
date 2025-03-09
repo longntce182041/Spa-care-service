@@ -72,9 +72,15 @@ public class OrderDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (orderStmt != null) orderStmt.close();
-                if (orderDetailStmt != null) orderDetailStmt.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (orderStmt != null) {
+                    orderStmt.close();
+                }
+                if (orderDetailStmt != null) {
+                    orderDetailStmt.close();
+                }
                 DBConnect.closeConnection(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -112,8 +118,12 @@ public class OrderDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
                 DBConnect.closeConnection(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -157,8 +167,12 @@ public class OrderDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
                 DBConnect.closeConnection(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -166,4 +180,75 @@ public class OrderDAO {
         }
         return order;
     }
+
+    public List<Order> getAllOrders() {
+        List<Order> orderList = new ArrayList<>();
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM Orders");
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setOrderDate(rs.getDate("order_date"));
+                order.setTotalPrice(rs.getDouble("total_price"));
+                order.setStatus(rs.getString("status"));
+                order.setPromotionId(rs.getInt("promotion_id"));
+                order.setUserId(rs.getInt("user_id"));
+                order.setProductId(rs.getInt("product_id"));
+                order.setName(rs.getString("name"));
+                order.setPhone(rs.getString("phone"));
+                order.setEmail(rs.getString("email"));
+                order.setAddress(rs.getString("address"));
+                order.setPaymentMethod(rs.getString("payment_method"));
+                orderList.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                DBConnect.closeConnection(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return orderList;
+    }
+
+    public void updateOrderStatus(int orderId, String status) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = DBConnect.getConnection();
+            String sql = "UPDATE Orders SET status = ? WHERE order_id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, status);
+            stmt.setInt(2, orderId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                DBConnect.closeConnection(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
