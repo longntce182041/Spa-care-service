@@ -58,7 +58,7 @@ public class SendOTPServlet extends HttpServlet {
             updateStmt.executeUpdate();
 
             // Gửi OTP qua email
-            EmailUtil.sendEmail(email, String.valueOf(otpCode));
+            EmailUtil.sendOTPEmail(email, String.valueOf(otpCode));
 
             // Điều hướng đến trang xác thực
             response.sendRedirect("verification.jsp?email=" + email);
