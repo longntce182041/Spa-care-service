@@ -1,4 +1,4 @@
-package Controller;
+package Model;
 
 import Controller.*;
 import jakarta.mail.Authenticator;

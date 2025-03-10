@@ -22,13 +22,13 @@ import java.sql.SQLException;
  *
  * @author
  */
-@WebServlet(name = "ChangePasswordServlet", urlPatterns = { "/ChangePasswordServlet" })
+@WebServlet(name = "ChangePasswordServlet", urlPatterns = {"/ChangePasswordServlet"})
 public class ChangePasswordServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession(false);
             String username = (session != null) ? (String) session.getAttribute("username") : null;
             if (username == null) {

@@ -1,7 +1,7 @@
 package Controller;
 
 import ConnectDB.DBConnect;
-import Controller.EmailUtil;
+import Model.EmailUtil;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 import java.util.logging.Level;
@@ -28,6 +29,8 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
+        String fullname = request.getParameter("fullname");
+        String address = request.getParameter("address");
 
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -41,15 +44,21 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
+            // Generate new user_id in the format US01
+            String newUserId = generateNewUserId(conn);
+
             // Mã hóa mật khẩu (Bcrypt nên được dùng thay thế)
             String hashedPassword = Integer.toHexString(password.hashCode());
 
-            String sql = "INSERT INTO Users (username, password, email, phone) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO Users (user_id, username, password, email, phone, fullname, address, role) VALUES (?, ?, ?, ?, ?, ?, ?,'customer')";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, username);
-            pstmt.setString(2, hashedPassword);
-            pstmt.setString(3, email);
-            pstmt.setString(4, phone);
+            pstmt.setString(1, newUserId);
+            pstmt.setString(2, username);
+            pstmt.setString(3, hashedPassword);
+            pstmt.setString(4, email);
+            pstmt.setString(5, phone);
+            pstmt.setString(6, fullname);
+            pstmt.setString(7, address);
 
             int rowsInserted = pstmt.executeUpdate();
             if (rowsInserted > 0) {
@@ -88,5 +97,19 @@ public class RegisterServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String generateNewUserId(Connection conn) throws SQLException {
+        String newUserId = "US001";
+        String sql = "SELECT TOP 1 user_id FROM Users ORDER BY user_id DESC";
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                String lastUserId = rs.getString("user_id");
+                int lastIdNumber = Integer.parseInt(lastUserId.substring(2));
+                int newIdNumber = lastIdNumber + 1;
+                newUserId = String.format("US%03d", newIdNumber);
+            }
+        }
+        return newUserId;
     }
 }

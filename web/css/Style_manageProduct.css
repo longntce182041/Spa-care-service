@@ -1,0 +1,156 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 2, 2025, 2:00:24 AM
+    Author     : Nguyen Thanh Long - CE182041 
+*/
+
+#sidebar {
+    position: fixed;
+    top: 20px;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background: #343a40;
+    color: #fff;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+#content {
+    margin-left: 250px;
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.navbar {
+    background: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+    margin-bottom: 0;
+}
+
+.navbar-brand {
+    color: #fff;
+}
+
+.navbar-nav .nav-link {
+    color: #fff;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #00bd56;
+}
+
+.btn-light {
+    background: #00bd56;
+    color: #fff;
+}
+
+.btn-light:hover {
+    background: #fff;
+    color: #00bd56;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.card-body .btn {
+    margin-top: 10px;
+}
+
+.content-box {
+    margin-top: 20px;
+    padding-top: 30px;
+}
+
+body {
+    background: url('images/space-time-continuum.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+}
+
+.navbar navbar-expand-lg navbar-dark bg-dark {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+td {
+    text-align: center;
+    color: #000;
+}
+
+tbody {
+    text-align: justify-all;
+}
+
+/* Table Styles */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #343a40;
+    color: #fff;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6;
+}
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+#addProductModal {
+    background-color:#343a40;
+    color: black;
+
+}
+#updateProductModal {
+    background-color:#343a40;
+    color: black;
+
+}

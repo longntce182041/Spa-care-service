@@ -6,7 +6,7 @@ package Controller;
 
 
 
-import Controller.EmailUtil;
+import Model.EmailUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

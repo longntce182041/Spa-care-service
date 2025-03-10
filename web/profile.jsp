@@ -25,7 +25,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/Style_profile.css">
-    
 </head>
 <body>
     <div class="container-fluid">
@@ -67,7 +66,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="changePassword.jsp">
                                 <i class="fa fa-user"></i>
-                                change Password
+                                Change Password
                             </a>
                         </li>
                     </ul>

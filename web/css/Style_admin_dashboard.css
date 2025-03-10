@@ -1,0 +1,112 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Feb 27, 2025, 9:04:38 PM
+    Author     : Nguyen Thanh Long - CE182041 
+*/
+
+/* Sidebar styles */
+#sidebar {
+    background: #343a40;
+    color: #fff;
+    min-height: 100vh;
+}
+
+#sidebar .navbar-brand {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#sidebar .components {
+    padding:0px;
+}
+
+#sidebar .components li {
+    padding: 10px;
+}
+
+#sidebar .components li a {
+    color: #adb5bd;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    transition: background 0.3s, color 0.3s;
+}
+
+#sidebar .components li a:hover, #sidebar .components li.active a {
+    background: #00bd56;
+    color: #fff;
+}
+
+/* Main content styles */
+#content {
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.navbar {
+    margin-bottom:0px;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.card-body .btn {
+    margin-top: 10px;
+}
+.content-box{
+    margin-top: 20px;
+    padding-top: 30px;
+}
+
+ body {
+                background: url('images/space-time-continuum.jpg') no-repeat center center fixed;
+                background-size: cover;
+                color: #fff;
+            }
+            .navbar {
+                background: rgba(0, 0, 0, 0.8);
+            }
+            .navbar-brand {
+                color: #fff;
+            }
+            .navbar-nav .nav-link {
+                color: #fff;
+            }
+            .navbar-nav .nav-link:hover {
+                color: #00bd56;
+            }
+            .card {
+                background: rgba(0, 0, 0, 0.8);
+                border: none;
+            }
+            .card-header {
+                background: rgba(0, 0, 0, 0.8);
+                border-bottom: 1px solid #00bd56;
+            }
+            .card-body {
+                color: #fff;
+            }
+            .btn-light {
+                background: #00bd56;
+                color: #fff;
+            }
+            .btn-light:hover {
+                background: #fff;
+                color: #00bd56;
+            }
