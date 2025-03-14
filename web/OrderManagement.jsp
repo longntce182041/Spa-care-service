@@ -29,6 +29,10 @@
                             <th>Order ID</th>
                             <th>Date</th>
                             <th>Total Amount</th>
+                            
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -43,6 +47,10 @@
                             <td><%= order.getOrderId()%></td>
                             <td><%= order.getOrderDate()%></td>
                             <td>$<%= order.getTotalPrice()%></td>
+                            
+                            <td><%= order.getName() %></td>
+                            <td><%= order.getPhone() %></td>
+                            <td><%= order.getEmail() %></td>
                             <td id="orderStatus<%= order.getOrderId() %>"><%= order.getStatus()%></td>
                             <td>
                                 <button class="btn btn-success mt-2" onclick="updateOrderStatus(<%= order.getOrderId() %>, 'Confirmed')">Confirm</button>

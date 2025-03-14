@@ -16,6 +16,7 @@ public class ConfirmAppointmentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int appointmentId = Integer.parseInt(request.getParameter("appointmentId"));
         appointmentDAO.confirmAppointment(appointmentId);
-        response.sendRedirect("appointment.jsp"); // Quay lại trang quản lý lịch hẹn
+        response.setContentType("text/plain");
+        response.getWriter().write("Confirmed");
     }
 }

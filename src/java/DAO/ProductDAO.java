@@ -27,7 +27,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id")
                 ));
             }
         } catch (SQLException e) {
@@ -70,7 +70,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id")
                 );
             }
         } catch (SQLException e) {
@@ -181,7 +181,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id")
                 ));
             }
         } catch (SQLException e) {
@@ -224,7 +224,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id")
                 );
                 productList.add(product);
             }

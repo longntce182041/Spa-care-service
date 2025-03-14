@@ -21,7 +21,6 @@
     </head>
     <body>
         <div class="container">
-            <h2>Appointment Management</h2>
             <h3>View Appointment Schedule</h3>
             <table class="appointment-table table table-striped table-hover">
                 <thead class="thead-dark">
@@ -42,14 +41,14 @@
                         List<Appointment> appointmentList = dao.getAllAppointments();
                         for (Appointment appointment : appointmentList) {
                     %>
-                    <tr>
+                    <tr id="appointment-<%= appointment.getAppointmentId() %>">
                         <td><%= appointment.getAppointmentId()%></td>
                         <td><%= appointment.getUserId()%></td>
                         <td><%= appointment.getPetId()%></td>
                         <td><%= appointment.getServiceId()%></td>
                         <td><%= appointment.getStaffId()%></td>
                         <td><%= appointment.getAppointmentDate()%></td>
-                        <td><%= appointment.getStatus()%></td>
+                        <td id="status-<%= appointment.getAppointmentId() %>"><%= appointment.getStatus()%></td>
                         <td class="action-buttons">
                             <button class="btn btn-primary" onclick="confirmAppointment('<%= appointment.getAppointmentId()%>')">Confirm</button>
                             <button class="btn btn-secondary" onclick="cancelAppointment('<%= appointment.getAppointmentId()%>')">Cancel</button>
@@ -59,25 +58,45 @@
                     <% }%>
                 </tbody>
             </table>
-            <a href="index.jsp" class="btn btn-primary">Back to Homepage</a>
         </div>
 
         <script>
             function confirmAppointment(appointmentId) {
                 if (confirm('Are you sure you want to confirm this appointment?')) {
-                    window.location.href = 'ConfirmAppointmentServlet?appointmentId=' + appointmentId;
+                    $.ajax({
+                        url: 'ConfirmAppointmentServlet',
+                        method: 'GET',
+                        data: { appointmentId: appointmentId },
+                        success: function(response) {
+                            $('#status-' + appointmentId).text('Confirmed');
+                        }
+                    });
                 }
             }
 
             function cancelAppointment(appointmentId) {
                 if (confirm('Are you sure you want to cancel this appointment?')) {
-                    window.location.href = 'CancelAppointmentServlet?appointmentId=' + appointmentId;
+                    $.ajax({
+                        url: 'CancelAppointmentServlet',
+                        method: 'GET',
+                        data: { appointmentId: appointmentId },
+                        success: function(response) {
+                            $('#status-' + appointmentId).text('Cancelled');
+                        }
+                    });
                 }
             }
 
             function deleteAppointment(appointmentId) {
                 if (confirm('Are you sure you want to delete this appointment?')) {
-                    window.location.href = 'DeleteAppointmentServlet?appointmentId=' + appointmentId;
+                    $.ajax({
+                        url: 'DeleteAppointmentServlet',
+                        method: 'GET',
+                        data: { appointmentId: appointmentId },
+                        success: function(response) {
+                            $('#appointment-' + appointmentId).remove();
+                        }
+                    });
                 }
             }
         </script>

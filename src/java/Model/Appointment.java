@@ -5,16 +5,16 @@ import java.sql.Timestamp;
 public class Appointment {
 
     private int appointmentId;
-    private int userId; // Thêm thuộc tính userId
-    private int petId;
-    private int serviceId;
-    private int staffId;
+    private int userId;
+    private String petId; // Thay đổi kiểu dữ liệu thành String
+    private String serviceId; // Thay đổi kiểu dữ liệu thành String
+    private String staffId; // Thay đổi kiểu dữ liệu thành String
     private Timestamp appointmentDate;
     private String status;
 
-    public Appointment(int appointmentId, int userId, int petId, int serviceId, int staffId, Timestamp appointmentDate, String status) {
+    public Appointment(int appointmentId, int userId, String petId, String serviceId, String staffId, Timestamp appointmentDate, String status) {
         this.appointmentId = appointmentId;
-        this.userId = userId; // Khởi tạo thuộc tính userId
+        this.userId = userId;
         this.petId = petId;
         this.serviceId = serviceId;
         this.staffId = staffId;
@@ -39,27 +39,27 @@ public class Appointment {
         this.userId = userId;
     }
 
-    public int getPetId() {
+    public String getPetId() {
         return petId;
     }
 
-    public void setPetId(int petId) {
+    public void setPetId(String petId) {
         this.petId = petId;
     }
 
-    public int getServiceId() {
+    public String getServiceId() {
         return serviceId;
     }
 
-    public void setServiceId(int serviceId) {
+    public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
     }
 
-    public int getStaffId() {
+    public String getStaffId() {
         return staffId;
     }
 
-    public void setStaffId(int staffId) {
+    public void setStaffId(String staffId) {
         this.staffId = staffId;
     }
 

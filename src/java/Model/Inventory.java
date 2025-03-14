@@ -3,13 +3,13 @@ package Model;
 public class Inventory {
     private int inventoryId;
     private int productId;
-    private int staffId;
+    private String staffId; // Thay đổi kiểu dữ liệu thành String
     private int quantity;
     private String type;
     private String imageUrl;
-    private int categoryId;
+    private String categoryId; // Thay đổi kiểu dữ liệu thành String
 
-    public Inventory(int inventoryId, int productId, int staffId, int quantity, String type, String imageUrl, int categoryId) {
+    public Inventory(int inventoryId, int productId, String staffId, int quantity, String type, String imageUrl, String categoryId) {
         this.inventoryId = inventoryId;
         this.productId = productId;
         this.staffId = staffId;
@@ -36,11 +36,11 @@ public class Inventory {
         this.productId = productId;
     }
 
-    public int getStaffId() {
+    public String getStaffId() {
         return staffId;
     }
 
-    public void setStaffId(int staffId) {
+    public void setStaffId(String staffId) {
         this.staffId = staffId;
     }
 
@@ -68,11 +68,11 @@ public class Inventory {
         this.imageUrl = imageUrl;
     }
 
-    public int getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(int categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 }

@@ -22,11 +22,11 @@ public class InventoryDAO {
                 list.add(new Inventory(
                         rs.getInt("inventory_id"),
                         rs.getInt("product_id"),
-                        rs.getInt("staff_id"),
+                        rs.getString("staff_id"), // Thay đổi kiểu dữ liệu thành String
                         rs.getInt("quantity"),
                         rs.getString("type"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id") // Thay đổi kiểu dữ liệu thành String
                 ));
             }
         } catch (SQLException e) {
@@ -64,11 +64,11 @@ public class InventoryDAO {
                 inventory = new Inventory(
                         rs.getInt("inventory_id"),
                         rs.getInt("product_id"),
-                        rs.getInt("staff_id"),
+                        rs.getString("staff_id"), // Thay đổi kiểu dữ liệu thành String
                         rs.getInt("quantity"),
                         rs.getString("type"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id") // Thay đổi kiểu dữ liệu thành String
                 );
             }
         } catch (SQLException e) {
@@ -98,11 +98,11 @@ public class InventoryDAO {
             conn = DBConnect.getConnection();
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, inventory.getProductId());
-            stmt.setInt(2, inventory.getStaffId());
+            stmt.setString(2, inventory.getStaffId()); // Thay đổi kiểu dữ liệu thành String
             stmt.setInt(3, inventory.getQuantity());
             stmt.setString(4, inventory.getType());
             stmt.setString(5, inventory.getImageUrl());
-            stmt.setInt(6, inventory.getCategoryId());
+            stmt.setString(6, inventory.getCategoryId()); // Thay đổi kiểu dữ liệu thành String
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -196,11 +196,11 @@ public class InventoryDAO {
             conn = DBConnect.getConnection();
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, inventory.getProductId());
-            stmt.setInt(2, inventory.getStaffId());
+            stmt.setString(2, inventory.getStaffId()); // Thay đổi kiểu dữ liệu thành String
             stmt.setInt(3, inventory.getQuantity());
             stmt.setString(4, inventory.getType());
             stmt.setString(5, inventory.getImageUrl());
-            stmt.setInt(6, inventory.getCategoryId());
+            stmt.setString(6, inventory.getCategoryId()); // Thay đổi kiểu dữ liệu thành String
             stmt.setInt(7, inventory.getInventoryId());
             stmt.executeUpdate();
         } catch (SQLException e) {
