@@ -1,12 +1,13 @@
 <%-- 
     Document   : ManageProducts
     Created on : Feb 27, 2025, 5:29:56 AM
-    Author     : Nguyen Thanh Long - CE182041 
+    Author     : Nguyen Thanh Long CE182041 
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="Controller.Product" %>
+<%@ page import="Model.Product" %>
+<%@ page import="Model.Category" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
@@ -15,7 +16,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Admin Dashboard</title>
+        <title>Admin Dashboard - Manage Products</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/animate.css">
         <link rel="stylesheet" href="css/owl.carousel.min.css">
@@ -27,6 +28,74 @@
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/Style_admin_dashboard.css">
         <link rel="stylesheet" href="css/Style_manageProduct.css">
+        <style>
+            .modal-content {
+                background-color: #fff;
+                border-radius: 10px;
+                padding: 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .modal-header {
+                border-bottom: none;
+                position: relative;
+            }
+
+            .modal-header .close {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+                font-size: 1.5rem;
+                color: #000;
+                opacity: 0.5;
+            }
+
+            .modal-header .close:hover {
+                color: #000;
+                opacity: 1;
+            }
+
+            .modal-title {
+                font-size: 1.75rem;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .modal-body img {
+                max-width: 300px;
+                height: auto;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+
+            .modal-body p {
+                font-size: 1.1rem;
+                color: #555;
+                margin-bottom: 10px;
+            }
+
+            .modal-body strong {
+                color: #333;
+            }
+
+            .modal-footer {
+                border-top: none;
+                text-align: right;
+            }
+
+            .modal-footer .btn {
+                background-color: #28a745;
+                color: #fff;
+                border-radius: 5px;
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+
+            .modal-footer .btn:hover {
+                background-color: #218838;
+                color: #fff;
+            }
+        </style>
     </head>
     <body>
         <!-- New Navbar with Icon and Search Box -->
@@ -36,10 +105,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
             </div>
         </nav>
         <div class="wrapper d-flex align-items-stretch">
@@ -54,13 +119,13 @@
                             <a href="ViewProductServlet">Manage Products</a>
                         </li>
                         <li>
-                            <a href="ManageCategories.jsp">Manage Categories</a>
+                            <a href="ManageCategoryServlet">Manage Categories</a>
                         </li>
                         <li>
-                            <a href="ManageOrders.jsp">Manage Orders</a>
+                            <a href="OrderManagement.jsp">Manage Orders</a>
                         </li>
                         <li>
-                            <a href="ManageUsers.jsp">Manage Users</a>
+                            <a href="ManageCustomerServlet">Manage Users</a>
                         </li>
                         <li>
                             <a href="ManageStaff.jsp">Manage Staff</a>
@@ -90,7 +155,7 @@
                         </ul>
                     </div>
                 </nav>
-                <h2 class="mb-4">Manage Products</h2>
+                <h2 class="mb-4"></h2>
                 <div class="container">
                     <c:choose>
                         <c:when test="${not empty products}">
@@ -101,7 +166,7 @@
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>Images</th>
-                                            <th>Products Name</th>
+                                            <th>Product Name</th>
                                             <th>Price</th>
                                             <th>Inventory</th>
                                             <th>Actions</th>
@@ -111,31 +176,32 @@
                                         <c:catch var="error">
                                             <c:forEach var="product" items="${products}">
                                                 <tr>
-                                                    <td><img src="<c:out value="${product.imageUrl}"/>" alt="<c:out value="${product.name}"/>" class="img-thumbnail" style="width: 100px; height: auto;"></td>
+                                                    <td><img src="<c:out value="${product.image_url}"/>" alt="<c:out value="${product.name}"/>" class="img-thumbnail" style="width: 100px; height: auto;"></td>
                                                     <td><c:out value="${product.name}"/></td>
                                                     <td><c:out value="${product.price}"/> VND</td>
                                                     <td><c:out value="${product.stockQuantity}"/></td>
                                                     <td>
                                                         <button class="btn btn-info detail-button" 
-                                                                data-name="<c:out value="${product.name}"/>" 
-                                                                data-description="<c:out value="${product.description}"/>" 
-                                                                data-price="<c:out value="${product.price}"/> VND"
-                                                                data-stock="<c:out value="${product.stockQuantity}"/>" 
-                                                                data-image="<c:out value="${product.imageUrl}"/>">
-                                                            View detail
+                                                                data-name="<c:out value='${product.name}'/>" 
+                                                                data-description="<c:out value='${product.description}'/>" 
+                                                                data-price="<c:out value='${product.price}'/> VND"
+                                                                data-stock="<c:out value='${product.stockQuantity}'/>" 
+                                                                data-image="<c:out value='${product.image_url}'/>">
+                                                            View Detail
                                                         </button>
                                                         <button class="btn btn-warning update-button" 
-                                                                data-id="<c:out value="${product.id}"/>" 
-                                                                data-name="<c:out value="${product.name}"/>" 
-                                                                data-description="<c:out value="${product.description}"/>" 
-                                                                data-price="<c:out value="${product.price}"/> VND"
-                                                                data-stock="<c:out value="${product.stockQuantity}"/>" 
-                                                                data-image="<c:out value="${product.imageUrl}"/>">
+                                                                data-id="<c:out value='${product.productId}'/>" 
+                                                                data-name="<c:out value='${product.name}'/>" 
+                                                                data-description="<c:out value='${product.description}'/>" 
+                                                                data-price="<c:out value='${product.price}'/> VND"
+                                                                data-stock="<c:out value='${product.stockQuantity}'/>" 
+                                                                data-category="<c:out value='${product.categoryId}'/>"
+                                                                data-image="<c:out value='${product.image_url}'/>">
                                                             Update
                                                         </button>
                                                         <form action="ViewProductServlet" method="post" style="display:inline;">
                                                             <input type="hidden" name="action" value="delete">
-                                                            <input type="hidden" name="productId" value="<c:out value="${product.id}"/>">
+                                                            <input type="hidden" name="productId" value="<c:out value='${product.productId}'/>">
                                                             <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                                         </form>
                                                     </td>
@@ -143,8 +209,8 @@
                                             </c:forEach>
                                         </c:catch>
                                         <c:if test="${not empty error}">
-                                        <script>console.error("Lỗi khi render sản phẩm: ${error}");</script>
-                                    </c:if>
+                                            <script>console.error("Error rendering products: ${error}");</script>
+                                        </c:if>
                                     </tbody>
                                 </table>
                             </div>
@@ -183,6 +249,14 @@
                                     <div class="form-group">
                                         <label for="stockQuantity">Stock Quantity:</label>
                                         <input type="number" class="form-control" id="stockQuantity" name="stockQuantity" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="categoryId">Category:</label>
+                                        <select class="form-control" id="categoryId" name="categoryId" required>
+                                            <c:forEach var="cat" items="${categories}">
+                                                 <option value="${cat.category_id}">${cat.name}</option>
+                                            </c:forEach>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="imageUrl">Image URL:</label>
@@ -229,6 +303,14 @@
                                         <input type="number" class="form-control" id="updateStockQuantity" name="stockQuantity" required>
                                     </div>
                                     <div class="form-group">
+                                        <label for="updateCategoryId">Category:</label>
+                                        <select class="form-control" id="updateCategoryId" name="categoryId" required>
+                                            <c:forEach var="cat" items="${categories}">
+                                                <option value="${cat.category_id}">${cat.name}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="updateImageUrl">Image URL:</label>
                                         <input type="text" class="form-control" id="updateImageUrl" name="imageUrl" required>
                                     </div>
@@ -247,7 +329,7 @@
                     <div class="modal-content">
                         <span class="close">&times;</span>
                         <h2 id="modalTitle"></h2>
-                        <img id="modalImage" class="img-fluid">
+                        <img id="modalImage" class="img-fluid" style="width: 200px; height: auto;">
                         <p><strong>Describe:</strong> <span id="modalDescription"></span></p>
                         <p><strong>Price:</strong> <span id="modalPrice"></span></p>
                         <p><strong>Inventory:</strong> <span id="modalStock"></span></p>
@@ -288,8 +370,9 @@
                                 document.getElementById("updateProductId").value = this.getAttribute("data-id");
                                 document.getElementById("updateName").value = this.getAttribute("data-name");
                                 document.getElementById("updateDescription").value = this.getAttribute("data-description");
-                                document.getElementById("updatePrice").value = this.getAttribute("data-price");
+                                document.getElementById("updatePrice").value = this.getAttribute("data-price").replace(' VND', '');
                                 document.getElementById("updateStockQuantity").value = this.getAttribute("data-stock");
+                                document.getElementById("updateCategoryId").value = this.getAttribute("data-category");
                                 document.getElementById("updateImageUrl").value = this.getAttribute("data-image");
                                 $('#updateProductModal').modal('show');
                             } catch (error) {

@@ -1,6 +1,6 @@
 <%-- 
     Document   : ManageCustomer
-    Created on : Mar 4, 2025, 4:58:54 PM
+    Created on : Mar 4, 2025, 4:58:54 PM
     Author     : Nguyen Thanh Long - CE182041 
 --%>
 
@@ -50,7 +50,7 @@
                             <a href="ManageProductsServlet">Manage Products</a>
                         </li>
                         <li>
-                            <a href="ManageCategories.jsp">Manage Categories</a>
+                            <a href="ManageCategorỷevlet">Manage Categories</a>
                         </li>
                         <li>
                             <a href="ManageOrders.jsp">Manage Orders</a>
@@ -86,7 +86,7 @@
                         </ul>
                     </div>
                 </nav>
-                <h2 class="mb-4">Manage Customers</h2>
+                <h2 class="mb-4"></h2>
                 <div class="container">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
@@ -98,6 +98,7 @@
                                     <th>Full Name</th>
                                     <th>Address</th>
                                     <th>Phone</th>
+                                    <th>Role</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -114,6 +115,7 @@
                                     <td><%= customer.getFullname() %></td>
                                     <td><%= customer.getAddress() %></td>
                                     <td><%= customer.getPhone() %></td>
+                                    <td><%= customer.getRole() %></td>
                                     <td>
                                         <form action="ManageCustomerServlet" method="post" style="display:inline;">
                                             <input type="hidden" name="action" value="delete">
@@ -126,7 +128,8 @@
                                                 data-email="<%= customer.getEmail() %>" 
                                                 data-fullname="<%= customer.getFullname() %>" 
                                                 data-address="<%= customer.getAddress() %>" 
-                                                data-phone="<%= customer.getPhone() %>">
+                                                data-phone="<%= customer.getPhone() %>" 
+                                                data-role="<%= customer.getRole() %>">
                                             Update
                                         </button>
                                     </td>
@@ -136,7 +139,7 @@
                                     } else {
                                 %>
                                 <tr>
-                                    <td colspan="7">No customers found.</td>
+                                    <td colspan="8">No customers found.</td>
                                 </tr>
                                 <% } %>
                             </tbody>
@@ -180,6 +183,14 @@
                                 <label for="updatePhone">Phone:</label>
                                 <input type="text" class="form-control" id="updatePhone" name="phone" required>
                             </div>
+                            <div class="form-group">
+                                <label for="updateRole">Role:</label>
+                                <select class="form-control" id="updateRole" name="role" required>
+                                    <option value="customer">Customer</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="staff">Staff</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -200,6 +211,7 @@
                         document.getElementById("updateFullname").value = this.getAttribute("data-fullname");
                         document.getElementById("updateAddress").value = this.getAttribute("data-address");
                         document.getElementById("updatePhone").value = this.getAttribute("data-phone");
+                        document.getElementById("updateRole").value = this.getAttribute("data-role");
                         $('#updateCustomerModal').modal('show');
                     });
                 });

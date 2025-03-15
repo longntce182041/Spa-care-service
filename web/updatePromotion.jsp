@@ -5,7 +5,7 @@
 --%>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="Controller.Promotion" %>
+<%@ page import="Model.Promotion" %>
 <%
     Promotion promo = (Promotion) request.getAttribute("promotion");
     if (promo == null) {

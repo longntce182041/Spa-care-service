@@ -5,7 +5,7 @@
 --%>
 
 <%@ page import="java.util.List" %>
-<%@ page import="Controller.Promotion" %>
+<%@ page import="Model.Promotion" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
     <head>

@@ -16,55 +16,43 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- *
- * @author Nguyen Thanh Long - CE182041
+ * Servlet implementation class ManageCustomerServlet
  */
-@WebServlet(name = "ManageCustomerServlet", urlPatterns = {"/ManageCustomerServlet"})
+@WebServlet("/ManageCustomerServlet")
 public class ManageCustomerServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 1L;
+
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @see HttpServlet#HttpServlet()
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-//        List<Customer> customers = CustomerDAO.getAllCustomer();
-        List<User> customer = UserDAO.getAllCustomer();
-        request.setAttribute("customers", customer);
-        request.getRequestDispatcher("ManageCustomer.jsp").forward(request, response);
+    public ManageCustomerServlet() {
+        super();
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @param request
+     * @param response
+     * @throws jakarta.servlet.ServletException
+     * @throws java.io.IOException
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     * response)
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @param request
+     * @param response
+     * @throws jakarta.servlet.ServletException
+     * @throws java.io.IOException
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     * response)
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         UserDAO userDAO = new UserDAO();
 
@@ -82,8 +70,9 @@ public class ManageCustomerServlet extends HttpServlet {
             String fullname = request.getParameter("fullname");
             String address = request.getParameter("address");
             String phone = request.getParameter("phone");
+            String role = request.getParameter("role");
 
-            User user = new User(email, null, null, fullname, address, phone, username, userId);
+            User user = new User(email, null, role, fullname, address, phone, username, userId);
             if (userDAO.updateUser(user)) {
                 request.setAttribute("message", "User updated successfully.");
             } else {
@@ -94,14 +83,15 @@ public class ManageCustomerServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<User> customers = UserDAO.getAllCustomer();
+        request.setAttribute("customers", customers);
+        request.getRequestDispatcher("ManageCustomer.jsp").forward(request, response);
+    }
+
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

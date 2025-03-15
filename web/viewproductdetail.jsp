@@ -1,8 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="Controller.Product" %>
-<html>
+<%@ page import="Model.Product" %>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Products Detail</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,6 +23,28 @@
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            max-width: 300px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            margin: 10px 0;
+        }
+
+        .product-detail {
+            margin-top: 20px;
+        }
+
+        .product-detail h2 {
+            margin-bottom: 20px;
+        }
+
+        .product-detail p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
         }
 
         h2 {
@@ -60,19 +86,25 @@
 </head>
 <body>
 
-    <div class="container">
-        <h2>Products Detail</h2>
-
-        <% Product product = (Product) request.getAttribute("product"); %>
-
-        <img src="<%= product.getImageUrl() %>" width="200">
-        <h3><%= product.getName() %></h3>
-        <p><strong>Describe:</strong> <%= product.getDescription() %></p>
-        <p><strong>Price:</strong> <%= product.getPrice() %> VND</p>
-        <p><strong>Inventory:</strong> <%= product.getStockQuantity() %></p>
-
+    <div class="container product-detail">
+        <h2>Product Detail</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <img src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>" class="product-image img-fluid">
+            </div>
+            <div class="col-md-8">
+                <h3><%= product.getName() %></h3>
+                <p><strong>Description:</strong> <%= product.getDescription() %></p>
+                <p><strong>Price:</strong> <%= product.getPrice() %> VND</p>
+                <p><strong>Stock Quantity:</strong> <%= product.getStockQuantity() %></p>
+                <p><strong>Category:</strong> <%= product.getCategoryId() %></p>
+            </div>
+        </div>
         <a href="ViewProductServlet" class="back-button">Quay lại danh sách</a>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,7 +1,6 @@
 package Controller;
 
-import Controller.Product;
-import ConnectDB.DBConnect;
+import Model.Product;
 import ConnectDB.DBConnect;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,11 +33,12 @@ public class ManageProductsServlet extends HttpServlet {
                 while (rs.next()) {
                     Product product = new Product(
                             rs.getInt("product_id"),
-                            rs.getString("name"),
-                            rs.getString("description"),
-                            rs.getDouble("price"),
-                            rs.getInt("stock_quantity"),
-                            rs.getString("image_url"));
+                            rs.getString("name"), 
+                            rs.getString("description"), 
+                            rs.getDouble("price"), 
+                            rs.getInt("stock_quantity"), 
+                            rs.getString("image_url"), 
+                            rs.getString("category_id"));
                     products.add(product);
                 }
             } catch (SQLException e) {

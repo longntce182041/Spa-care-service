@@ -9,10 +9,6 @@
 <%@page import="jakarta.servlet.http.HttpServletRequest"%>
 <%
     String username = (session != null) ? (String) session.getAttribute("username") : null;
-    if (username == null) {
-        response.sendRedirect("login.jsp");
-        return;
-    }
 %>
 <!DOCTYPE html>
 <html lang="en">

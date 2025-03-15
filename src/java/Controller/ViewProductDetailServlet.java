@@ -4,7 +4,7 @@
  */
 package Controller;
 
-import Controller.Product;
+import Model.Product;
 import DAO.ProductDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -43,13 +43,13 @@ public class ViewProductDetailServlet extends HttpServlet {
 
             if (rs.next()) {
                 product = new Product(
-                    rs.getInt("product_id"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getDouble("price"),
-                    rs.getInt("stock_quantity"),
-                    rs.getString("image_url")
-                );
+                            rs.getInt("product_id"),
+                            rs.getString("name"), 
+                            rs.getString("description"), 
+                            rs.getDouble("price"), 
+                            rs.getInt("stock_quantity"), 
+                            rs.getString("image_url"), 
+                            rs.getString("category_id"));
             }
             rs.close();
             stmt.close();

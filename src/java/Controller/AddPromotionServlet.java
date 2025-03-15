@@ -5,7 +5,7 @@
 package Controller;
 
 import ConnectDB.DBConnect;
-import Controller.Promotion;
+import Model.Promotion;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

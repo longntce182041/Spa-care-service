@@ -73,6 +73,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin-top: 20px;
     padding-top: 30px;
 }
+tbody {
+    background: #f8f9fa;
+    color: #000;
+}
 
  body {
                 background: url('images/space-time-continuum.jpg') no-repeat center center fixed;

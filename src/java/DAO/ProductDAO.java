@@ -27,7 +27,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id")
                 ));
             }
         } catch (SQLException e) {
@@ -70,7 +70,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id")
                 );
             }
         } catch (SQLException e) {
@@ -181,7 +181,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id")
                 ));
             }
         } catch (SQLException e) {
@@ -224,7 +224,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
                         rs.getString("image_url"),
-                        rs.getInt("category_id")
+                        rs.getString("category_id")
                 );
                 productList.add(product);
             }
@@ -246,4 +246,28 @@ public class ProductDAO {
         return productList;
     }
 
+    public void updateProductQuantity(int productId, int quantityChange) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = DBConnect.getConnection();
+            String sql = "UPDATE Products SET stock_quantity = stock_quantity + ? WHERE product_id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, quantityChange);
+            stmt.setInt(2, productId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                DBConnect.closeConnection(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

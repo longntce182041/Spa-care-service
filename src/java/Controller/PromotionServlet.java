@@ -6,7 +6,7 @@ package Controller;
 
 
 import ConnectDB.DBConnect;
-import Controller.Promotion;
+import Model.Promotion;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

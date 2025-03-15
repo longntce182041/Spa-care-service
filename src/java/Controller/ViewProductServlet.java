@@ -4,7 +4,8 @@
  */
 package Controller;
 
-import Controller.Product;
+import Model.Product;
+import DAO.CategoryDAO;
 import DAO.ProductDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -21,6 +22,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import ConnectDB.DBConnect;
+import Model.Category;
 
 /**
  *
@@ -28,8 +30,10 @@ import ConnectDB.DBConnect;
  */
 @WebServlet("/ViewProductServlet")
 public class ViewProductServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<Product> products = new ArrayList<>();
@@ -48,7 +52,8 @@ public class ViewProductServlet extends HttpServlet {
                         rs.getString("description"),
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
-                        rs.getString("image_url"));
+                        rs.getString("image_url"),
+                        rs.getString("category_id"));
                 products.add(product);
             }
             request.setAttribute("products", products);
@@ -58,9 +63,14 @@ public class ViewProductServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<Category> categories = categoryDAO.getAllCategories();
+        request.setAttribute("products", products);
+        request.setAttribute("categories", categories);
         request.getRequestDispatcher("ManageProducts.jsp").forward(request, response);
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -91,15 +101,49 @@ public class ViewProductServlet extends HttpServlet {
         double price = Double.parseDouble(request.getParameter("price"));
         int stockQuantity = Integer.parseInt(request.getParameter("stockQuantity"));
         String imageUrl = request.getParameter("imageUrl");
+        String category = request.getParameter("categoryId");
 
-        try (Connection conn = DBConnect.getConnection()) {
-            String sql = "INSERT INTO Products (name, description, price, stock_quantity, image_url) VALUES (?, ?, ?, ?, ?)";
+        try ( Connection conn = DBConnect.getConnection()) {
+            String sql = "INSERT INTO Products (name, description, price, stock_quantity, image_url, category_id) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, name);
             stmt.setString(2, description);
             stmt.setDouble(3, price);
             stmt.setInt(4, stockQuantity);
             stmt.setString(5, imageUrl);
+            stmt.setString(6, category);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.sendRedirect("ViewProductServlet");
+    }
+
+    private void updateProduct(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String productIdStr = request.getParameter("productId");
+        String name = request.getParameter("name");
+        String description = request.getParameter("description");
+        String priceStr = request.getParameter("price");
+        String stockQuantityStr = request.getParameter("stockQuantity");
+        String imageUrl = request.getParameter("imageUrl");
+        String category = request.getParameter("categoryId");
+
+        int productId = Integer.parseInt(productIdStr);
+        double price = Double.parseDouble(priceStr);
+        int stockQuantity = Integer.parseInt(stockQuantityStr);
+
+        try ( Connection conn = DBConnect.getConnection()) {
+            String sql = "UPDATE Products SET name = ?, description = ?, price = ?, stock_quantity = ?, image_url = ?, category_id = ? WHERE product_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, description);
+            stmt.setDouble(3, price);
+            stmt.setInt(4, stockQuantity);
+            stmt.setString(5, imageUrl);
+            stmt.setString(6, category);
+            stmt.setInt(7, productId);
             stmt.executeUpdate();
             stmt.close();
         } catch (Exception e) {
@@ -112,36 +156,10 @@ public class ViewProductServlet extends HttpServlet {
             throws ServletException, IOException {
         int productId = Integer.parseInt(request.getParameter("productId"));
 
-        try (Connection conn = DBConnect.getConnection()) {
+        try ( Connection conn = DBConnect.getConnection()) {
             String sql = "DELETE FROM Products WHERE product_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, productId);
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        response.sendRedirect("ViewProductServlet");
-    }
-
-    private void updateProduct(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        String name = request.getParameter("name");
-        String description = request.getParameter("description");
-        double price = Double.parseDouble(request.getParameter("price"));
-        int stockQuantity = Integer.parseInt(request.getParameter("stockQuantity"));
-        String imageUrl = request.getParameter("imageUrl");
-
-        try (Connection conn = DBConnect.getConnection()) {
-            String sql = "UPDATE Products SET name = ?, description = ?, price = ?, stock_quantity = ?, image_url = ? WHERE product_id = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, name);
-            stmt.setString(2, description);
-            stmt.setDouble(3, price);
-            stmt.setInt(4, stockQuantity);
-            stmt.setString(5, imageUrl);
-            stmt.setInt(6, productId);
             stmt.executeUpdate();
             stmt.close();
         } catch (Exception e) {

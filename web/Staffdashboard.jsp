@@ -39,21 +39,21 @@
         <nav id="sidebar" class="bg-dark">
             <div class="p-4 pt-5">
                 <a class="navbar-brand" href="index.jsp"><span class="flaticon-pawprint-1 mr-2"></span>Petique Spa</a>
-                <ul class="list-unstyled components mb-5">
-                    <li class="active">
-                        <a href="staffdashboard.jsp">Dashboard</a>
+                <ul class="list-unstyled components mb-5" id="sidebarMenu">
+                    <li>
+                        <a href="#" onclick="loadContent('dashboard.jsp', this)">Dashboard</a>
                     </li>
                     <li>
-                        <a href="cashier_functions.jsp">Cashier Functions</a>
+                        <a href="#" onclick="loadContent('OrderManagement.jsp', this)">Cashier Functions</a>
                     </li>
                     <li>
-                        <a href="customer_service_functions.jsp">Customer Service Functions</a>
+                        <a href="#" onclick="loadContent('customer_service_functions.jsp', this)">Customer Service Functions</a>
                     </li>
                     <li>
-                        <a href="sales_functions.jsp">Sales Functions</a>
+                        <a href="#" onclick="loadContent('sales.jsp', this)">Sales Functions</a>
                     </li>
                     <li>
-                        <a href="StaffWarehouse.jsp">Warehouse Functions</a>
+                        <a href="#" onclick="loadContent('StaffWarehouse.jsp', this)">Warehouse Functions</a>
                     </li>
                 </ul>
             </div>
@@ -72,7 +72,7 @@
                             <a class="nav-link" href="profile.jsp"><i class="fa fa-user"></i> Profile</a>
                             <% if ("staff".equalsIgnoreCase(role)) { %>
                             <a class="nav-link" href="changePassword.jsp"><i class="fa fa-key"></i> Change Password</a>
-                            <% } %>
+                            <% }%>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="index.jsp"><i class="fa fa-sign-out"></i> Logout</a>
@@ -80,54 +80,13 @@
                     </ul>
                 </div>
             </nav>
-            <h2 class="mb-4">Staff Dashboard</h2>
-            <div class="content-box">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card text-white bg-primary mb-3">
-                            <div class="card-header">Cashier</div>
-                            <div class="card-body">
-                                <h5 class="card-title">Cashier Functions</h5>
-                                <p class="card-text">View and manage cashier functions.</p>
-                                <a href="cashier_functions.jsp" class="btn btn-light">Go to Cashier</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-secondary mb-3">
-                            <div class="card-header">Customer Service</div>
-                            <div class="card-body">
-                                <h5 class="card-title">Customer Service Functions</h5>
-                                <p class="card-text">View and manage customer service functions.</p>
-                                <a href="customer_service_functions.jsp" class="btn btn-light">Go to Customer Service</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-success mb-3">
-                            <div class="card-header">Sales</div>
-                            <div class="card-body">
-                                <h5 class="card-title">Sales Functions</h5>
-                                <p class="card-text">View and manage sales functions.</p>
-                                <a href="sales_functions.jsp" class="btn btn-light">Go to Sales</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-danger mb-3">
-                            <div class="card-header">Warehouse</div>
-                            <div class="card-body">
-                                <h5 class="card-title">Warehouse Functions</h5>
-                                <p class="card-text">View and manage warehouse functions.</p>
-                                <a href="StaffWarehouse.jsp" class="btn btn-light">Go to Warehouse</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+            <div id="main-content" class="content-box">
+                <!-- Nội dung sẽ được tải vào đây -->
             </div>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="js/jquery.min.js"></script>
@@ -144,5 +103,29 @@
         <script src="js/jquery.magnific-popup.min.js"></script>
         <script src="js/scrollax.min.js"></script>
         <script src="js/main.js"></script>
+        <script>
+            function loadContent(page, element) {
+                $.ajax({
+                    url: page,
+                    method: 'GET',
+                    success: function (data) {
+                        $('#main-content').html(data);
+                        // Loại bỏ lớp 'active' khỏi tất cả các mục
+                        $('#sidebarMenu li').removeClass('active');
+                        // Thêm lớp 'active' vào mục hiện tại
+                        $(element).closest('li').addClass('active');
+                    },
+                    error: function () {
+                        $('#main-content').html('<p>Error loading content.</p>');
+                    }
+                });
+            }
+
+            // Load default content
+            $(document).ready(function () {
+                loadContent('dashboard.jsp', $('#sidebarMenu li a')[0]);
+            });
+        </script>
+    </div>
 </body>
 </html>

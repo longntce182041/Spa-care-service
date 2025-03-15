@@ -79,7 +79,7 @@ public class UserDAO {
 
     // in ra tất cả các user có role là customer
     public static void viewAllCustomer() {
-        String query = "SELECT * FROM Users WHERE role = 'customer'";
+        String query = "SELECT * FROM Users";
         try ( Connection conn = DBConnect.getConnection();  PreparedStatement pstmt = conn.prepareStatement(query)) {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -92,36 +92,43 @@ public class UserDAO {
 
     // Xóa user theo user_id
     public boolean deleteUser(String userId) {
-        String query = "DELETE FROM Users WHERE user_id = ?";
-        try ( Connection conn = DBConnect.getConnection();  PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
+        try (Connection conn = DBConnect.getConnection()) {
+            String sql = "DELETE FROM Users WHERE user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, userId);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     // Cập nhật thông tin user
     public boolean updateUser(User user) {
-        String query = "UPDATE Users SET username = ?, email = ?, fullname = ?, address = ?, phone = ? WHERE user_id = ?";
-        try ( Connection conn = DBConnect.getConnection();  PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, user.getUsername());
-            pstmt.setString(2, user.getEmail());
-            pstmt.setString(3, user.getFullname());
-            pstmt.setString(4, user.getAddress());
-            pstmt.setString(5, user.getPhone());
-            pstmt.setString(6, user.getUserId());
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
+        try (Connection conn = DBConnect.getConnection()) {
+            String sql = "UPDATE Users SET username = ?, email = ?, fullname = ?, address = ?, phone = ?, [role] = ? WHERE user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getFullname());
+            stmt.setString(4, user.getAddress());
+            stmt.setString(5, user.getPhone());
+            stmt.setString(6, user.getRole());
+            stmt.setString(7, user.getUserId());
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     public static List<User> getAllCustomer() {
         List<User> customerList = new ArrayList<>();
-        try ( Connection conn = DBConnect.getConnection();  Statement stmt = conn.createStatement();  ResultSet rs = stmt.executeQuery("SELECT * FROM Users WHERE role = 'customer'")) {
+        try ( Connection conn = DBConnect.getConnection();
+            Statement stmt = conn.createStatement();  
+                ResultSet rs = stmt.executeQuery("SELECT * FROM Users")) {
             while (rs.next()) {
                 User customer = new User(
                         rs.getString("user_id"),
@@ -129,7 +136,8 @@ public class UserDAO {
                         rs.getString("email"),
                         rs.getString("fullname"),
                         rs.getString("address"),
-                        rs.getString("phone"));
+                        rs.getString("phone"),
+                        rs.getString("role"));
                 customerList.add(customer);
             }
         } catch (Exception e) {
@@ -140,7 +148,8 @@ public class UserDAO {
 
     public static User getCustomerById(String customerId) {
         User customer = null;
-        try ( Connection conn = DBConnect.getConnection();  PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users WHERE user_id = ? AND role = 'customer'")) {
+        try ( Connection conn = DBConnect.getConnection();  
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users WHERE user_id = ? ")) {
             stmt.setString(1, customerId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -150,7 +159,8 @@ public class UserDAO {
                         rs.getString("email"),
                         rs.getString("fullname"),
                         rs.getString("address"),
-                        rs.getString("phone"));
+                        rs.getString("phone"),
+                        rs.getString("role"));
 
             }
             rs.close();
