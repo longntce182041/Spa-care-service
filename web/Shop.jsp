@@ -2,6 +2,10 @@
 <%@ page import="java.sql.*, java.util.*, DAO.ProductDAO, Model.Product" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp" />
+<%
+    // Remove the duplicate declaration of the session variable
+    String username = (session != null) ? (String) session.getAttribute("user") : null;
+%>
 <link rel="stylesheet" href="css/shop.css"> <!-- Liên kết tệp CSS mới -->
 
 <div class="container">

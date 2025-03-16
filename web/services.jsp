@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<%
+    // Remove the duplicate declaration of the session variable
+    String username = (session != null) ? (String) session.getAttribute("user") : null;
+%>
 <html lang="en">
     <head>
         <title>Petique Spa - Free Bootstrap 4 Template by Colorlib</title>
@@ -54,23 +58,28 @@
                 </button>
                 <div class="collapse navbar-collapse" id="ftco-nav">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active"><a href="index.jsp" class="nav-link">Home</a></li>
+                        <li class="nav-item"><a href="index.jsp" class="nav-link">Home</a></li>
                         <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
-                        <li class="nav-item"><a href="Staffdashboard.jsp" class="nav-link">Staff</a></li>
-                        <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
+                        <li class="nav-item active"><a href="services.jsp" class="nav-link">Services</a></li>
                         <li class="nav-item"><a href="appointment.jsp" class="nav-link">Appointment</a></li>
                         <li class="nav-item"><a href="pricing.jsp" class="nav-link">Pricing</a></li>
                         <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
                         <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
+                            <% if (username != null) { %>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="fa fa-user"></span>
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-user nav-item">  </i>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="login.jsp">Login</a>
-                                <a class="dropdown-item" href="register.jsp">Sign up</a>
+
+                            <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                                <a class="dropdown-item-text"> <%= username %> </a>
+                                <a class="dropdown-item" href="profile.jsp">Profile</a>
+                                <a class="dropdown-item" href="index.jsp">Logout</a>
                             </div>
                         </li>
+                        <% } else { %>
+                        <li class="nav-item"><a href="login.jsp" class="nav-link">Login</a></li>
+                            <% } %>
                     </ul>
                 </div>
             </div>

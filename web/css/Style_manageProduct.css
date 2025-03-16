@@ -126,7 +126,7 @@ tbody {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(254, 254, 254, 0.05);
 }
 
 .table-bordered {
@@ -155,5 +155,5 @@ tbody {
 
 }.modal-content {
     background-color: #343a40;
-    color: black;
+    color: rgb(255, 255, 255);
 }

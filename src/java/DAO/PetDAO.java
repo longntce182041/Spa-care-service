@@ -112,4 +112,34 @@ public class PetDAO {
             return false;
         }
     }
+    
+     public static List<Pet> getPetsByUserId(String userId) {
+        List<Pet> pets = new ArrayList<>();
+
+        String sql = "SELECT pet_id, name, type, age, weight_kg, note FROM Pets WHERE user_id = ?";
+
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Pet pet = new Pet(
+                        rs.getString("pet_id"),
+                        rs.getString("name"),
+                        rs.getString("type"),
+                        rs.getInt("age"),
+                        rs.getDouble("weight_kg"),
+                        rs.getString("note")
+                );
+                pets.add(pet);
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pets;
+    }
+    
 }

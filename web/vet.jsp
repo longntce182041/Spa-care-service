@@ -60,7 +60,7 @@
                         <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
                         <li class="nav-item"><a href="appointment.jsp" class="nav-link">Appointment</a></li>
                         <li class="nav-item"><a href="pricing.jsp" class="nav-link">Pricing</a></li>
-                        <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
+                        <li class="nav-item"><a href="Shop.jsp" class="nav-link">Shop</a></li>
                         <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

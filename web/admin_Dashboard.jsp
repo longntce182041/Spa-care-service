@@ -60,6 +60,9 @@
                             <li>
                                 <a href="PromotionServlet">Manage Promotion</a>
                             </li>
+                            <li>
+                                <a href="ManageServiceServlet">Manage Service</a>
+                            </li>
                         </ul>
                     </div>
                 </nav>

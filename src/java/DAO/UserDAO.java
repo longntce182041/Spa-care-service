@@ -92,7 +92,7 @@ public class UserDAO {
 
     // Xóa user theo user_id
     public boolean deleteUser(String userId) {
-        try (Connection conn = DBConnect.getConnection()) {
+        try ( Connection conn = DBConnect.getConnection()) {
             String sql = "DELETE FROM Users WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, userId);
@@ -106,7 +106,7 @@ public class UserDAO {
 
     // Cập nhật thông tin user
     public boolean updateUser(User user) {
-        try (Connection conn = DBConnect.getConnection()) {
+        try ( Connection conn = DBConnect.getConnection()) {
             String sql = "UPDATE Users SET username = ?, email = ?, fullname = ?, address = ?, phone = ?, [role] = ? WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, user.getUsername());
@@ -126,9 +126,7 @@ public class UserDAO {
 
     public static List<User> getAllCustomer() {
         List<User> customerList = new ArrayList<>();
-        try ( Connection conn = DBConnect.getConnection();
-            Statement stmt = conn.createStatement();  
-                ResultSet rs = stmt.executeQuery("SELECT * FROM Users")) {
+        try ( Connection conn = DBConnect.getConnection();  Statement stmt = conn.createStatement();  ResultSet rs = stmt.executeQuery("SELECT * FROM Users")) {
             while (rs.next()) {
                 User customer = new User(
                         rs.getString("user_id"),
@@ -148,8 +146,7 @@ public class UserDAO {
 
     public static User getCustomerById(String customerId) {
         User customer = null;
-        try ( Connection conn = DBConnect.getConnection();  
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users WHERE user_id = ? ")) {
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users WHERE user_id = ? ")) {
             stmt.setString(1, customerId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -170,5 +167,48 @@ public class UserDAO {
         }
         return customer;
     }
-    
+
+    public static User getUserByUsername(String username) {
+        User user = null;
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Users WHERE username = ?")) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = new User(
+                        rs.getString("user_id"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("fullname"),
+                        rs.getString("address"),
+                        rs.getString("phone"),
+                        rs.getString("role"));
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public static String getUserIdByUsername(String username) {
+        String userId = null;
+        String query = "SELECT user_id FROM Users WHERE username = ?";
+
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                userId = rs.getString("user_id");
+            }
+
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return userId;
+    }
+
 }

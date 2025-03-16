@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<%
+    // Remove the duplicate declaration of the session variable
+    String username = (session != null) ? (String) session.getAttribute("user") : null;
+%>
 <html lang="en">
     <head>
         <title>Petique Spa - Free Bootstrap 4 Template by Colorlib</title>
@@ -37,7 +41,7 @@
                         <div class="social-media">
                             <p class="mb-0 d-flex">
                                 <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-facebook"><i class="sr-only">Facebook</i></span></a>
-                                spa	    			<a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-twitter"><i class="sr-only">Twitter</i></span></a>
+                                <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-twitter"><i class="sr-only">Twitter</i></span></a>
                                 <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-instagram"><i class="sr-only">Instagram</i></span></a>
                                 <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-dribbble"><i class="sr-only">Dribbble</i></span></a>
                             </p>
@@ -54,23 +58,32 @@
                 </button>
                 <div class="collapse navbar-collapse" id="ftco-nav">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active"><a href="index.jsp" class="nav-link">Home</a></li>
-                        <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
-                        <li class="nav-item"><a href="Staffdashboard.jsp" class="nav-link">Staff</a></li>
+                        <% if (username != null){%>
+                        <li class="nav-item"><a href="homepage.jsp" class="nav-link">Home</a>
+                            <% } else {%>
+                        <li class="nav-item"><a href="index.jsp" class="nav-link">Home</a></li>
+                            <%} %>
+                        <li class="nav-item active"><a href="about.jsp" class="nav-link">About</a></li>
                         <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
                         <li class="nav-item"><a href="appointment.jsp" class="nav-link">Appointment</a></li>
                         <li class="nav-item"><a href="pricing.jsp" class="nav-link">Pricing</a></li>
                         <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
                         <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
+                            <% if (username != null) { %>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="fa fa-user"></span>
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-user nav-item">  </i>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="login.jsp">Login</a>
-                                <a class="dropdown-item" href="register.jsp">Sign up</a>
+
+                            <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                                <a class="dropdown-item-text"> <%= username %> </a>
+                                <a class="dropdown-item" href="profile.jsp">Profile</a>
+                                <a class="dropdown-item" href="index.jsp">Logout</a>
                             </div>
                         </li>
+                        <% } else { %>
+                        <li class="nav-item"><a href="login.jsp" class="nav-link">Login</a></li>
+                            <% } %>
                     </ul>
                 </div>
             </div>
@@ -295,6 +308,7 @@
                 <div class="row justify-content-center pb-5 mb-3">
                     <div class="col-md-7 heading-section text-center ftco-animate">
                         <h2>Happy Clients &amp; Feedbacks</h2>
+                        <a class="btnFeedback" href="RatingService.jsp">Add feedback</a>
                     </div>
                 </div>
                 <div class="row ftco-animate">

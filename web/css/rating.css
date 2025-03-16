@@ -1,0 +1,86 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : Mar 15, 2025, 9:38:04 PM
+    Author     : TruongMinhDan CE181520
+*/
+body {
+    background-image: url('../images/rating1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+}
+.rating input {
+    display: none;
+}
+.rating label {
+    font-size: 30px;
+    color: #ddd;
+    cursor: pointer;
+}
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label {
+    color: gold;
+}
+.group-services label {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    border: 2px solid rgb(0, 189, 86);
+    color: rgb(0, 189, 86);
+    padding: 10px 15px;
+    display: inline-block;
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+    /*                font-size: 14px*/
+}
+.group-services:hover ~ label {
+
+}
+.btn-check:checked + label {
+    background-color: rgb(0, 189, 86) !important;
+    color: white !important;
+    border-color: rgb(0, 189, 86) !important;
+}
+.group-services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items:  center;
+    justify-content: center;
+}
+.card {
+    background-color: whitesmoke;
+    border-radius: 20px;
+}
+.card-header {
+    background:rgb(0, 189, 86);
+    color: #fff;
+    border-radius: 20px 20px 0px 0px !important;
+}
+.comment textarea {
+    resize: none;
+}
+.rating label {
+    font-size: 55px;
+}
+.back-home {
+    border : solid 1px black;
+}
+.back-home:hover {
+    border : solid 1px black;
+}
+.btn-action {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+}
+.btn-action button {
+    border-radius: 15px;
+    padding: 5px 20px;
+}
+
