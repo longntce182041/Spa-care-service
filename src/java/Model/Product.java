@@ -1,6 +1,7 @@
 package Model;
 
 public class Product {
+
     private int productId;
     private String name;
     private String description;
@@ -8,6 +9,7 @@ public class Product {
     private int stockQuantity;
     private String image_url;
     private String categoryId;
+    private String description_detail;
 
     // Constructor mặc định
     public Product() {
@@ -22,6 +24,17 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.image_url = image_url;
         this.categoryId = categoryId;
+    }
+
+    public Product(int productId, String name, String description, double price, int stockQuantity, String image_url, String categoryId, String description_detail) {
+        this.productId = productId;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.image_url = image_url;
+        this.categoryId = categoryId;
+        this.description_detail = description_detail;
     }
 
     // Getters và setters
@@ -69,7 +82,7 @@ public class Product {
         return image_url;
     }
 
-    public void setimage_url(String imageUrl) {
+    public void setImage_url(String image_url) {
         this.image_url = image_url;
     }
 
@@ -80,4 +93,13 @@ public class Product {
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
+
+    public String getDescription_detail() {
+        return description_detail;
+    }
+
+    public void setDescription_detail(String description_detail) {
+        this.description_detail = description_detail;
+    }
+
 }

@@ -25,7 +25,6 @@
             <button id="viewAppointmentBtn" class="btn btn-primary">View Appointment</button>
             <button id="backBtn" class="btn btn-secondary" style="display: none;">Back</button>
         </div>
-        
         <div id="consultationTableContainer">
             <table class="consultation-table table table-striped table-hover">
                 <thead class="thead-dark">

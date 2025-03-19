@@ -4,15 +4,15 @@
 
 .cart-count {
     position: absolute;
-    top: 20px; /* Điều chỉnh giá trị này để di chuyển badge lên/xuống */
-    right: -5px; /* Điều chỉnh giá trị này để di chuyển badge trái/phải */
-    font-size: 0.75rem;
-    background-color: #dc3545;
-    color: white;
-    width: 20px; /* Đặt chiều rộng cố định */
-    height: 20px; /* Đặt chiều cao cố định */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%; /* Đảm bảo badge có hình tròn */
+    top: 20px !important; /* Điều chỉnh giá trị này để di chuyển badge lên/xuống */
+    right: -5px !important; /* Điều chỉnh giá trị này để di chuyển badge trái/phải */
+    font-size: 0.75rem !important;
+    background-color: #dc3545 !important;
+    color: white !important; /* Đảm bảo số có màu trắng */
+    width: 20px !important; /* Đặt chiều rộng cố định */
+    height: 20px !important; /* Đặt chiều cao cố định */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important; /* Đảm bảo badge có hình tròn */
 }

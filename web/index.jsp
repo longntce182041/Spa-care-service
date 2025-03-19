@@ -22,16 +22,17 @@
                 <div class="row">
                     <div class="col-md-6 d-flex align-items-center">
                         <p class="mb-0 phone pl-md-2">
-
+                            <a href="#" class="mr-2"><span class="fa fa-phone mr-1"></span> 0968996035</a> 
+                            <a href="#"><span class="fa fa-paper-plane mr-1"></span> petquespact@gmail.com</a>
                         </p>
                     </div>
                     <div class="col-md-6 d-flex justify-content-md-end">
                         <div class="social-media">
                             <p class="mb-0 d-flex">
-                                <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-facebook"><i class="sr-only">Facebook</i></span></a>
-                                <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-twitter"><i class="sr-only">Twitter</i></span></a>
-                                <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-instagram"><i class="sr-only">Instagram</i></span></a>
-                                <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-dribbble"><i class="sr-only">Dribbble</i></span></a>
+                                <a href="https://www.facebook.com/trung.kien.284391" class="d-flex align-items-center justify-content-center"><span class="fa fa-facebook"><i class="sr-only">Facebook</i></span></a>
+                                <a href="https://x.com/ilove_banhmi_15" class="d-flex align-items-center justify-content-center"><span class="fa fa-twitter"><i class="sr-only">Twitter</i></span></a>
+                                <a href="https://www.instagram.com/im_a_mf.st4rboiz/" class="d-flex align-items-center justify-content-center"><span class="fa fa-instagram"><i class="sr-only">Instagram</i></span></a>
+                                <a href="https://petservicehcm.com" class="d-flex align-items-center justify-content-center"><span class="fa fa-dribbble"><i class="sr-only">Dribbble</i></span></a>
                             </p>
                         </div>
                     </div>
@@ -417,71 +418,7 @@
             </div>
         </section>
 
-        <section class="ftco-section bg-light">
-            <div class="container">
-                <div class="row justify-content-center pb-5 mb-3">
-                    <div class="col-md-7 heading-section text-center ftco-animate">
-                        <h2>Affordable Packages</h2>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 ftco-animate">
-                        <div class="block-7">
-                            <div class="img" style="background-image: url(images/pricing-1.jpg);"></div>
-                            <div class="text-center p-4">
-                                <span class="excerpt d-block">Personal</span>
-                                <span class="price"><sup>$</sup> <span class="number">49</span> <sub>/mos</sub></span>
-
-                                <ul class="pricing-text mb-5">
-                                    <li><span class="fa fa-check mr-2"></span>5 Dog Walk</li>
-                                    <li><span class="fa fa-check mr-2"></span>3 Vet Visit</li>
-                                    <li><span class="fa fa-check mr-2"></span>3 Pet Spa</li>
-                                    <li><span class="fa fa-check mr-2"></span>Free Supports</li>
-                                </ul>
-
-                                <a href="#" class="btn btn-primary d-block px-2 py-3">Get Started</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 ftco-animate">
-                        <div class="block-7">
-                            <div class="img" style="background-image: url(images/pricing-2.jpg);"></div>
-                            <div class="text-center p-4">
-                                <span class="excerpt d-block">Business</span>
-                                <span class="price"><sup>$</sup> <span class="number">79</span> <sub>/mos</sub></span>
-
-                                <ul class="pricing-text mb-5">
-                                    <li><span class="fa fa-check mr-2"></span>5 Dog Walk</li>
-                                    <li><span class="fa fa-check mr-2"></span>3 Vet Visit</li>
-                                    <li><span class="fa fa-check mr-2"></span>3 Pet Spa</li>
-                                    <li><span class="fa fa-check mr-2"></span>Free Supports</li>
-                                </ul>
-
-                                <a href="#" class="btn btn-primary d-block px-2 py-3">Get Started</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 ftco-animate">
-                        <div class="block-7">
-                            <div class="img" style="background-image: url(images/pricing-3.jpg);"></div>
-                            <div class="text-center p-4">
-                                <span class="excerpt d-block">Ultimate</span>
-                                <span class="price"><sup>$</sup> <span class="number">109</span> <sub>/mos</sub></span>
-
-                                <ul class="pricing-text mb-5">
-                                    <li><span class="fa fa-check mr-2"></span>5 Dog Walk</li>
-                                    <li><span class="fa fa-check mr-2"></span>3 Vet Visit</li>
-                                    <li><span class="fa fa-check mr-2"></span>3 Pet Spa</li>
-                                    <li><span class="fa fa-check mr-2"></span>Free Supports</li>
-                                </ul>
-
-                                <a href="#" class="btn btn-primary d-block px-2 py-3">Get Started</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        
 
         <section class="ftco-section">
             <div class="container">

@@ -28,6 +28,12 @@ public class AddToCartServlet extends HttpServlet {
         ProductDAO productDAO = new ProductDAO();
         Product product = productDAO.getProductById(productId);
 
+        if (product == null) {
+            response.setContentType("application/json");
+            response.getWriter().write("{\"success\": false, \"message\": \"Product not found.\"}");
+            return;
+        }
+
         HttpSession session = request.getSession();
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart == null) {
@@ -35,15 +41,28 @@ public class AddToCartServlet extends HttpServlet {
         }
 
         boolean itemExists = false;
+        int currentQuantity = 0;
+
         for (CartItem item : cart) {
             if (item.getProduct().getProductId() == productId) {
-                item.setQuantity(item.getQuantity() + quantity);
+                currentQuantity = item.getQuantity();
+                if (currentQuantity + quantity > product.getStockQuantity()) {
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"success\": false, \"message\": \"The quantity of products has exceeded the allowed limit.\"}");
+                    return;
+                }
+                item.setQuantity(currentQuantity + quantity);
                 itemExists = true;
                 break;
             }
         }
 
         if (!itemExists) {
+            if (quantity > product.getStockQuantity()) {
+                response.setContentType("application/json");
+                response.getWriter().write("{\"success\": false, \"message\": \"The quantity of products has exceeded the allowed limit.\"}");
+                return;
+            }
             cart.add(new CartItem(product, quantity));
         }
 
@@ -52,6 +71,7 @@ public class AddToCartServlet extends HttpServlet {
 
         // Trả về số lượng sản phẩm trong giỏ hàng
         response.setContentType("application/json");
-        response.getWriter().write("{\"cartCount\": " + cart.size() + "}");
+        response.getWriter().write("{\"success\": true, \"cartCount\": " + cart.size() + "}");
     }
 }
+

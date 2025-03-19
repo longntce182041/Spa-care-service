@@ -1,10 +1,18 @@
-<!-- filepath: /Users/tranphantrungkien/Ky5/SWP391/pet1/web/Shop.jsp -->
+<!-- filepath: /Users/tranphantrungkien/Ky5/SWP391/PetiqueSpa/web/Shop.jsp -->
 <%@ page import="java.sql.*, java.util.*, DAO.ProductDAO, Model.Product" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp" />
+
 <link rel="stylesheet" href="css/shop.css"> <!-- Liên kết tệp CSS mới -->
 
-<div class="container">
+<div class="container mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Shop</li>
+        </ol>
+    </nav>
+
     <h1 class="text-center my-4">Shop</h1>
     <div class="row">
         <div class="col-md-3">
@@ -37,7 +45,11 @@
                             <h5 class="card-title"><%= product.getName()%></h5>
                             <p class="card-text"><%= product.getDescription()%></p>
                             <p class="card-text"><strong>Price: $<%= product.getPrice()%></strong></p>
+                            <% if (product.getStockQuantity() == 0) { %>
+                            <span class="badge badge-danger">Sold Out</span>
+                            <% } else { %>
                             <a href="javascript:void(0);" class="btn btn-outline-primary add-to-cart" data-product-id="<%= product.getProductId()%>"><i class="fa fa-shopping-cart"></i></a>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -52,6 +64,7 @@
 <jsp:include page="footer.jsp" />
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
         function bindEvents() {

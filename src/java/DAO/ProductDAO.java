@@ -70,7 +70,8 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("stock_quantity"),
                         rs.getString("image_url"),
-                        rs.getString("category_id")
+                        rs.getString("category_id"),
+                        rs.getString("desciption_detail")
                 );
             }
         } catch (SQLException e) {
@@ -270,5 +271,49 @@ public class ProductDAO {
             }
         }
     }
+    // Lấy danh sách các sản phẩm tương tự
+    public List<Product> getSimilarProducts(int productId) {
+        List<Product> similarProducts = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
+        try {
+            conn = DBConnect.getConnection();
+            String sql = "SELECT * FROM Products WHERE category_id = (SELECT category_id FROM Products WHERE product_id = ?) AND product_id != ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, productId);
+            stmt.setInt(2, productId);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Product product = new Product(
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock_quantity"),
+                        rs.getString("image_url"),
+                        rs.getString("category_id")
+                );
+                similarProducts.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                DBConnect.closeConnection(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return similarProducts;
+    }
+    
 }

@@ -1,4 +1,3 @@
-<!-- filepath: /Users/tranphantrungkien/Ky5/SWP391/pet1/web/OrderConfirmation.jsp -->
 <%@ page import="DAO.ProductDAO" %>
 <%@ page import="Model.Product" %>
 <%@ page import="Model.Order" %> <!-- Thêm import cho lớp Order -->
@@ -27,8 +26,6 @@
 <div class="container">
     <h1 class="text-center my-4">Order Confirmation</h1>
     <p>Thank you for your order! Your order has been placed successfully.</p>
-
-   
 
     <h4 class="d-flex justify-content-between align-items-center mb-3">
         <span class="text-muted">Order Details</span>

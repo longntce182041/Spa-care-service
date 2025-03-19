@@ -1,42 +1,47 @@
 body {
-    background: url('images/space-time-continuum.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #fff;
+    background: url('../images/dashboard.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
+    color: #fff !important;
 }
 
 .navbar {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.8) !important;
 }
 .navbar-brand, .navbar-nav .nav-link {
-    color: #fff;
+    color: #fff !important;
+    
 }
 .navbar-nav .nav-link:hover {
-    color: #00bd56;
+    color: #00bd56 !important;
 }
 
 /* Sidebar */
 #sidebar {
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.8) !important;
+    color: #fff !important;
+    min-height: 100vh !important;
 }
 #sidebar .navbar-brand {
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: bold;
+    color: #fff !important;
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
 }
 #sidebar .components {
-    padding: 0px;
+    padding: 0px !important;
 }
 #sidebar .components li {
-    padding: 10px;
+    padding: 10px !important;
 }
 #sidebar .components li a {
-    color: #adb5bd;
-    text-decoration: none;
-    display: block;
-    padding: 10px;
-    transition: background 0.3s, color 0.3s;
+    color: #adb5bd !important;
+    text-decoration: none !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 10px !important;
+    transition: background 0.3s, color 0.3s !important;
+}
+#sidebar .components li a i {
+    margin-right: 10px !important; /* Tạo khoảng cách giữa biểu tượng và chữ */
 }
 
 /* Active menu item */
@@ -49,10 +54,32 @@ body {
 
 /* Main content */
 #content {
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.9);
-    min-height: 100vh;
-    border-radius: 10px;
-    color: #000;
-    width: 100%;
+    padding: 20px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    min-height: 100vh !important;
+    border-radius: 10px !important;
+    color: #000 !important;
+    width: 100% !important;
+}
+
+/* Card styles */
+.card {
+    border: none !important;
+    border-radius: 10px !important;
+    transition: transform 0.2s, box-shadow 0.2s !important;
+}
+.card:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+}
+.card .card-body {
+    padding: 20px !important;
+}
+.card .card-title {
+    font-size: 1.25rem !important;
+    margin-bottom: 10px !important;
+}
+.card .btn {
+    border-radius: 20px !important;
+    padding: 10px 20px !important;
 }
