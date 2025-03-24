@@ -1,24 +1,175 @@
+/* General Styles */
 body {
     font-family: 'Montserrat', sans-serif;
+    background-color: #f8f9fa; /* MĂ u ná»n nháº¹ nhĂ ng */
+    color: #343a40; /* MĂ u chá»¯ chĂ­nh */
+    margin: 0;
+    padding: 0;
 }
 
-.container {
+.checkout-container {
     max-width: 960px;
+    margin: 2rem auto;
+    background: #ffffff; /* Ná»n tráº¯ng cho container */
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiá»‡u á»©ng Ä‘á»• bĂ³ng */
 }
 
-.order-md-1 {
+h1, h4 {
+    color: #495057; /* MĂ u chá»¯ tiĂªu Ä‘á» */
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 2rem;
     margin-bottom: 1.5rem;
 }
 
-.order-md-2 {
-    margin-bottom: 1.5rem;
+h4 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
 }
 
+/* Form Styles */
+form {
+    margin-top: 1rem;
+}
+
+label {
+    font-weight: 500;
+    color: #495057;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="radio"],
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #495057;
+    background-color: #ffffff;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Cart Summary Styles */
 .list-group-item {
     padding: 1rem 1.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    background-color: #ffffff;
 }
 
-.btn-block {
-    padding: 0.75rem 1.25rem;
+.list-group-item h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
 }
 
+.list-group-item small {
+    color: #6c757d;
+}
+
+.list-group-item img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.list-group-item:last-child {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #495057;
+}
+
+/* Alert Styles */
+.alert {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* QR Code Section */
+#qr-code-container {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px dashed #ced4da;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+#qr-code-container h4 {
+    font-size: 1.25rem;
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+#qr-code {
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h4 {
+        font-size: 1.125rem;
+    }
+
+    button[type="submit"] {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+
+    #qr-code {
+        max-width: 150px;
+    }
+}

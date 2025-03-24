@@ -1,12 +1,18 @@
-<%@ page import="DAO.ProductDAO" %>
-<%@ page import="Model.Product" %>
-<%@ page import="Model.Order" %> <!-- Thêm import cho lớp Order -->
-<%@ page import="java.util.*, Model.OrderDetail, DAO.OrderDAO" %>
+<%@page import="Model.Order"%>
+<%@ page import="java.util.*, DAO.ProductDAO, Model.Product, Model.OrderDetail, DAO.OrderDAO" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp" />
 <link rel="stylesheet" href="css/OrderConfirmation.css">
 
 <%
+    // Lấy danh sách sản phẩm được chọn từ request
+    String[] selectedProductIds = request.getParameterValues("selectedProducts");
+    if (selectedProductIds == null || selectedProductIds.length == 0) {
+        response.sendRedirect("Cart.jsp");
+        return;
+    }
+
+    // Lấy thông tin đơn hàng
     Integer orderId = (Integer) request.getAttribute("orderId");
     if (orderId == null) {
         response.sendRedirect("Shop.jsp");
@@ -21,91 +27,83 @@
         response.sendRedirect("Shop.jsp");
         return;
     }
+
+    // Lọc các sản phẩm được chọn
+    List<OrderDetail> selectedOrderDetails = new ArrayList<>();
+    for (OrderDetail detail : orderDetails) {
+        for (String productId : selectedProductIds) {
+            if (detail.getProductId() == Integer.parseInt(productId)) {
+                selectedOrderDetails.add(detail);
+            }
+        }
+    }
 %>
 
 <div class="container">
-    <h1 class="text-center my-4">Order Confirmation</h1>
-    <p>Thank you for your order! Your order has been placed successfully.</p>
+    <div class="confirmation-header">
+        <h1>Order Confirmation</h1>
+        <p>Thank you for your order! Your order has been placed successfully.</p>
+    </div>
 
-    <h4 class="d-flex justify-content-between align-items-center mb-3">
-        <span class="text-muted">Order Details</span>
-    </h4>
-    <ul class="list-group mb-3">
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Order ID</h6>
-                <small class="text-muted"><%= order.getOrderId() %></small>
-            </div>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Order Date</h6>
-                <small class="text-muted"><%= order.getOrderDate() %></small>
-            </div>
-        </li>
-        <%
-            double total = 0;
-            for (OrderDetail detail : orderDetails) {
-                Product product = productDAO.getProductById(detail.getProductId());
-                double itemTotal = detail.getPrice() * detail.getQuantity();
-                total += itemTotal;
-        %>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0"><%= product.getName() %></h6>
-                <small class="text-muted">Quantity: <%= detail.getQuantity() %></small>
-            </div>
-            <span class="text-muted">$<%= itemTotal %></span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <img src="<%= product.getimage_url() %>" alt="<%= product.getName() %>" style="width: 100px; height: auto;">
-        </li>
-        <%
-            }
-        %>
-        <li class="list-group-item d-flex justify-content-between">
-            <span>Total (USD)</span>
-            <strong>$<%= total %></strong>
-        </li>
-    </ul>
-    
-    <h4 class="d-flex justify-content-between align-items-center mb-3">
-        <span class="text-muted">Customer Details</span>
-    </h4>
-    <ul class="list-group mb-3">
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Name</h6>
-                <small class="text-muted"><%= order.getName() %></small>
-            </div>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Address</h6>
-                <small class="text-muted"><%= order.getAddress() %></small>
-            </div>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Phone</h6>
-                <small class="text-muted"><%= order.getPhone() %></small>
-            </div>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Email</h6>
-                <small class="text-muted"><%= order.getEmail() %></small>
-            </div>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-                <h6 class="my-0">Payment Method</h6>
-                <small class="text-muted"><%= order.getPaymentMethod() %></small>
-            </div>
-        </li>
-    </ul>
+    <div class="order-details">
+        <h4>Order Details</h4>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>Order ID:</strong> <span><%= order.getOrderId() %></span>
+            </li>
+            <li class="list-group-item">
+                <strong>Order Date:</strong> <span><%= order.getOrderDate() %></span>
+            </li>
+            <%
+                double total = 0;
+                for (OrderDetail detail : selectedOrderDetails) {
+                    Product product = productDAO.getProductById(detail.getProductId());
+                    double itemTotal = detail.getPrice() * detail.getQuantity();
+                    total += itemTotal;
+            %>
+            <li class="list-group-item">
+                <div class="product-info">
+                    <img src="<%= product.getimage_url() %>" alt="<%= product.getName() %>" class="product-image">
+                    <div>
+                        <h6><%= product.getName() %></h6>
+                        <small>Quantity: <%= detail.getQuantity() %></small>
+                    </div>
+                </div>
+                <span class="price">$<%= itemTotal %></span>
+            </li>
+            <%
+                }
+            %>
+            <li class="list-group-item total">
+                <strong>Total (USD):</strong> <span>$<%= total %></span>
+            </li>
+        </ul>
+    </div>
 
-    <a href="Shop.jsp" class="btn btn-primary">Continue Shopping</a>
+    <div class="customer-details">
+        <h4>Customer Details</h4>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>Name:</strong> <span><%= order.getName() %></span>
+            </li>
+            <li class="list-group-item">
+                <strong>Address:</strong> <span><%= order.getAddress() %></span>
+            </li>
+            <li class="list-group-item">
+                <strong>Phone:</strong> <span><%= order.getPhone() %></span>
+            </li>
+            <li class="list-group-item">
+                <strong>Email:</strong> <span><%= order.getEmail() %></span>
+            </li>
+            <li class="list-group-item">
+                <strong>Payment Method:</strong> <span><%= order.getPaymentMethod() %></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="continue-shopping">
+        <a href="Shop.jsp" class="btn btn-primary">Continue Shopping</a>
+    </div>
 </div>
 
 <jsp:include page="footer.jsp" />

@@ -9,9 +9,26 @@
         response.sendRedirect("Shop.jsp");
         return;
     }
+
+    // Lấy danh sách sản phẩm được chọn
+    String[] selectedProductIds = request.getParameterValues("selectedProducts");
+    if (selectedProductIds == null || selectedProductIds.length == 0) {
+        response.sendRedirect("Cart.jsp");
+        return;
+    }
+
+    // Lọc các sản phẩm được chọn từ giỏ hàng
+    List<CartItem> selectedCartItems = new ArrayList<>();
+    for (CartItem item : cart) {
+        for (String productId : selectedProductIds) {
+            if (item.getProduct().getProductId() == Integer.parseInt(productId)) {
+                selectedCartItems.add(item);
+            }
+        }
+    }
 %>
 
-<div class="container">
+<div class="checkout-container">
     <h1 class="text-center my-4">Checkout</h1>
     <div class="row">
         <div class="col-md-8 order-md-1">
@@ -50,27 +67,35 @@
                     <h4 class="mb-3">Scan this QR code to pay with MOMO</h4>
                     <img id="qr-code" src="images/QRcode.jpg" alt="MOMO QR Code">
                 </div>
+                <!-- Gửi danh sách sản phẩm được chọn -->
+                <%
+                    for (CartItem item : selectedCartItems) {
+                %>
+                <input type="hidden" name="selectedProducts" value="<%= item.getProduct().getProductId() %>">
+                <%
+                    }
+                %>
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Place Order</button>
             </form>
         </div>
         <div class="col-md-4 order-md-2 mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted">Your cart</span>
-                <span class="badge badge-secondary badge-pill"><%= cart.size()%></span>
+                <span class="badge badge-secondary badge-pill"><%= selectedCartItems.size() %></span>
             </h4>
             <ul class="list-group mb-3">
                 <%
                     double total = 0;
-                    for (CartItem item : cart) {
+                    for (CartItem item : selectedCartItems) {
                         double itemTotal = item.getProduct().getPrice() * item.getQuantity();
                         total += itemTotal;
                 %>
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
-                        <h6 class="my-0"><%= item.getProduct().getName()%></h6>
-                        <small class="text-muted">Quantity: <%= item.getQuantity()%></small>
+                        <h6 class="my-0"><%= item.getProduct().getName() %></h6>
+                        <small class="text-muted">Quantity: <%= item.getQuantity() %></small>
                     </div>
-                    <span class="text-muted">$<%= itemTotal%></span>
+                    <span class="text-muted">$<%= itemTotal %></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <img src="<%= item.getProduct().getimage_url()%>" alt="<%= item.getProduct().getName()%>" style="width: 100px; height: auto;">
@@ -80,7 +105,7 @@
                 %>
                 <li class="list-group-item d-flex justify-content-between">
                     <span>Total (USD)</span>
-                    <strong>$<%= total%></strong>
+                    <strong>$<%= total %></strong>
                 </li>
             </ul>
         </div>
@@ -97,6 +122,51 @@
                 $('#qr-code-container').show();
             } else {
                 $('#qr-code-container').hide();
+            }
+        });
+
+        // Validate form inputs
+        $('form').on('submit', function (e) {
+            const name = $('#name').val().trim();
+            const phone = $('#phone').val().trim();
+            const address = $('#address').val().trim();
+            const email = $('#email').val().trim();
+
+            // Regex for full name (cho phép chữ cái có dấu và dấu cách)
+            const nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
+
+            // Regex for phone number (mã vùng Việt Nam: +84 hoặc 0, theo sau là 9-10 chữ số)
+            const phoneRegex = /^(?:\+84|0)(?:[3|5|7|8|9])\d{8}$/;
+
+            // Regex for email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // Validate Full Name
+            if (!nameRegex.test(name) || name.length < 3 || name.length > 50) {
+                alert('Full Name is required, must be between 3 and 50 characters, and can only contain letters, spaces, and Vietnamese diacritics.');
+                e.preventDefault();
+                return;
+            }
+
+            // Validate Phone Number
+            if (!phoneRegex.test(phone)) {
+                alert('Phone Number must start with +84 or 0, followed by 9-10 digits, and match Vietnamese phone number formats.');
+                e.preventDefault();
+                return;
+            }
+
+            // Validate Address
+            if (address === '' || address.length < 5 || address.length > 100) {
+                alert('Address is required and must be between 5 and 100 characters.');
+                e.preventDefault();
+                return;
+            }
+
+            // Validate Email
+            if (!emailRegex.test(email)) {
+                alert('Invalid Email format.');
+                e.preventDefault();
+                return;
             }
         });
     });

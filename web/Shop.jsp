@@ -1,4 +1,3 @@
-<!-- filepath: /Users/tranphantrungkien/Ky5/SWP391/PetiqueSpa/web/Shop.jsp -->
 <%@ page import="java.sql.*, java.util.*, DAO.ProductDAO, Model.Product" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp" />
@@ -38,17 +37,17 @@
                     List<Product> productList = productDAO.getAllProducts();
                     for (Product product : productList) {
                 %>
-                <div class="col-md-4">
+                <div class="col-md-4 d-flex align-items-stretch">
                     <div class="card mb-4 shadow-sm product-card" data-product-id="<%= product.getProductId()%>">
                         <img src="<%= product.getimage_url()%>" class="card-img-top" alt="<%= product.getName()%>">
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column">
                             <h5 class="card-title"><%= product.getName()%></h5>
                             <p class="card-text"><%= product.getDescription()%></p>
-                            <p class="card-text"><strong>Price: $<%= product.getPrice()%></strong></p>
+                            <p class="card-text"><strong>Price: $<%= product.getPrice()%></strong></p> <!-- Chỉnh màu giá tiền thành xanh lục -->
                             <% if (product.getStockQuantity() == 0) { %>
                             <span class="badge badge-danger">Sold Out</span>
                             <% } else { %>
-                            <a href="javascript:void(0);" class="btn btn-outline-primary add-to-cart" data-product-id="<%= product.getProductId()%>"><i class="fa fa-shopping-cart"></i></a>
+                            <a href="javascript:void(0);" class="btn btn-outline-success add-to-cart mt-auto" data-product-id="<%= product.getProductId()%>"><i class="fa fa-shopping-cart"></i></a>
                             <% } %>
                         </div>
                     </div>

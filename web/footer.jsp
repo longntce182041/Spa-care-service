@@ -1,3 +1,9 @@
+<style>
+    /* CSS t?o kho?ng c?ch gi?a n?i dung v? footer */
+    .footer {
+        margin-top: 50px; /* Kho?ng c?ch gi?a n?i dung v? footer */
+    }
+</style>
 <footer class="footer">
     <div class="container">
         <div class="row">
