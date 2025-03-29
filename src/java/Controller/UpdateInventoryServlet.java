@@ -18,13 +18,13 @@ public class UpdateInventoryServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int inventoryId = Integer.parseInt(request.getParameter("inventoryId"));
         int productId = Integer.parseInt(request.getParameter("productId"));
-        String staffId = request.getParameter("staffId"); // Thay đổi kiểu dữ liệu thành String
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        String type = request.getParameter("type");
-        String imageUrl = request.getParameter("image_url");
-        String categoryId = request.getParameter("categoryId"); // Thay đổi kiểu dữ liệu thành String
+        String staffId = request.getParameter("staffId");
+        int inventoryQuantity = Integer.parseInt(request.getParameter("quantity"));
+        String inventoryType = request.getParameter("type");
+        String inventoryImageUrl = request.getParameter("image_url");
+        String productCategoryId = request.getParameter("categoryId");
 
-        Inventory inventory = new Inventory(inventoryId, productId, staffId, quantity, type, imageUrl, categoryId);
+        Inventory inventory = new Inventory(inventoryId, productId, staffId, inventoryQuantity, inventoryType, inventoryImageUrl, productCategoryId);
         inventoryDAO.updateInventory(inventory);
 
         response.sendRedirect("StaffWarehouse.jsp");

@@ -18,14 +18,14 @@ public class GetInventoryServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String inventoryIdParam = request.getParameter("inventoryId");
+            String inventory_idParam = request.getParameter("inventoryId");
             Gson gson = new Gson();
             String json;
 
-            if (inventoryIdParam != null) {
+            if (inventory_idParam != null) {
                 // Lấy thông tin chi tiết của một hàng tồn kho
-                int inventoryId = Integer.parseInt(inventoryIdParam);
-                Inventory inventory = inventoryDAO.getInventoryById(inventoryId);
+                int inventory_id = Integer.parseInt(inventory_idParam);
+                Inventory inventory = inventoryDAO.getInventoryById(inventory_id);
 
                 if (inventory != null) {
                     json = gson.toJson(inventory);

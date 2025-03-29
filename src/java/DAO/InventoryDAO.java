@@ -2,6 +2,7 @@ package DAO;
 
 import Model.Inventory;
 import ConnectDB.DBConnect;
+import static ConnectDB.DBConnect.getConnection;
 import java.sql.*;
 import java.util.*;
 
@@ -22,11 +23,11 @@ public class InventoryDAO {
                 list.add(new Inventory(
                         rs.getInt("inventory_id"),
                         rs.getInt("product_id"),
-                        rs.getString("staff_id"), // Thay đổi kiểu dữ liệu thành String
-                        rs.getInt("quantity"),
-                        rs.getString("type"),
-                        rs.getString("image_url"),
-                        rs.getString("category_id") // Thay đổi kiểu dữ liệu thành String
+                        rs.getString("staff_id"),
+                        rs.getInt("inventory_quantity"),
+                        rs.getString("inventory_type"),
+                        rs.getString("inventory_image_url"),
+                        rs.getString("product_category_id")
                 ));
             }
         } catch (SQLException e) {
@@ -64,11 +65,11 @@ public class InventoryDAO {
                 inventory = new Inventory(
                         rs.getInt("inventory_id"),
                         rs.getInt("product_id"),
-                        rs.getString("staff_id"), // Thay đổi kiểu dữ liệu thành String
-                        rs.getInt("quantity"),
-                        rs.getString("type"),
-                        rs.getString("image_url"),
-                        rs.getString("category_id") // Thay đổi kiểu dữ liệu thành String
+                        rs.getString("staff_id"),
+                        rs.getInt("inventory_quantity"),
+                        rs.getString("inventory_type"),
+                        rs.getString("inventory_image_url"),
+                        rs.getString("product_category_id")
                 );
             }
         } catch (SQLException e) {
@@ -90,7 +91,7 @@ public class InventoryDAO {
     }
 
     public void addInventory(Inventory inventory) {
-        String sql = "INSERT INTO Inventory (product_id, staff_id, quantity, type, image_url, category_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Inventory (product_id, staff_id, inventory_quantity, inventory_type, inventory_image_url, product_category_id) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -98,11 +99,11 @@ public class InventoryDAO {
             conn = DBConnect.getConnection();
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, inventory.getProductId());
-            stmt.setString(2, inventory.getStaffId()); // Thay đổi kiểu dữ liệu thành String
-            stmt.setInt(3, inventory.getQuantity());
-            stmt.setString(4, inventory.getType());
-            stmt.setString(5, inventory.getImageUrl());
-            stmt.setString(6, inventory.getCategoryId()); // Thay đổi kiểu dữ liệu thành String
+            stmt.setString(2, inventory.getStaffId());
+            stmt.setInt(3, inventory.getInventoryQuantity());
+            stmt.setString(4, inventory.getInventoryType());
+            stmt.setString(5, inventory.getInventoryImageUrl());
+            stmt.setString(6, inventory.getProductCategoryId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,8 +120,8 @@ public class InventoryDAO {
     }
 
     public boolean removeInventory(int id, int quantity) {
-        String sqlUpdate = "UPDATE Inventory SET quantity = quantity - ? WHERE inventory_id = ?";
-        String sqlSelect = "SELECT quantity FROM Inventory WHERE inventory_id = ?";
+        String sqlUpdate = "UPDATE Inventory SET inventory_quantity = inventory_quantity - ? WHERE inventory_id = ?";
+        String sqlSelect = "SELECT inventory_quantity FROM Inventory WHERE inventory_id = ?";
         String sqlDelete = "DELETE FROM Inventory WHERE inventory_id = ?";
         Connection conn = null;
         PreparedStatement stmtUpdate = null;
@@ -144,7 +145,7 @@ public class InventoryDAO {
             rs = stmtSelect.executeQuery();
 
             if (rs.next()) {
-                int currentQuantity = rs.getInt("quantity");
+                int currentQuantity = rs.getInt("inventory_quantity");
                 if (currentQuantity <= 0) {
                     // Xóa sản phẩm nếu số lượng <= 0
                     stmtDelete = conn.prepareStatement(sqlDelete);
@@ -188,7 +189,7 @@ public class InventoryDAO {
     }
 
     public void updateInventory(Inventory inventory) {
-        String sql = "UPDATE Inventory SET product_id = ?, staff_id = ?, quantity = ?, type = ?, image_url = ?, category_id = ? WHERE inventory_id = ?";
+        String sql = "UPDATE Inventory SET product_id = ?, staff_id = ?, inventory_quantity = ?, inventory_type = ?, inventory_image_url = ?, product_category_id = ? WHERE inventory_id = ?";
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -196,11 +197,11 @@ public class InventoryDAO {
             conn = DBConnect.getConnection();
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, inventory.getProductId());
-            stmt.setString(2, inventory.getStaffId()); // Thay đổi kiểu dữ liệu thành String
-            stmt.setInt(3, inventory.getQuantity());
-            stmt.setString(4, inventory.getType());
-            stmt.setString(5, inventory.getImageUrl());
-            stmt.setString(6, inventory.getCategoryId()); // Thay đổi kiểu dữ liệu thành String
+            stmt.setString(2, inventory.getStaffId());
+            stmt.setInt(3, inventory.getInventoryQuantity());
+            stmt.setString(4, inventory.getInventoryType());
+            stmt.setString(5, inventory.getInventoryImageUrl());
+            stmt.setString(6, inventory.getProductCategoryId());
             stmt.setInt(7, inventory.getInventoryId());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -214,6 +215,18 @@ public class InventoryDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public boolean deleteInventory(int inventoryId) {
+        String sql = "DELETE FROM inventory WHERE inventory_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, inventoryId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

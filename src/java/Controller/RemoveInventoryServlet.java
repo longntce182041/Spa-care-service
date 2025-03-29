@@ -15,10 +15,10 @@ public class RemoveInventoryServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int inventoryId = Integer.parseInt(request.getParameter("inventoryId"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        int inventoryQuantity = Integer.parseInt(request.getParameter("quantity")); // Đổi tên biến cho phù hợp
 
         // Giảm số lượng và kiểm tra nếu số lượng về 0
-        boolean isDeleted = inventoryDAO.removeInventory(inventoryId, quantity);
+        boolean isDeleted = inventoryDAO.removeInventory(inventoryId, inventoryQuantity);
 
         if (isDeleted) {
             // Nếu sản phẩm bị xóa, chuyển hướng đến trang dashboard

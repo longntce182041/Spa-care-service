@@ -17,21 +17,36 @@ public class AddInventoryServlet extends HttpServlet {
     private ProductDAO productDAO = new ProductDAO();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        String staffId = request.getParameter("staffId"); // Thay đổi kiểu dữ liệu thành String
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        String type = request.getParameter("type");
-        String imageUrl = request.getParameter("image_url");
-        String categoryId = request.getParameter("categoryId"); // Thay đổi kiểu dữ liệu thành String
+        try {
+            String productIdParam = request.getParameter("productId");
+            if (productIdParam == null || productIdParam.isEmpty()) {
+                throw new IllegalArgumentException("Product ID is required.");
+            }
+            int productId = Integer.parseInt(productIdParam);
 
-        // Kiểm tra sự tồn tại của product_id trong bảng Products
-        if (productDAO.productExists(productId)) {
-            Inventory inventory = new Inventory(0, productId, staffId, quantity, type, imageUrl, categoryId);
-            inventoryDAO.addInventory(inventory);
-            response.sendRedirect("StaffWarehouse.jsp"); // Quay lại trang dashboard
-        } else {
-            // Nếu product_id không tồn tại, hiển thị thông báo lỗi
-            response.sendRedirect("StaffWarehouse.jsp?error=Product ID does not exist");
+            String staffId = request.getParameter("staffId");
+            int inventoryQuantity = Integer.parseInt(request.getParameter("quantity"));
+            String inventoryType = request.getParameter("type");
+            String inventoryImageUrl = request.getParameter("image_url");
+            String productCategoryId = request.getParameter("categoryId");
+
+            // Kiểm tra sự tồn tại của product_id trong bảng Products
+            if (productDAO.productExists(productId)) {
+                Inventory inventory = new Inventory(0, productId, staffId, inventoryQuantity, inventoryType, inventoryImageUrl, productCategoryId);
+                inventoryDAO.addInventory(inventory);
+                response.sendRedirect("StaffWarehouse.jsp"); // Quay lại trang dashboard
+            } else {
+                response.sendRedirect("StaffWarehouse.jsp?error=Product ID does not exist");
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            response.sendRedirect("StaffWarehouse.jsp?error=Invalid Product ID");
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            response.sendRedirect("StaffWarehouse.jsp?error=" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("StaffWarehouse.jsp?error=An unexpected error occurred");
         }
     }
 }

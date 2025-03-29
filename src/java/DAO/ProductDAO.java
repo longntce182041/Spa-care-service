@@ -22,12 +22,12 @@ public class ProductDAO {
             while (rs.next()) {
                 list.add(new Product(
                         rs.getInt("product_id"),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock_quantity"),
-                        rs.getString("image_url"),
-                        rs.getString("category_id")
+                        rs.getString("product_name"),
+                        rs.getString("product_description"),
+                        rs.getDouble("product_price"),
+                        rs.getInt("product_stock_quantity"),
+                        rs.getString("product_image_url"),
+                        rs.getString("product_category_id")
                 ));
             }
         } catch (SQLException e) {
@@ -65,13 +65,13 @@ public class ProductDAO {
             if (rs.next()) {
                 product = new Product(
                         rs.getInt("product_id"),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock_quantity"),
-                        rs.getString("image_url"),
-                        rs.getString("category_id"),
-                        rs.getString("desciption_detail")
+                        rs.getString("product_name"),
+                        rs.getString("product_description"),
+                        rs.getDouble("product_price"),
+                        rs.getInt("product_stock_quantity"),
+                        rs.getString("product_image_url"),
+                        rs.getString("product_category_id"),
+                        rs.getString("product_description_detail")
                 );
             }
         } catch (SQLException e) {
@@ -136,10 +136,10 @@ public class ProductDAO {
         try {
             conn = DBConnect.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT DISTINCT name FROM Categories"); // Sửa lại cho đúng cột
+            rs = stmt.executeQuery("SELECT DISTINCT product_category_name FROM Product_Categories"); // Sửa lại cho đúng cột
 
             while (rs.next()) {
-                categories.add(rs.getString("name")); // Lấy giá trị từ cột "name"
+                categories.add(rs.getString("product_category_name")); // Lấy giá trị từ cột "name"
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -168,8 +168,8 @@ public class ProductDAO {
         try {
             conn = DBConnect.getConnection();
             String sql = "SELECT p.* FROM Products p "
-                    + "JOIN Categories c ON p.category_id = c.category_id "
-                    + "WHERE c.name = ?";
+                    + "JOIN Product_Categories c ON p.product_category_id = c.product_category_id "
+                    + "WHERE c.product_category_name = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, categoryName);
             rs = stmt.executeQuery();
@@ -177,12 +177,12 @@ public class ProductDAO {
             while (rs.next()) {
                 list.add(new Product(
                         rs.getInt("product_id"),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock_quantity"),
-                        rs.getString("image_url"),
-                        rs.getString("category_id")
+                        rs.getString("product_name"),
+                        rs.getString("product_description"),
+                        rs.getDouble("product_price"),
+                        rs.getInt("product_stock_quantity"),
+                        rs.getString("product_image_url"),
+                        rs.getString("product_category_id")
                 ));
             }
         } catch (SQLException e) {
@@ -211,7 +211,7 @@ public class ProductDAO {
 
         try {
             conn = DBConnect.getConnection();
-            String sql = "SELECT * FROM Products WHERE name LIKE ? OR description LIKE ?";
+            String sql = "SELECT * FROM Products WHERE name LIKE ? OR product_description LIKE ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, "%" + query + "%");
             stmt.setString(2, "%" + query + "%");
@@ -219,13 +219,13 @@ public class ProductDAO {
 
             while (rs.next()) {
                 Product product = new Product(
-                        rs.getInt("product_id"),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock_quantity"),
-                        rs.getString("image_url"),
-                        rs.getString("category_id")
+                        rs.getInt("product_product_id"),
+                        rs.getString("product_name"),
+                        rs.getString("product_description"),
+                        rs.getDouble("product_price"),
+                        rs.getInt("product_stock_quantity"),
+                        rs.getString("product_image_url"),
+                        rs.getString("product_category_id")
                 );
                 productList.add(product);
             }
@@ -253,7 +253,7 @@ public class ProductDAO {
 
         try {
             conn = DBConnect.getConnection();
-            String sql = "UPDATE Products SET stock_quantity = stock_quantity + ? WHERE product_id = ?";
+            String sql = "UPDATE Products SET product_stock_quantity = product_stock_quantity + ? WHERE product_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, quantityChange);
             stmt.setInt(2, productId);
@@ -271,6 +271,7 @@ public class ProductDAO {
             }
         }
     }
+
     // Lấy danh sách các sản phẩm tương tự
     public List<Product> getSimilarProducts(int productId) {
         List<Product> similarProducts = new ArrayList<>();
@@ -280,7 +281,7 @@ public class ProductDAO {
 
         try {
             conn = DBConnect.getConnection();
-            String sql = "SELECT * FROM Products WHERE category_id = (SELECT category_id FROM Products WHERE product_id = ?) AND product_id != ?";
+            String sql = "SELECT * FROM Products WHERE product_category_id = (SELECT product_category_id FROM Products WHERE product_id = ?) AND product_id != ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, productId);
             stmt.setInt(2, productId);
@@ -289,12 +290,12 @@ public class ProductDAO {
             while (rs.next()) {
                 Product product = new Product(
                         rs.getInt("product_id"),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock_quantity"),
-                        rs.getString("image_url"),
-                        rs.getString("category_id")
+                        rs.getString("product_name"),
+                        rs.getString("product_description"),
+                        rs.getDouble("product_price"),
+                        rs.getInt("product_stock_quantity"),
+                        rs.getString("product_image_url"),
+                        rs.getString("product_category_id")
                 );
                 similarProducts.add(product);
             }
@@ -315,5 +316,5 @@ public class ProductDAO {
         }
         return similarProducts;
     }
-    
+
 }

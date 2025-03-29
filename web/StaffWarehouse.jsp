@@ -31,8 +31,9 @@
                     <tr>
                         <th>ID</th>
                         <th>Product ID</th>
-                        <th>Type</th>
+                        <th>Staff ID</th>
                         <th>Quantity</th>
+                        <th>Type</th>
                         <th>Images</th>
                         <th>Category ID</th>
                         <th>Action</th>
@@ -45,17 +46,23 @@
                         for (Inventory item : inventoryList) {
                     %>
                     <tr>
-                        <td><%= item.getInventoryId()%></td>
-                        <td><%= item.getProductId()%></td>
-                        <td><%= item.getType()%></td>
-                        <td><%= item.getQuantity()%></td>
-                        <td><img src="<%= item.getImageUrl()%>" alt="Product Image" style="width: 100px; height: auto;"></td>
-                        <td><%= item.getCategoryId()%></td>
+                        <td><%= item.getInventoryId() %></td>
+                        <td><%= item.getProductId() %></td>
+                        <td><%= item.getStaffId() %></td>
+                        <td><%= item.getInventoryQuantity() %></td>
+                        <td><%= item.getInventoryType() %></td>
+                        <td><img src="<%= item.getInventoryImageUrl() %>" alt="Product Image" style="width: 100px; height: auto;"></td>
+                        <td><%= item.getProductCategoryId() %></td>
                         <td>
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#editInventoryModal" onclick="loadInventoryData(<%= item.getInventoryId() %>)">Edit</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#editInventoryModal" onclick="loadInventoryData(<%= item.getInventoryId() %>)">
+                                <i class="fa fa-pencil"></i> 
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteInventory(<%= item.getInventoryId() %>)">
+                                <i class="fa fa-trash"></i> 
+                            </button>
                         </td>
                     </tr>
-                    <% }%>
+                    <% } %>
                 </tbody>
             </table>
         </div>
@@ -72,7 +79,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="stockReceivingForm">
+                    <form id="stockReceivingForm" method="POST" action="AddInventoryServlet">
                         <div class="form-group">
                             <label for="productId">Product ID:</label>
                             <input type="text" class="form-control" id="productId" name="productId" required>
@@ -97,7 +104,7 @@
                             <label for="categoryId">Category ID:</label>
                             <input type="text" class="form-control" id="categoryId" name="categoryId" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Import</button>
+                        <button type="submit" class="btn btn-primary">Add Inventory</button>
                     </form>
                 </div>
             </div>
@@ -155,11 +162,11 @@
                         <input type="hidden" id="editInventoryId" name="inventoryId">
                         <div class="form-group">
                             <label for="editProductId">Product ID:</label>
-                            <input type="text" class="form-control" id="editProductId" name="productId" required>
+                            <input type="text" class="form-control" id="editProductId" name="productId" readonly>
                         </div>
                         <div class="form-group">
                             <label for="editStaffId">Staff ID:</label>
-                            <input type="text" class="form-control" id="editStaffId" name="staffId" required>
+                            <input type="text" class="form-control" id="editStaffId" name="staffId" readonly>
                         </div>
                         <div class="form-group">
                             <label for="editQuantity">Quantity:</label>
@@ -245,70 +252,96 @@
                 method: 'GET',
                 data: { inventoryId: inventoryId },
                 success: function(data) {
-                    $('#editInventoryId').val(data.inventoryId);
-                    $('#editProductId').val(data.productId);
-                    $('#editStaffId').val(data.staffId);
-                    $('#editQuantity').val(data.quantity);
-                    $('#editType').val(data.type);
-                    $('#editImageUrl').val(data.imageUrl);
-                    $('#editCategoryId').val(data.categoryId);
+                    // Điền dữ liệu vào các trường trong modal
+            $('#editInventoryId').val(data.inventoryId);
+            $('#editProductId').val(data.productId);
+            $('#editStaffId').val(data.staffId);
+            $('#editQuantity').val(data.inventoryQuantity);
+            $('#editType').val(data.inventoryType);
+            $('#editImageUrl').val(data.inventoryImageUrl);
+            $('#editCategoryId').val(data.productCategoryId);
                 },
                 error: function() {
                     alert('Error loading inventory data.');
                 }
             });
         }
-
         // Handle form submissions for editing inventory
         $('#editInventoryForm').on('submit', function(event) {
-            event.preventDefault();
-            $.ajax({
-                url: 'UpdateInventoryServlet',
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    $('#editInventoryModal').modal('hide');
-                    updateInventoryTable(); // Update the inventory table without reloading the page
-                    removeModalBackdrop(); // Remove modal backdrop
-                },
-                error: function() {
-                    alert('Error processing request.');
-                }
-            });
-        });
-
+    event.preventDefault();
+    console.log($(this).serialize()); // Log dữ liệu gửi đi
+    $.ajax({
+        url: 'UpdateInventoryServlet',
+        method: 'POST',
+        data: $(this).serialize(),
+        success: function(response) {
+            console.log("Response from UpdateInventoryServlet:", response); // Log phản hồi từ backend
+            $('#editInventoryModal').modal('hide');
+            updateInventoryTable(); // Update the inventory table without reloading the page
+            removeModalBackdrop(); // Remove modal backdrop
+        },
+        error: function(xhr, status, error) {
+            console.error("Error: " + error); // Log lỗi
+            console.error("Response: " + xhr.responseText); // Log phản hồi lỗi
+            alert('Error processing request.');
+        }
+    });
+});
         // Function to update the inventory table without reloading the page
         function updateInventoryTable() {
-            $.ajax({
-                url: 'GetInventoryServlet',
-                method: 'GET',
-                success: function(data) {
-                    var inventoryTableBody = $('#inventoryTableBody');
-                    inventoryTableBody.empty();
-                    data.forEach(function(item) {
-                        var row = '<tr>' +
-                            '<td>' + item.inventoryId + '</td>' +
-                            '<td>' + item.productId + '</td>' +
-                            '<td>' + item.type + '</td>' +
-                            '<td>' + item.quantity + '</td>' +
-                            '<td><img src="' + item.imageUrl + '" alt="Product Image" style="width: 100px; height: auto;"></td>' +
-                            '<td>' + item.categoryId + '</td>' +
-                            '<td><button class="btn btn-primary" data-toggle="modal" data-target="#editInventoryModal" onclick="loadInventoryData(' + item.inventoryId + ')">Edit</button></td>' +
-                            '</tr>';
-                        inventoryTableBody.append(row);
-                    });
-                },
-                error: function() {
-                    alert('Error updating inventory table.');
-                }
+    $.ajax({
+        url: 'GetInventoryServlet',
+        method: 'GET',
+        success: function(data) {
+            var inventoryTableBody = $('#inventoryTableBody');
+            inventoryTableBody.empty();
+            data.forEach(function(item) {
+                var row = '<tr>' +
+                    '<td>' + item.inventoryId + '</td>' +
+                    '<td>' + item.productId + '</td>' +
+                    '<td>' + item.staffId + '</td>' +
+                    '<td>' + item.inventoryQuantity + '</td>' +
+                    '<td>' + item.inventoryType + '</td>' +
+                    '<td><img src="' + item.inventoryImageUrl + '" alt="Product Image" style="width: 100px; height: auto;"></td>' +
+                    '<td>' + item.productCategoryId + '</td>' +
+                    '<td><button class="btn btn-primary" data-toggle="modal" data-target="#editInventoryModal" onclick="loadInventoryData(' + item.inventoryId + ')"><i class="fa fa-pencil"></i> Edit</button><button class="btn btn-danger" onclick="deleteInventory(' + item.inventoryId + ')"><i class="fa fa-trash"></i> Delete</button></td>' +
+                    '</tr>';
+                inventoryTableBody.append(row);
             });
+        },
+        error: function(xhr, status, error) {
+            console.error("Error: " + error); // Log lỗi
+            console.error("Response: " + xhr.responseText); // Log phản hồi lỗi
+            alert('Error updating inventory table.');
         }
+    });
+}
 
         // Function to remove modal backdrop
         function removeModalBackdrop() {
             $('.modal-backdrop').remove();
             $('body').removeClass('modal-open');
             $('body').css('padding-right', '');
+        }
+
+        // Function to delete inventory
+        function deleteInventory(inventoryId) {
+            if (confirm("Are you sure you want to delete this inventory item?")) {
+                $.ajax({
+                    url: 'DeleteInventoryServlet',
+                    method: 'POST',
+                    data: { inventoryId: inventoryId },
+                    success: function(response) {
+                        alert("Inventory item deleted successfully.");
+                        updateInventoryTable(); // Cập nhật lại bảng sản phẩm
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: " + error); // Log lỗi
+                        console.error("Response: " + xhr.responseText); // Log phản hồi lỗi
+                        alert('Error deleting inventory item.');
+                    }
+                });
+            }
         }
     </script>
 </body>

@@ -10,14 +10,16 @@ public class Consultation {
     private String phoneNumber;
     private Date date;
     private Time time;
+    private String consultationStatus; // Đổi tên thuộc tính
 
-    public Consultation(int consultationId, String message, String name, String phoneNumber, Date date, Time time) {
+    public Consultation(int consultationId, String message, String name, String phoneNumber, Date date, Time time, String consultationStatus) {
         this.consultationId = consultationId;
         this.message = message;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.date = date;
         this.time = time;
+        this.consultationStatus = consultationStatus;
     }
 
     // Getters and Setters
@@ -67,5 +69,13 @@ public class Consultation {
 
     public void setTime(Time time) {
         this.time = time;
+    }
+
+    public String getConsultationStatus() {
+        return consultationStatus;
+    }
+
+    public void setConsultationStatus(String consultationStatus) {
+        this.consultationStatus = consultationStatus;
     }
 }

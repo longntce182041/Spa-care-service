@@ -35,6 +35,8 @@
                         <th>Phone Number</th>
                         <th>Date</th>
                         <th>Time</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="consultationTableBody">
@@ -43,13 +45,21 @@
                         List<Consultation> consultationList = dao.getAllConsultations();
                         for (Consultation consultation : consultationList) {
                     %>
-                    <tr>
-                        <td><%= consultation.getConsultationId()%></td>
-                        <td><%= consultation.getMessage()%></td>
-                        <td><%= consultation.getName()%></td>
-                        <td><%= consultation.getPhoneNumber()%></td>
-                        <td><%= consultation.getDate()%></td>
-                        <td><%= consultation.getTime()%></td>
+                    <tr id="consultation-<%= consultation.getConsultationId() %>">
+                        <td><%= consultation.getConsultationId() %></td>
+                        <td><%= consultation.getMessage() %></td>
+                        <td><%= consultation.getName() %></td>
+                        <td><%= consultation.getPhoneNumber() %></td>
+                        <td><%= consultation.getDate() %></td>
+                        <td><%= consultation.getTime() %></td>
+                        <td id="status-<%= consultation.getConsultationId() %>"><%= consultation.getConsultationStatus() %></td>
+                        <td>
+                            <% if ("Pending".equals(consultation.getConsultationStatus())) { %>
+                                <button class="btn btn-primary confirmStatusBtn" data-id="<%= consultation.getConsultationId() %>">Confirm</button>
+                            <% } else { %>
+                                <span class="text-success">Confirmed</span>
+                            <% } %>
+                        </td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -79,6 +89,27 @@
     <script src="js/main.js"></script>
     <script>
         $(document).ready(function() {
+            // Xử lý sự kiện khi nhấn nút "Confirm"
+            $('.confirmStatusBtn').click(function () {
+                const consultationId = $(this).data('id'); // Lấy ID của consultation
+
+                // Gửi yêu cầu AJAX đến servlet
+                $.ajax({
+                    url: 'ConfirmConsultationServlet',
+                    method: 'GET',
+                    data: { consultationId: consultationId },
+                    success: function(response) {
+                        $('#status-' + consultationId).text('Confirm');
+                        $('#consultation-' + consultationId + ' .confirmStatusBtn').replaceWith('<span class="text-success">Confirmed</span>');
+                        alert('Consultation confirmed successfully!');
+                    },
+                    error: function() {
+                        alert('An error occurred while confirming the consultation.');
+                    }
+                });
+            });
+
+            // Xử lý sự kiện chuyển đổi giữa bảng Consultation và Appointment
             $('#viewAppointmentBtn').click(function() {
                 $.ajax({
                     url: 'appointment.jsp',

@@ -573,16 +573,16 @@
                 <div class="row d-md-flex justify-content-end">
                     <div class="col-md-12 col-lg-6 half p-3 py-5 pl-lg-5 ftco-animate">
                         <h2 class="mb-4">Free Consultation</h2>
-                        <form action="AddConsultationServlet" method="post" class="appointment">
+                        <form id="consultationForm" action="AddConsultationServlet" method="post" class="appointment">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="name" placeholder="Your Name">
+                                        <input type="text" class="form-control" name="name" id="name" placeholder="Your Name">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="phoneNumber" placeholder="Phone Number">
+                                        <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Phone Number">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -714,7 +714,70 @@
         <script src="js/google-map.js"></script>
         <script src="js/main.js"></script>
 
+        <script>
+            document.getElementById("consultationForm").addEventListener("submit", function (event) {
+                const name = document.querySelector("input[name='name']").value.trim();
+                const phoneNumber = document.querySelector("input[name='phoneNumber']").value.trim();
+                const date = document.querySelector("input[name='date']").value.trim();
+                const time = document.querySelector("input[name='time']").value.trim();
+                const message = document.querySelector("textarea[name='message']").value.trim();
 
+                const nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
+                const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
+                const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+                const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
+                const today = new Date();
+                const inputDate = new Date(date);
+
+                if (!name && !phoneNumber && !date && !time && !message) {
+                    alert("Please fill out all fields before submitting.");
+                    event.preventDefault();
+                    return;
+                }
+
+                if (!nameRegex.test(name)) {
+                    alert("Please enter a valid name (only letters and spaces are allowed).");
+                    event.preventDefault();
+                    return;
+                }
+
+                if (!phoneRegex.test(phoneNumber)) {
+                    alert("Please enter a valid Vietnamese phone number (e.g., 0968996035).");
+                    event.preventDefault();
+                    return;
+                }
+
+                if (!dateRegex.test(date)) {
+                    alert("Please enter a valid date in MM/dd/yyyy format.");
+                    event.preventDefault();
+                    return;
+                }
+                if (inputDate < today) {
+                    alert("The date cannot be in the past.");
+                    event.preventDefault();
+                    return;
+                }
+
+                if (!timeRegex.test(time)) {
+                    alert("Please enter a valid time in HH:mm format.");
+                    event.preventDefault();
+                    return;
+                }
+                const [hours, minutes] = time.split(":").map(Number);
+                if (hours < 8 || hours > 18) {
+                    alert("The time must be between 08:00 and 18:00.");
+                    event.preventDefault();
+                    return;
+                }
+
+                if (message === "") {
+                    alert("Please enter a message.");
+                    event.preventDefault();
+                    return;
+                }
+            });
+        </script>
 
     </body>
 </html>

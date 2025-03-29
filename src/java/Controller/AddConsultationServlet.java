@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 
 @WebServlet("/AddConsultationServlet")
 public class AddConsultationServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
     private ConsultationDAO consultationDAO = new ConsultationDAO();
 
@@ -42,7 +43,8 @@ public class AddConsultationServlet extends HttpServlet {
             return;
         }
 
-        Consultation consultation = new Consultation(0, message, name, phoneNumber, date, time);
+        String consultationStatus = "Pending"; // Trạng thái mặc định
+        Consultation consultation = new Consultation(0, message, name, phoneNumber, date, time, consultationStatus);
         consultationDAO.addConsultation(consultation);
 
         response.sendRedirect("index.jsp");

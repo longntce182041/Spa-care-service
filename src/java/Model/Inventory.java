@@ -3,20 +3,21 @@ package Model;
 public class Inventory {
     private int inventoryId;
     private int productId;
-    private String staffId; // Thay đổi kiểu dữ liệu thành String
-    private int quantity;
-    private String type;
-    private String imageUrl;
-    private String categoryId; // Thay đổi kiểu dữ liệu thành String
+    private String staffId; // ID của nhân viên
+    private int inventoryQuantity; // Số lượng sản phẩm trong kho
+    private String inventoryType; // Loại kho (nhập, xuất)
+    private String inventoryImageUrl; // URL hình ảnh liên quan đến kho
+    private String productCategoryId; // ID danh mục sản phẩm
 
-    public Inventory(int inventoryId, int productId, String staffId, int quantity, String type, String imageUrl, String categoryId) {
+    // Constructor đầy đủ
+    public Inventory(int inventoryId, int productId, String staffId, int inventoryQuantity, String inventoryType, String inventoryImageUrl, String productCategoryId) {
         this.inventoryId = inventoryId;
         this.productId = productId;
         this.staffId = staffId;
-        this.quantity = quantity;
-        this.type = type;
-        this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
+        this.inventoryQuantity = inventoryQuantity;
+        this.inventoryType = inventoryType;
+        this.inventoryImageUrl = inventoryImageUrl;
+        this.productCategoryId = productCategoryId;
     }
 
     // Getters and Setters
@@ -44,35 +45,35 @@ public class Inventory {
         this.staffId = staffId;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getInventoryQuantity() {
+        return inventoryQuantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setInventoryQuantity(int inventoryQuantity) {
+        this.inventoryQuantity = inventoryQuantity;
     }
 
-    public String getType() {
-        return type;
+    public String getInventoryType() {
+        return inventoryType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setInventoryType(String inventoryType) {
+        this.inventoryType = inventoryType;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getInventoryImageUrl() {
+        return inventoryImageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setInventoryImageUrl(String inventoryImageUrl) {
+        this.inventoryImageUrl = inventoryImageUrl;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getProductCategoryId() {
+        return productCategoryId;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setProductCategoryId(String productCategoryId) {
+        this.productCategoryId = productCategoryId;
     }
 }
