@@ -45,9 +45,9 @@
                     <td>
                         <img src="<%= item.getProduct().getimage_url() %>" alt="<%= item.getProduct().getName() %>" class="img-thumbnail" style="width: 100px; height: auto;">
                     </td>
-                    <td>$<%= item.getProduct().getPrice() %></td>
+                    <td><%= String.format("%,.0f VNĐ", item.getProduct().getPrice()) %></td>
                     <td><%= item.getQuantity() %></td>
-                    <td class="product-total">$<%= itemTotal %></td>
+                    <td class="product-total"><%= String.format("%,.0f VNĐ", itemTotal) %></td>
                     <td>
                         <button type="button" class="btn btn-danger btn-remove" data-product-id="<%= item.getProduct().getProductId() %>">
                             <i class="fas fa-trash-alt"></i> Remove
@@ -57,13 +57,10 @@
                 <%
                     }
                 %>
-                <tr id="total-row">
-                    <td colspan="5" class="text-right"><strong>Total:</strong></td>
-                    <td colspan="2"><strong id="cart-total">$<%= String.format("%.2f", totalCartValue) %></strong></td>
-                </tr>
             </tbody>
         </table>
         <div class="text-right">
+            <h4>Total: <span id="cart-total">0 VNĐ</span></h4>
             <button id="checkout-button" class="btn btn-success"><i class="fas fa-credit-card"></i> Proceed to Checkout</button>
         </div>
     </form>
@@ -79,13 +76,13 @@
         function updateTotal() {
             let total = 0;
             $('.product-row').each(function() {
-                const price = parseFloat($(this).data('product-price'));
-                const quantity = parseInt($(this).data('product-quantity'));
-                total += price * quantity;
+                const price = parseFloat($(this).data('product-price')); // Lấy giá trị price
+                const quantity = parseInt($(this).data('product-quantity')); // Lấy số lượng sản phẩm
+                total += price * quantity; // Tính tổng tiền
             });
 
-            // Hiển thị tổng tiền
-            $('#cart-total').text(`$${total.toFixed(2)}`);
+            // Hiển thị tổng tiền với định dạng VNĐ
+            $('#cart-total').text(`${total.toLocaleString('vi-VN')} VNĐ`);
         }
 
         // Cập nhật số lượng sản phẩm trên biểu tượng giỏ hàng

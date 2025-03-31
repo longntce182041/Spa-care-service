@@ -71,7 +71,8 @@ public class AddToCartServlet extends HttpServlet {
 
         // Trả về số lượng sản phẩm trong giỏ hàng
         response.setContentType("application/json");
-        response.getWriter().write("{\"success\": true, \"cartCount\": " + cart.size() + "}");
+        double totalPrice = cart.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum();
+        response.getWriter().write("{\"success\": true, \"cartCount\": " + cart.size() + ", \"totalPrice\": \"" + String.format("%,.0f VNĐ", totalPrice) + "\"}");
     }
 }
 

@@ -39,8 +39,8 @@ public class FilterProductsServlet extends HttpServlet {
             out.println("<div class='card-body'>");
             out.println("<h5 class='card-title'>" + product.getName() + "</h5>");
             out.println("<p class='card-text'>" + product.getDescription() + "</p>");
-            out.println("<p class='card-text'><strong>Price: $" + product.getPrice() + "</strong></p>");
-            out.println("<a href='javascript:void(0);' class='btn btn-outline-primary add-to-cart' data-product-id='" + product.getProductId() + "'><i class='fa fa-shopping-cart'></i> Add to Cart</a>");
+            out.println("<p class='card-text'><strong>Price: " + String.format("%,.0f VNĐ", product.getPrice()) + "</strong></p>");
+            out.println("<a href='javascript:void(0);' class='btn btn-outline-success add-to-cart mt-auto'" + product.getProductId() + "'><i class='fa fa-shopping-cart'></i></a>");
             out.println("</div>");
             out.println("</div>");
             out.println("</div>");

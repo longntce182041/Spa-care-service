@@ -26,6 +26,8 @@ public class RemoveFromCartServlet extends HttpServlet {
 
         session.setAttribute("cart", cart);
         session.setAttribute("cartCount", cart.size());
-        response.sendRedirect("Cart.jsp");
+
+        double totalPrice = cart.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum();
+        response.getWriter().write("{\"success\": true, \"cartCount\": " + cart.size() + ", \"totalPrice\": \"" + String.format("%,.0f VNĐ", totalPrice) + "\"}");
     }
 }

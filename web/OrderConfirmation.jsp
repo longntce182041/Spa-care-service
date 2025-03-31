@@ -69,13 +69,13 @@
                         <small>Quantity: <%= detail.getQuantity() %></small>
                     </div>
                 </div>
-                <span class="price">$<%= itemTotal %></span>
+                <span class="price"><%= String.format("%,.0f VNĐ", itemTotal) %></span>
             </li>
             <%
                 }
             %>
             <li class="list-group-item total">
-                <strong>Total (USD):</strong> <span>$<%= total %></span>
+                <strong>Total (VNĐ):</strong> <span><%= String.format("%,.0f VNĐ", total) %></span>
             </li>
         </ul>
     </div>

@@ -43,7 +43,7 @@
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title"><%= product.getName()%></h5>
                             <p class="card-text"><%= product.getDescription()%></p>
-                            <p class="card-text"><strong>Price: $<%= product.getPrice()%></strong></p> <!-- Chỉnh màu giá tiền thành xanh lục -->
+                            <p class="card-text"><strong>Price: <%= String.format("%,.0f VNĐ", product.getPrice()) %></strong></p>
                             <% if (product.getStockQuantity() == 0) { %>
                             <span class="badge badge-danger">Sold Out</span>
                             <% } else { %>
@@ -124,5 +124,7 @@
                 }
             });
         });
+
+        console.log(`Price: ${price.toLocaleString('vi-VN')} VNĐ`);
     });
 </script>

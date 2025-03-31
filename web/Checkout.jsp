@@ -95,17 +95,19 @@
                         <h6 class="my-0"><%= item.getProduct().getName() %></h6>
                         <small class="text-muted">Quantity: <%= item.getQuantity() %></small>
                     </div>
-                    <span class="text-muted">$<%= itemTotal %></span>
+                    <!-- Hiển thị giá tiền theo định dạng VNĐ -->
+                    <span class="text-muted"><%= String.format("%,.0f VNĐ", itemTotal) %></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <img src="<%= item.getProduct().getimage_url()%>" alt="<%= item.getProduct().getName()%>" style="width: 100px; height: auto;">
+                    <img src="<%= item.getProduct().getimage_url() %>" alt="<%= item.getProduct().getName() %>" style="width: 100px; height: auto;">
                 </li>
                 <%
                     }
                 %>
                 <li class="list-group-item d-flex justify-content-between">
-                    <span>Total (USD)</span>
-                    <strong>$<%= total %></strong>
+                    <span>Total (VNĐ)</span>
+                    <!-- Hiển thị tổng tiền theo định dạng VNĐ -->
+                    <strong><%= String.format("%,.0f VNĐ", total) %></strong>
                 </li>
             </ul>
         </div>

@@ -211,7 +211,7 @@ public class ProductDAO {
 
         try {
             conn = DBConnect.getConnection();
-            String sql = "SELECT * FROM Products WHERE name LIKE ? OR product_description LIKE ?";
+            String sql = "SELECT * FROM Products WHERE product_name LIKE ? OR product_description LIKE ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, "%" + query + "%");
             stmt.setString(2, "%" + query + "%");
@@ -219,7 +219,7 @@ public class ProductDAO {
 
             while (rs.next()) {
                 Product product = new Product(
-                        rs.getInt("product_product_id"),
+                        rs.getInt("product_id"),
                         rs.getString("product_name"),
                         rs.getString("product_description"),
                         rs.getDouble("product_price"),

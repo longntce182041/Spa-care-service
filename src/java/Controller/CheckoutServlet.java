@@ -118,12 +118,12 @@ public class CheckoutServlet extends HttpServlet {
             Product product = productDAO.getProductById(detail.getProductId());
             emailContent.append("<p>Product: ").append(product.getName()).append("</p>");
             emailContent.append("<p>Quantity: ").append(detail.getQuantity()).append("</p>");
-            emailContent.append("<p>Price: $").append(detail.getPrice()).append("</p>");
+            emailContent.append("<p>Price: ").append(String.format("%,.0f VNĐ", detail.getPrice())).append("</p>");
             emailContent.append("<img src=\"").append(product.getimage_url()).append("\" alt=\"").append(product.getName()).append("\" style=\"width: 100px; height: auto;\"><br>");
             total += detail.getPrice() * detail.getQuantity();
         }
 
-        emailContent.append("<p>Total: $").append(total).append("</p>");
+        emailContent.append("<p>Total: ").append(String.format("%,.0f VNĐ", total)).append("</p>");
         emailContent.append("<h2>Customer Details:</h2>");
         emailContent.append("<p>Name: ").append(order.getName()).append("</p>");
         emailContent.append("<p>Address: ").append(order.getAddress()).append("</p>");
