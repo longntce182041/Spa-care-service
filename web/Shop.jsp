@@ -47,7 +47,7 @@
                             <% if (product.getStockQuantity() == 0) { %>
                             <span class="badge badge-danger">Sold Out</span>
                             <% } else { %>
-                            <a href="javascript:void(0);" class="btn btn-outline-success add-to-cart mt-auto" data-product-id="<%= product.getProductId()%>"><i class="fa fa-shopping-cart"></i></a>
+                            <a href="javascript:void(0);" class="btn btn-outline-success add-to-cart mt-auto" data-product-id="<%= product.getProductId()%>"><i class="fa fa-shopping-cart"></i> Add to Cart</a>
                             <% } %>
                         </div>
                     </div>
@@ -78,6 +78,9 @@
                     success: function (response) {
                         // Cập nhật số lượng sản phẩm trong giỏ hàng trên thanh navbar
                         $('#cart-count').text(response.cartCount);
+
+                        // Hiển thị thông báo
+                        alert('Product added to cart successfully!');
                     },
                     error: function (xhr, status, error) {
                         console.error('Failed to add product to cart.');

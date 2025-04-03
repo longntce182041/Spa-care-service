@@ -15,12 +15,18 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import jakarta.mail.MessagingException;
 
 @WebServlet("/CheckoutServlet")
 public class CheckoutServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+
+    // Khai báo và khởi tạo OrderDAO
+    private OrderDAO orderDAO = new OrderDAO();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -69,14 +75,35 @@ public class CheckoutServlet extends HttpServlet {
             System.out.println("OrderDetail: " + detail);
         }
 
-        // Lưu thông tin đơn hàng và các mục đơn hàng vào cơ sở dữ liệu
-        OrderDAO orderDAO = new OrderDAO();
-        int orderId = orderDAO.saveOrder(order, orderDetails);
+        // Lấy danh sách sản phẩm được chọn từ request
+        String[] selectedProductIds = request.getParameterValues("selectedProducts");
+        if (selectedProductIds == null || selectedProductIds.length == 0) {
+            System.out.println("No products selected for checkout");
+            response.sendRedirect("Cart.jsp");
+            return;
+        }
+
+        // Chuyển danh sách selectedProductIds thành Set để dễ kiểm tra
+        Set<Integer> selectedProductIdSet = Arrays.stream(selectedProductIds)
+                                                  .map(Integer::parseInt)
+                                                  .collect(Collectors.toSet());
+
+        // Lọc danh sách OrderDetail để chỉ giữ lại các sản phẩm được chọn
+        List<OrderDetail> selectedOrderDetails = orderDetails.stream()
+            .filter(detail -> selectedProductIdSet.contains(detail.getProductId()))
+            .collect(Collectors.toList());
+
+        // Kiểm tra danh sách sản phẩm đã chọn
+        if (selectedOrderDetails.isEmpty()) {
+            System.out.println("No valid products selected for checkout");
+            response.sendRedirect("Cart.jsp");
+            return;
+        }
+
+        // Lưu thông tin đơn hàng và các mục đơn hàng đã chọn vào cơ sở dữ liệu
+        int orderId = orderDAO.saveOrder(order, selectedOrderDetails);
 
         // Kiểm tra orderId
-        System.out.println("Order ID: " + orderId);
-
-        // Nếu orderId là 0, có nghĩa là lưu thông tin đơn hàng không thành công
         if (orderId == 0) {
             System.out.println("Failed to save order");
             response.sendRedirect("Shop.jsp");
@@ -90,9 +117,9 @@ public class CheckoutServlet extends HttpServlet {
         session.removeAttribute("cart");
         session.removeAttribute("cartCount");
 
-        // Gửi email hóa đơn
+        // Gửi email hóa đơn chỉ với các sản phẩm đã chọn
         try {
-            sendOrderConfirmationEmail(order, orderDetails);
+            sendOrderConfirmationEmail(order, selectedOrderDetails);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -107,31 +134,69 @@ public class CheckoutServlet extends HttpServlet {
     private void sendOrderConfirmationEmail(Order order, List<OrderDetail> orderDetails) throws MessagingException {
         ProductDAO productDAO = new ProductDAO();
         StringBuilder emailContent = new StringBuilder();
-        emailContent.append("<html><body>");
-        emailContent.append("<h1>Thank you for your order! Your order has been placed successfully.</h1>");
-        emailContent.append("<h2>Order Details:</h2>");
-        emailContent.append("<p>Order code: ").append(order.getOrderId()).append("</p>");
-        emailContent.append("<p>Date: ").append(order.getOrderDate()).append("</p>");
+
+        // Bắt đầu nội dung email
+        emailContent.append("<html><body style='font-family: Arial, sans-serif;'>");
+        emailContent.append("<h1 style='color: #4CAF50;'>Thank you for your order!</h1>");
+        emailContent.append("<p>Your order has been placed successfully. Below are the details of your order:</p>");
+
+        // Thông tin đơn hàng
+        emailContent.append("<h2 style='color: #333;'>Order Details</h2>");
+        emailContent.append("<p><strong>Order ID:</strong> ").append(order.getOrderId()).append("</p>");
+        emailContent.append("<p><strong>Order Date:</strong> ").append(order.getOrderDate()).append("</p>");
+
+        // Bảng chi tiết sản phẩm
+        emailContent.append("<table style='width: 100%; border-collapse: collapse; margin-top: 20px;'>");
+        emailContent.append("<thead>");
+        emailContent.append("<tr style='background-color: #f2f2f2;'>");
+        emailContent.append("<th style='border: 1px solid #ddd; padding: 8px; text-align: left;'>Product</th>");
+        emailContent.append("<th style='border: 1px solid #ddd; padding: 8px; text-align: left;'>Quantity</th>");
+        emailContent.append("<th style='border: 1px solid #ddd; padding: 8px; text-align: left;'>Price</th>");
+        emailContent.append("<th style='border: 1px solid #ddd; padding: 8px; text-align: left;'>Total</th>");
+        emailContent.append("</tr>");
+        emailContent.append("</thead>");
+        emailContent.append("<tbody>");
 
         double total = 0;
         for (OrderDetail detail : orderDetails) {
             Product product = productDAO.getProductById(detail.getProductId());
-            emailContent.append("<p>Product: ").append(product.getName()).append("</p>");
-            emailContent.append("<p>Quantity: ").append(detail.getQuantity()).append("</p>");
-            emailContent.append("<p>Price: ").append(String.format("%,.0f VNĐ", detail.getPrice())).append("</p>");
-            emailContent.append("<img src=\"").append(product.getimage_url()).append("\" alt=\"").append(product.getName()).append("\" style=\"width: 100px; height: auto;\"><br>");
-            total += detail.getPrice() * detail.getQuantity();
+            double itemTotal = detail.getPrice() * detail.getQuantity();
+            total += itemTotal;
+
+            emailContent.append("<tr>");
+            emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>")
+                        .append("<img src='").append(product.getimage_url()).append("' alt='").append(product.getName())
+                        .append("' style='width: 50px; height: auto; margin-right: 10px;'>")
+                        .append(product.getName()).append("</td>");
+            emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>").append(detail.getQuantity()).append("</td>");
+            emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>")
+                        .append(String.format("%,.0f VNĐ", detail.getPrice())).append("</td>");
+            emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>")
+                        .append(String.format("%,.0f VNĐ", itemTotal)).append("</td>");
+            emailContent.append("</tr>");
         }
 
-        emailContent.append("<p>Total: ").append(String.format("%,.0f VNĐ", total)).append("</p>");
-        emailContent.append("<h2>Customer Details:</h2>");
-        emailContent.append("<p>Name: ").append(order.getName()).append("</p>");
-        emailContent.append("<p>Address: ").append(order.getAddress()).append("</p>");
-        emailContent.append("<p>Phone: ").append(order.getPhone()).append("</p>");
-        emailContent.append("<p>Email: ").append(order.getEmail()).append("</p>");
-        emailContent.append("<p>Payment Method: ").append(order.getPaymentMethod()).append("</p>");
+        emailContent.append("</tbody>");
+        emailContent.append("</table>");
+
+        // Tổng tiền
+        emailContent.append("<p style='margin-top: 20px;'><strong>Total:</strong> ")
+                    .append(String.format("%,.0f VNĐ", total)).append("</p>");
+
+        // Thông tin khách hàng
+        emailContent.append("<h2 style='color: #333;'>Customer Details</h2>");
+        emailContent.append("<p><strong>Name:</strong> ").append(order.getName()).append("</p>");
+        emailContent.append("<p><strong>Address:</strong> ").append(order.getAddress()).append("</p>");
+        emailContent.append("<p><strong>Phone:</strong> ").append(order.getPhone()).append("</p>");
+        emailContent.append("<p><strong>Email:</strong> ").append(order.getEmail()).append("</p>");
+        emailContent.append("<p><strong>Payment Method:</strong> ").append(order.getPaymentMethod()).append("</p>");
+
+        // Kết thúc email
+        emailContent.append("<p style='margin-top: 20px;'>If you have any questions, feel free to contact us at petquespact@gmail.com.</p>");
+        emailContent.append("<p style='color: #888;'>Thank you for shopping with us!</p>");
         emailContent.append("</body></html>");
 
+        // Gửi email
         EmailUtil.sendOrderConfirmationEmail(order.getEmail(), "Order Confirmation", emailContent.toString());
     }
 }

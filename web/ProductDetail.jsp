@@ -25,7 +25,7 @@
         </div>
         <div class="col-md-6">
             <h2 class="my-3"><%= product.getName()%></h2>
-            <h4 class="text-success"><%= String.format("%,.0f VNĐ", product.getPrice()) %></h4> <!-- Chỉnh màu giá tiền thành xanh lục -->
+            <h4 class="text-success"><%= String.format("%,.0f VNĐ", product.getPrice())%></h4> <!-- Chỉnh màu giá tiền thành xanh lục -->
             <p><%= product.getDescription()%></p>
             <p><%= product.getDescription_detail()%></p>
             <p>Stock: <%= product.getStockQuantity()%></p>
@@ -63,7 +63,7 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title"><%= similarProduct.getName()%></h5>
                     <p class="card-text"><%= similarProduct.getDescription()%></p>
-                    <p class="card-text"><strong>Price: <%= String.format("%,.0f VNĐ", similarProduct.getPrice()) %></strong></p> <!-- Chỉnh màu giá tiền thành xanh lục -->
+                    <p class="card-text"><strong>Price: <%= String.format("%,.0f VNĐ", similarProduct.getPrice())%></strong></p> <!-- Chỉnh màu giá tiền thành xanh lục -->
                     <% if (similarProduct.getStockQuantity() == 0) { %>
                     <span class="badge badge-danger">Sold Out</span>
                     <% } %>
@@ -102,6 +102,8 @@
 
                     // Đặt lại giá trị của ô nhập số lượng về 0
                     $('#quantity').val(0);
+                    // Hiển thị thông báo
+                    alert('Product added to cart successfully!');
                 },
                 error: function (xhr, status, error) {
                     console.error('Failed to add product to cart.');

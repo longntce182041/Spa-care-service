@@ -37,7 +37,10 @@
                     for (CartItem item : cart) {
                         double itemTotal = item.getProduct().getPrice() * item.getQuantity();
                 %>
-                <tr class="product-row" data-product-id="<%= item.getProduct().getProductId() %>" data-product-price="<%= item.getProduct().getPrice() %>" data-product-quantity="<%= item.getQuantity() %>">
+                <tr class="product-row" 
+                    data-product-id="<%= item.getProduct().getProductId() %>" 
+                    data-product-price="<%= item.getProduct().getPrice() %>" 
+                    data-product-quantity="<%= item.getQuantity() %>">
                     <td class="text-center">
                         <input type="checkbox" name="selectedProducts" value="<%= item.getProduct().getProductId() %>" class="product-checkbox">
                     </td>
@@ -76,9 +79,13 @@
         function updateTotal() {
             let total = 0;
             $('.product-row').each(function() {
-                const price = parseFloat($(this).data('product-price')); // Lấy giá trị price
-                const quantity = parseInt($(this).data('product-quantity')); // Lấy số lượng sản phẩm
-                total += price * quantity; // Tính tổng tiền
+                const price = parseFloat($(this).data('product-price'));
+                const quantity = parseInt($(this).data('product-quantity'));
+
+                // Kiểm tra giá trị hợp lệ
+                if (!isNaN(price) && !isNaN(quantity)) {
+                    total += price * quantity;
+                }
             });
 
             // Hiển thị tổng tiền với định dạng VNĐ
@@ -139,5 +146,20 @@
         // Cập nhật tổng tiền và số lượng sản phẩm ban đầu
         updateTotal();
         updateCartCount();
+        updateTotal(); // Cập nhật tổng tiền khi trang tải xong
+
+        // Cập nhật số lượng sản phẩm khi thay đổi
+        $('.product-quantity').on('change', function() {
+            const row = $(this).closest('.product-row');
+            const newQuantity = parseInt($(this).val()) || 0;
+
+            // Cập nhật thuộc tính data-product-quantity
+            row.data('product-quantity', newQuantity);
+
+            // Cập nhật tổng tiền
+            updateTotal();
+        });
+
+        updateTotal(); // Cập nhật tổng tiền khi trang tải xong
     });
 </script>

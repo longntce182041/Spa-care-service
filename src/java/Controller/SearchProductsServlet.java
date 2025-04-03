@@ -28,11 +28,16 @@ public class SearchProductsServlet extends HttpServlet {
             out.println("<div class='col-md-4 d-flex align-items-stretch'>");
             out.println("<div class='card mb-4 shadow-sm product-card' data-product-id='" + product.getProductId() + "'>");
             out.println("<img src='" + product.getimage_url() + "' class='card-img-top' alt='" + product.getName() + "'>");
-            out.println("<div class='card-body'>");
+            out.println("<div class='card-body d-flex flex-column'>");
             out.println("<h5 class='card-title'>" + product.getName() + "</h5>");
             out.println("<p class='card-text'>" + product.getDescription() + "</p>");
             out.println("<p class='card-text'><strong>Price: " + String.format("%,.0f VNĐ", product.getPrice()) + "</strong></p>");
-            out.println("<a href='javascript:void(0);' class='btn btn-outline-success add-to-cart mt-auto'" + product.getProductId() + "'><i class='fa fa-shopping-cart'></i></a>");
+            if (product.getStockQuantity() == 0) {
+                out.println("<span class='badge badge-danger'>Sold Out</span>");
+            } else {
+                out.println("<a href='javascript:void(0);' class='btn btn-outline-success add-to-cart mt-auto' data-product-id='" + product.getProductId() + "'>");
+                out.println("<i class='fa fa-shopping-cart'></i> Add to Cart</a>");
+            }
             out.println("</div>");
             out.println("</div>");
             out.println("</div>");
