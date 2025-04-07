@@ -8,14 +8,15 @@ public class Order {
     private Date orderDate; // Thêm thuộc tính orderDate
     private double totalPrice;
     private String status;
-    private Integer promotionId;
-    private int userId;
+    private String promotionId; // Thay đổi từ Integer sang String
+    private String userId; // Thay đổi kiểu dữ liệu từ int sang String
     private int productId;
     private String name;
     private String phone;
     private String email;
     private String address;
     private String paymentMethod;
+    private double shippingFee; // Thêm thuộc tính shippingFee
 
     // Getters and setters
     public int getOrderId() {
@@ -50,19 +51,19 @@ public class Order {
         this.status = status;
     }
 
-    public Integer getPromotionId() {
+    public String getPromotionId() {
         return promotionId;
     }
 
-    public void setPromotionId(Integer promotionId) {
+    public void setPromotionId(String promotionId) {
         this.promotionId = promotionId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -112,5 +113,13 @@ public class Order {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public double getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(double shippingFee) {
+        this.shippingFee = shippingFee;
     }
 }

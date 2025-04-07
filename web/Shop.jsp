@@ -3,6 +3,8 @@
 <jsp:include page="header.jsp" />
 
 <link rel="stylesheet" href="css/shop.css"> <!-- Liên kết tệp CSS mới -->
+<link rel="stylesheet" href="./css/toast.css">
+<%@include file="popUpMessage.jsp" %>
 
 <div class="container mt-5">
     <nav aria-label="breadcrumb">
@@ -32,7 +34,7 @@
             <input type="text" id="search-input" class="form-control" placeholder="Search for products...">
         </div>
         <div class="col-md-9">
-            <div class="row" id="product-list">
+            <div class="row g-3" id="product-list">
                 <%
                     List<Product> productList = productDAO.getAllProducts();
                     for (Product product : productList) {
@@ -76,14 +78,20 @@
                     type: 'POST',
                     data: {productId: productId, quantity: quantity},
                     success: function (response) {
-                        // Cập nhật số lượng sản phẩm trong giỏ hàng trên thanh navbar
-                        $('#cart-count').text(response.cartCount);
+                        if (response.success) {
+                            // Cập nhật số lượng sản phẩm trong giỏ hàng trên thanh navbar
+                            $('#cart-count').text(response.cartCount);
 
-                        // Hiển thị thông báo
-                        alert('Product added to cart successfully!');
+                            // Hiển thị thông báo thành công
+                            showSuccessToast(response.message);
+                        } else {
+                            // Hiển thị thông báo lỗi
+                            showErrorToast(response.message);
+                        }
                     },
                     error: function (xhr, status, error) {
-                        console.error('Failed to add product to cart.');
+                        // Hiển thị thông báo lỗi nếu xảy ra lỗi kết nối
+                        showErrorToast('Failed to add product to cart. Please try again.');
                     }
                 });
             });

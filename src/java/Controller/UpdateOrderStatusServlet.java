@@ -18,22 +18,30 @@ public class UpdateOrderStatusServlet extends HttpServlet {
     private ProductDAO productDAO = new ProductDAO();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
-        String status = request.getParameter("status");
-
-        // Cập nhật trạng thái đơn hàng
-        orderDAO.updateOrderStatus(orderId, status);
-
-        // Nếu trạng thái là "Confirmed", trừ số lượng sản phẩm trong bảng Products
-        if ("Confirmed".equals(status)) {
-            List<OrderDetail> orderDetails = orderDAO.getOrderDetails(orderId);
-            for (OrderDetail detail : orderDetails) {
-                productDAO.updateProductQuantity(detail.getProductId(), -detail.getQuantity());
-            }
-        }
-
-        response.setContentType("text/plain");
+        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("Success");
+
+        try {
+            int orderId = Integer.parseInt(request.getParameter("orderId"));
+            String status = request.getParameter("status");
+
+            // Cập nhật trạng thái đơn hàng
+            orderDAO.updateOrderStatus(orderId, status);
+
+            // Nếu trạng thái là "Confirmed", trừ số lượng sản phẩm trong bảng Products
+            if ("Confirmed".equals(status)) {
+                List<OrderDetail> orderDetails = orderDAO.getOrderDetails(orderId);
+                for (OrderDetail detail : orderDetails) {
+                    productDAO.updateProductQuantity(detail.getProductId(), -detail.getQuantity());
+                }
+            }
+
+            // Trả về phản hồi JSON thành công
+            response.getWriter().write("{\"success\": true, \"message\": \"Order status updated to " + status + " successfully.\"}");
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Trả về phản hồi JSON lỗi
+            response.getWriter().write("{\"success\": false, \"message\": \"Failed to update order status.\"}");
+        }
     }
 }

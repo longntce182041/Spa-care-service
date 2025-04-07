@@ -15,19 +15,35 @@ public class RemoveFromCartServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int productId = Integer.parseInt(request.getParameter("productId"));
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        HttpSession session = request.getSession();
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        try {
+            int productId = Integer.parseInt(request.getParameter("productId"));
 
-        if (cart != null) {
-            cart.removeIf(item -> item.getProduct().getProductId() == productId);
+            HttpSession session = request.getSession();
+            List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
+            if (cart == null || cart.isEmpty()) {
+                response.getWriter().write("{\"success\": false, \"message\": \"Your cart is empty.\"}");
+                return;
+            }
+
+            boolean removed = cart.removeIf(item -> item.getProduct().getProductId() == productId);
+
+            if (!removed) {
+                response.getWriter().write("{\"success\": false, \"message\": \"Product not found in cart.\"}");
+                return;
+            }
+
+            session.setAttribute("cart", cart);
+            session.setAttribute("cartCount", cart.size());
+
+            double totalPrice = cart.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum();
+
+            response.getWriter().write("{\"success\": true, \"message\": \"Product removed successfully.\", \"cartCount\": " + cart.size() + ", \"totalPrice\": \"" + String.format("%,.0f VNĐ", totalPrice) + "\"}");
+        } catch (NumberFormatException e) {
+            response.getWriter().write("{\"success\": false, \"message\": \"Invalid product ID.\"}");
         }
-
-        session.setAttribute("cart", cart);
-        session.setAttribute("cartCount", cart.size());
-
-        double totalPrice = cart.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum();
-        response.getWriter().write("{\"success\": true, \"cartCount\": " + cart.size() + ", \"totalPrice\": \"" + String.format("%,.0f VNĐ", totalPrice) + "\"}");
     }
 }

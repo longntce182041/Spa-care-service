@@ -19,6 +19,10 @@ import java.util.Set;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import jakarta.mail.MessagingException;
+import java.text.NumberFormat;
+import java.util.Locale;
+import DAO.PromotionDAO;
+import Model.Promotion;
 
 @WebServlet("/CheckoutServlet")
 public class CheckoutServlet extends HttpServlet {
@@ -27,6 +31,10 @@ public class CheckoutServlet extends HttpServlet {
 
     // Khai báo và khởi tạo OrderDAO
     private OrderDAO orderDAO = new OrderDAO();
+
+    private double calculateShippingFee(String address) {
+        return 30_000; // Phí vận chuyển mặc định
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -42,23 +50,83 @@ public class CheckoutServlet extends HttpServlet {
         String address = request.getParameter("address");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
-        String paymentMethod = request.getParameter("paymentMethod");
+
+        String userId = (String) session.getAttribute("user_id");
+
+        if (userId == null) {
+            userId = "GUEST"; // Gán giá trị mặc định cho khách vãng lai
+        } else {
+            // Nếu người dùng đã đăng nhập, sử dụng thông tin từ session
+            name = (String) session.getAttribute("user_fullname");
+            address = (String) session.getAttribute("user_address");
+            phone = (String) session.getAttribute("user_phone");
+            email = (String) session.getAttribute("user_email");
+        }
 
         // Tạo đối tượng Order
         Order order = new Order();
-        order.setTotalPrice(cart.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum());
-        order.setStatus("Pending");
-        order.setPromotionId(null); // Giả sử không có promotion, bạn có thể thay đổi theo logic của bạn
-        order.setUserId(1); // Giả sử user_id là 1, bạn có thể thay đổi theo logic của bạn
-        order.setProductId(cart.get(0).getProduct().getProductId()); // Lấy product_id từ sản phẩm đầu tiên trong giỏ hàng
         order.setName(name);
+        order.setAddress(address);
         order.setPhone(phone);
         order.setEmail(email);
-        order.setAddress(address);
-        order.setPaymentMethod(paymentMethod);
+        order.setUserId(userId); // Nếu không đăng nhập, userId sẽ là "guest"
+        order.setPaymentMethod(request.getParameter("paymentMethod"));
+
+        order.setTotalPrice(cart.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum());
+        order.setStatus("Pending");
+        order.setPromotionId(null); // Giả sử không có promotion
+        order.setProductId(cart.get(0).getProduct().getProductId()); // Lấy product_id từ sản phẩm đầu tiên trong giỏ hàng
+
+        // Tính phí vận chuyển mặc định
+        double shippingFee = calculateShippingFee(address);
+        order.setShippingFee(shippingFee);
+
+        // Lấy mã giảm giá từ request
+        String promoCode = request.getParameter("promoCode");
+        System.out.println("Promo code: " + promoCode);
+
+        // Kiểm tra mã giảm giá
+        double discount = 0;
+        if (promoCode != null && !promoCode.trim().isEmpty()) {
+            PromotionDAO promotionDAO = new PromotionDAO();
+            Promotion promotion = promotionDAO.getPromotionByCode(promoCode);
+
+            if (promotion != null && promotion.isActive() && promotion.isValid(order.getTotalPrice())) {
+                if ("fixed".equalsIgnoreCase(promotion.getDiscountType())) {
+                    discount = promotion.getDiscountValue();
+                } else if ("percent".equalsIgnoreCase(promotion.getDiscountType())) {
+                    discount = order.getTotalPrice() * (promotion.getDiscountValue() / 100);
+                }
+
+                // Áp dụng giới hạn giảm giá tối đa
+                if (promotion.getMaxDiscount() != null && discount > promotion.getMaxDiscount()) {
+                    discount = promotion.getMaxDiscount();
+                }
+
+                // Gán mã giảm giá vào đơn hàng
+                order.setPromotionId(promoCode);
+                System.out.println("Promotion applied: " + promoCode + ", Discount: " + discount);
+            } else {
+                System.out.println("Invalid or expired promotion code: " + promoCode);
+            }
+        }
+
+        // Cộng phí vận chuyển vào tổng giá trị ban đầu
+        double totalPriceWithShipping = order.getTotalPrice() + shippingFee;
+
+        // Áp dụng giảm giá vào tổng giá trị đã bao gồm phí vận chuyển
+        double totalPriceAfterDiscount = totalPriceWithShipping - discount;
+
+        // Cập nhật tổng giá trị vào đối tượng Order
+        order.setTotalPrice(totalPriceAfterDiscount);
 
         // In ra console để kiểm tra
-        System.out.println("Order: " + order);
+        System.out.println("Original total price: " + order.getTotalPrice());
+        System.out.println("Shipping fee: " + shippingFee);
+        System.out.println("Total price with shipping: " + totalPriceWithShipping);
+        System.out.println("Discount applied: " + discount);
+        System.out.println("Total price after discount: " + totalPriceAfterDiscount);
+        System.out.println("Order total price: " + order.getTotalPrice());
 
         // Tạo danh sách OrderDetail từ giỏ hàng
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -85,13 +153,13 @@ public class CheckoutServlet extends HttpServlet {
 
         // Chuyển danh sách selectedProductIds thành Set để dễ kiểm tra
         Set<Integer> selectedProductIdSet = Arrays.stream(selectedProductIds)
-                                                  .map(Integer::parseInt)
-                                                  .collect(Collectors.toSet());
+                .map(Integer::parseInt)
+                .collect(Collectors.toSet());
 
         // Lọc danh sách OrderDetail để chỉ giữ lại các sản phẩm được chọn
         List<OrderDetail> selectedOrderDetails = orderDetails.stream()
-            .filter(detail -> selectedProductIdSet.contains(detail.getProductId()))
-            .collect(Collectors.toList());
+                .filter(detail -> selectedProductIdSet.contains(detail.getProductId()))
+                .collect(Collectors.toList());
 
         // Kiểm tra danh sách sản phẩm đã chọn
         if (selectedOrderDetails.isEmpty()) {
@@ -131,9 +199,17 @@ public class CheckoutServlet extends HttpServlet {
         request.getRequestDispatcher("OrderConfirmation.jsp").forward(request, response);
     }
 
-    private void sendOrderConfirmationEmail(Order order, List<OrderDetail> orderDetails) throws MessagingException {
+    void sendOrderConfirmationEmail(Order order, List<OrderDetail> orderDetails) throws MessagingException {
         ProductDAO productDAO = new ProductDAO();
+        PromotionDAO promotionDAO = new PromotionDAO();
         StringBuilder emailContent = new StringBuilder();
+        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+        // Lấy thông tin mã giảm giá (nếu có)
+        Promotion promotion = null;
+        if (order.getPromotionId() != null) {
+            promotion = promotionDAO.getPromotionByCode(order.getPromotionId());
+        }
 
         // Bắt đầu nội dung email
         emailContent.append("<html><body style='font-family: Arial, sans-serif;'>");
@@ -157,31 +233,47 @@ public class CheckoutServlet extends HttpServlet {
         emailContent.append("</thead>");
         emailContent.append("<tbody>");
 
-        double total = 0;
+        double subtotal = 0;
         for (OrderDetail detail : orderDetails) {
             Product product = productDAO.getProductById(detail.getProductId());
             double itemTotal = detail.getPrice() * detail.getQuantity();
-            total += itemTotal;
+            subtotal += itemTotal;
 
             emailContent.append("<tr>");
             emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>")
-                        .append("<img src='").append(product.getimage_url()).append("' alt='").append(product.getName())
-                        .append("' style='width: 50px; height: auto; margin-right: 10px;'>")
-                        .append(product.getName()).append("</td>");
+                    .append("<img src='").append(product.getimage_url()).append("' alt='").append(product.getName())
+                    .append("' style='width: 50px; height: auto; margin-right: 10px;'>")
+                    .append(product.getName()).append("</td>");
             emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>").append(detail.getQuantity()).append("</td>");
             emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>")
-                        .append(String.format("%,.0f VNĐ", detail.getPrice())).append("</td>");
+                    .append(currencyVN.format(detail.getPrice())).append("</td>");
             emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>")
-                        .append(String.format("%,.0f VNĐ", itemTotal)).append("</td>");
+                    .append(currencyVN.format(itemTotal)).append("</td>");
             emailContent.append("</tr>");
         }
 
         emailContent.append("</tbody>");
         emailContent.append("</table>");
 
-        // Tổng tiền
-        emailContent.append("<p style='margin-top: 20px;'><strong>Total:</strong> ")
-                    .append(String.format("%,.0f VNĐ", total)).append("</p>");
+        // Tổng tiền trước giảm giá
+        emailContent.append("<p style='margin-top: 20px;'><strong>Subtotal:</strong> ")
+                .append(currencyVN.format(subtotal)).append("</p>");
+
+        // Thông tin mã giảm giá (nếu có)
+        if (promotion != null) {
+            emailContent.append("<p><strong>Promotion Code:</strong> ").append(promotion.getPromotionId()).append("</p>");
+            
+        } else {
+            emailContent.append("<p><strong>Promotion Code:</strong> None</p>");
+        }
+
+        // Phí vận chuyển
+        emailContent.append("<p><strong>Shipping Fee:</strong> ")
+            .append(currencyVN.format(30_000)).append("</p>");
+
+        // Tổng tiền sau giảm giá và phí vận chuyển
+        emailContent.append("<p><strong>Total (including shipping):</strong> ")
+                .append(currencyVN.format(order.getTotalPrice())).append("</p>");
 
         // Thông tin khách hàng
         emailContent.append("<h2 style='color: #333;'>Customer Details</h2>");

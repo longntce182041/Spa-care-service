@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="css/flaticon.css">
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/Appointment.css"> <!-- Liên kết tệp CSS mới -->
+        <link rel="stylesheet" href="./css/toast.css">
     </head>
     <body>
         <div class="container">
@@ -62,42 +63,75 @@
 
         <script>
             function confirmAppointment(appointmentId) {
-                if (confirm('Are you sure you want to confirm this appointment?')) {
-                    $.ajax({
-                        url: 'ConfirmAppointmentServlet',
-                        method: 'GET',
-                        data: { appointmentId: appointmentId },
-                        success: function(response) {
+                $.ajax({
+                    url: 'ConfirmAppointmentServlet',
+                    method: 'GET',
+                    data: { appointmentId: appointmentId },
+                    success: function(response) {
+                        if (response === 'Confirmed') {
+                            // Cập nhật trạng thái trên giao diện
                             $('#status-' + appointmentId).text('Confirmed');
+
+                            // Hiển thị thông báo thành công
+                            showSuccessToast('Appointment confirmed successfully!');
+                        } else {
+                            // Hiển thị thông báo lỗi
+                            showErrorToast('Failed to confirm appointment.');
                         }
-                    });
-                }
+                    },
+                    error: function() {
+                        // Hiển thị thông báo lỗi nếu xảy ra lỗi kết nối
+                        showErrorToast('Failed to connect to the server. Please try again.');
+                    }
+                });
             }
 
             function cancelAppointment(appointmentId) {
-                if (confirm('Are you sure you want to cancel this appointment?')) {
-                    $.ajax({
-                        url: 'CancelAppointmentServlet',
-                        method: 'GET',
-                        data: { appointmentId: appointmentId },
-                        success: function(response) {
+                $.ajax({
+                    url: 'CancelAppointmentServlet',
+                    method: 'GET',
+                    data: { appointmentId: appointmentId },
+                    success: function(response) {
+                        if (response === 'Cancelled') {
+                            // Cập nhật trạng thái trên giao diện
                             $('#status-' + appointmentId).text('Cancelled');
+
+                            // Hiển thị thông báo thành công
+                            showSuccessToast('Appointment cancelled successfully!');
+                        } else {
+                            // Hiển thị thông báo lỗi
+                            showErrorToast('Failed to cancel appointment.');
                         }
-                    });
-                }
+                    },
+                    error: function() {
+                        // Hiển thị thông báo lỗi nếu xảy ra lỗi kết nối
+                        showErrorToast('Failed to connect to the server. Please try again.');
+                    }
+                });
             }
 
             function deleteAppointment(appointmentId) {
-                if (confirm('Are you sure you want to delete this appointment?')) {
-                    $.ajax({
-                        url: 'DeleteAppointmentServlet',
-                        method: 'GET',
-                        data: { appointmentId: appointmentId },
-                        success: function(response) {
+                $.ajax({
+                    url: 'DeleteAppointmentServlet',
+                    method: 'GET',
+                    data: { appointmentId: appointmentId },
+                    success: function(response) {
+                        if (response === 'Deleted') {
+                            // Xóa dòng hẹn khỏi giao diện
                             $('#appointment-' + appointmentId).remove();
+
+                            // Hiển thị thông báo thành công
+                            showSuccessToast('Appointment deleted successfully!');
+                        } else {
+                            // Hiển thị thông báo lỗi
+                            showErrorToast('Failed to delete appointment.');
                         }
-                    });
-                }
+                    },
+                    error: function() {
+                        // Hiển thị thông báo lỗi nếu xảy ra lỗi kết nối
+                        showErrorToast('Failed to connect to the server. Please try again.');
+                    }
+                });
             }
         </script>
 
@@ -115,5 +149,6 @@
         <script src="js/jquery.magnific-popup.min.js"></script>
         <script src="js/scrollax.min.js"></script>
         <script src="js/main.js"></script>
+        <%@include file="popUpMessage.jsp" %>
     </body>
 </html>

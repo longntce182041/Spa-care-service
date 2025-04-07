@@ -1,9 +1,16 @@
 <%@ page import="java.sql.*, java.util.*, DAO.ProductDAO, Model.Product" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <jsp:include page="header.jsp" />
 <link rel="stylesheet" href="css/shop.css"> <!-- Liên kết tệp CSS mới -->
+<link rel="stylesheet" href="./css/toast.css">
+<%@include file="popUpMessage.jsp" %>
 
 <%
+    Locale localeVN = new Locale("vi", "VN");
+    NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+
     int productId = Integer.parseInt(request.getParameter("productId"));
     ProductDAO productDAO = new ProductDAO();
     Product product = productDAO.getProductById(productId);
@@ -25,7 +32,7 @@
         </div>
         <div class="col-md-6">
             <h2 class="my-3"><%= product.getName()%></h2>
-            <h4 class="text-success"><%= String.format("%,.0f VNĐ", product.getPrice())%></h4> <!-- Chỉnh màu giá tiền thành xanh lục -->
+            <h4 class="text-success"><%= currencyVN.format(product.getPrice()) %></h4>
             <p><%= product.getDescription()%></p>
             <p><%= product.getDescription_detail()%></p>
             <p>Stock: <%= product.getStockQuantity()%></p>
@@ -63,7 +70,7 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title"><%= similarProduct.getName()%></h5>
                     <p class="card-text"><%= similarProduct.getDescription()%></p>
-                    <p class="card-text"><strong>Price: <%= String.format("%,.0f VNĐ", similarProduct.getPrice())%></strong></p> <!-- Chỉnh màu giá tiền thành xanh lục -->
+                    <p class="card-text"><strong>Price: <%= currencyVN.format(similarProduct.getPrice()) %></strong></p>
                     <% if (similarProduct.getStockQuantity() == 0) { %>
                     <span class="badge badge-danger">Sold Out</span>
                     <% } %>
@@ -88,7 +95,7 @@
             var maxQuantity = $('#quantity').attr('max');
 
             if (quantity < 1 || !$.isNumeric(quantity) || parseInt(quantity) > parseInt(maxQuantity)) {
-                alert('Please enter a valid quantity between 1 and ' + maxQuantity + '.');
+                showErrorToast('Please enter a valid quantity between 1 and ' + maxQuantity + '.');
                 return;
             }
 
@@ -97,16 +104,23 @@
                 type: 'POST',
                 data: {productId: productId, quantity: quantity},
                 success: function (response) {
-                    // Cập nhật số lượng sản phẩm trong giỏ hàng trên thanh navbar
-                    $('#cart-count').text(response.cartCount);
+                    if (response.success) {
+                        // Cập nhật số lượng sản phẩm trong giỏ hàng trên thanh navbar
+                        $('#cart-count').text(response.cartCount);
 
-                    // Đặt lại giá trị của ô nhập số lượng về 0
-                    $('#quantity').val(0);
-                    // Hiển thị thông báo
-                    alert('Product added to cart successfully!');
+                        // Đặt lại giá trị của ô nhập số lượng về 1
+                        $('#quantity').val(1);
+
+                        // Hiển thị thông báo thành công
+                        showSuccessToast(response.message);
+                    } else {
+                        // Hiển thị thông báo lỗi
+                        showErrorToast(response.message);
+                    }
                 },
                 error: function (xhr, status, error) {
-                    console.error('Failed to add product to cart.');
+                    // Hiển thị thông báo lỗi nếu xảy ra lỗi kết nối
+                    showErrorToast('Failed to add product to cart. Please try again.');
                 }
             });
         });

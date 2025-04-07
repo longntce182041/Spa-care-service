@@ -23,22 +23,23 @@ public class OrderDAO {
             }
             conn.setAutoCommit(false);
 
-            String orderSql = "INSERT INTO Orders (order_date, total_price, status, promotion_id, user_id, product_id, name, phone, email, address, payment_method) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String orderSql = "INSERT INTO Orders (order_date, total_price, status, promotion_id, user_id, product_id, name, phone, email, address, payment_method, shipping_fee) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             orderStmt = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
             orderStmt.setDouble(1, order.getTotalPrice());
             orderStmt.setString(2, order.getStatus());
             if (order.getPromotionId() != null) {
-                orderStmt.setInt(3, order.getPromotionId());
+                orderStmt.setString(3, order.getPromotionId());
             } else {
-                orderStmt.setNull(3, Types.INTEGER);
+                orderStmt.setNull(3, Types.VARCHAR);
             }
-            orderStmt.setInt(4, order.getUserId());
+            orderStmt.setString(4, order.getUserId()); // Lưu user_id dưới dạng chuỗi
             orderStmt.setInt(5, order.getProductId());
             orderStmt.setString(6, order.getName());
             orderStmt.setString(7, order.getPhone());
             orderStmt.setString(8, order.getEmail());
             orderStmt.setString(9, order.getAddress());
             orderStmt.setString(10, order.getPaymentMethod());
+            orderStmt.setDouble(11, order.getShippingFee());
             orderStmt.executeUpdate();
 
             rs = orderStmt.getGeneratedKeys();
@@ -100,7 +101,11 @@ public class OrderDAO {
             if (conn == null) {
                 throw new SQLException("Unable to connect to database");
             }
-            String sql = "SELECT * FROM Order_Details WHERE order_id = ?";
+
+            String sql = "SELECT od.*, p.product_name, p.product_image_url " +
+                         "FROM Order_Details od " +
+                         "JOIN Products p ON od.product_id = p.product_id " +
+                         "WHERE od.order_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, orderId);
             rs = stmt.executeQuery();
@@ -112,18 +117,16 @@ public class OrderDAO {
                 detail.setProductId(rs.getInt("product_id"));
                 detail.setQuantity(rs.getInt("quantity"));
                 detail.setPrice(rs.getDouble("price"));
+                detail.setProductName(rs.getString("product_name")); // Lấy tên sản phẩm
+                detail.setProductImage(rs.getString("product_image_url")); // Lấy hình ảnh sản phẩm
                 orderDetails.add(detail);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
                 DBConnect.closeConnection(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -154,8 +157,8 @@ public class OrderDAO {
                 order.setOrderDate(rs.getTimestamp("order_date")); // Lấy giá trị order_date từ cơ sở dữ liệu
                 order.setTotalPrice(rs.getDouble("total_price"));
                 order.setStatus(rs.getString("status"));
-                order.setPromotionId(rs.getInt("promotion_id"));
-                order.setUserId(rs.getInt("user_id"));
+                order.setPromotionId(rs.getString("promotion_id"));
+                order.setUserId(rs.getString("user_id")); // Lấy user_id dưới dạng chuỗi
                 order.setProductId(rs.getInt("product_id"));
                 order.setName(rs.getString("name"));
                 order.setPhone(rs.getString("phone"));
@@ -198,8 +201,8 @@ public class OrderDAO {
                 order.setOrderDate(rs.getDate("order_date"));
                 order.setTotalPrice(rs.getDouble("total_price"));
                 order.setStatus(rs.getString("status"));
-                order.setPromotionId(rs.getInt("promotion_id"));
-                order.setUserId(rs.getInt("user_id"));
+                order.setPromotionId(rs.getString("promotion_id"));
+                order.setUserId(rs.getString("user_id"));
                 order.setProductId(rs.getInt("product_id"));
                 order.setName(rs.getString("name"));
                 order.setPhone(rs.getString("phone"));
@@ -249,6 +252,53 @@ public class OrderDAO {
                 e.printStackTrace();
             }
         }
+    }
+
+    public List<Order> getOrdersByUserId(String userId) {
+        List<Order> orders = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.getConnection();
+            if (conn == null) {
+                throw new SQLException("Unable to connect to database");
+            }
+
+            String sql = "SELECT * FROM Orders WHERE user_id = ? ORDER BY order_date DESC";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, userId);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setOrderDate(rs.getTimestamp("order_date"));
+                order.setTotalPrice(rs.getDouble("total_price"));
+                order.setStatus(rs.getString("status"));
+                order.setPromotionId(rs.getString("promotion_id"));
+                order.setUserId(rs.getString("user_id"));
+                order.setName(rs.getString("name"));
+                order.setPhone(rs.getString("phone"));
+                order.setEmail(rs.getString("email"));
+                order.setAddress(rs.getString("address"));
+                order.setPaymentMethod(rs.getString("payment_method"));
+                order.setShippingFee(rs.getDouble("shipping_fee"));
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                DBConnect.closeConnection(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return orders;
     }
 
 }

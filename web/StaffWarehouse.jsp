@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/staffdashboard.css">
+    <link rel="stylesheet" href="./css/toast.css">
 </head>
 <body>
     <div class="container mt-5">
@@ -55,10 +56,10 @@
                         <td><%= item.getProductCategoryId() %></td>
                         <td>
                             <button class="btn btn-primary" data-toggle="modal" data-target="#editInventoryModal" onclick="loadInventoryData(<%= item.getInventoryId() %>)">
-                                <i class="fa fa-pencil"></i> 
+                                <i class="fa fa-pencil"> Edit</i> 
                             </button>
                             <button class="btn btn-danger" onclick="deleteInventory(<%= item.getInventoryId() %>)">
-                                <i class="fa fa-trash"></i> 
+                                <i class="fa fa-trash"> Delete</i> 
                             </button>
                         </td>
                     </tr>
@@ -73,13 +74,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="stockReceivingModalLabel">Stock Receiving</h5>
+                    <h5 class="modal-title" id="stockReceivingModalLabel">Add Inventory</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="stockReceivingForm" method="POST" action="AddInventoryServlet">
+                    <form id="stockReceivingForm">
                         <div class="form-group">
                             <label for="productId">Product ID:</label>
                             <input type="text" class="form-control" id="productId" name="productId" required>
@@ -104,7 +105,7 @@
                             <label for="categoryId">Category ID:</label>
                             <input type="text" class="form-control" id="categoryId" name="categoryId" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add Inventory</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </form>
                 </div>
             </div>
@@ -209,7 +210,7 @@
     <script src="js/scrollax.min.js"></script>
     <script src="js/main.js"></script>
     <script>
-        // Handle form submissions for stock receiving
+        // Handle form submissions for stock receiving (Import)
         $('#stockReceivingForm').on('submit', function(event) {
             event.preventDefault();
             $.ajax({
@@ -220,14 +221,15 @@
                     $('#stockReceivingModal').modal('hide');
                     updateInventoryTable(); // Update the inventory table without reloading the page
                     removeModalBackdrop(); // Remove modal backdrop
+                    showSuccessToast('Stock imported successfully!');
                 },
                 error: function() {
-                    alert('Error processing request.');
+                    showErrorToast('Error importing stock. Please try again.');
                 }
             });
         });
 
-        // Handle form submissions for stock delivering
+        // Handle form submissions for stock delivering (Export)
         $('#stockDeliveringForm').on('submit', function(event) {
             event.preventDefault();
             $.ajax({
@@ -238,9 +240,10 @@
                     $('#stockDeliveringModal').modal('hide');
                     updateInventoryTable(); // Update the inventory table without reloading the page
                     removeModalBackdrop(); // Remove modal backdrop
+                    showSuccessToast('Stock exported successfully!');
                 },
                 error: function() {
-                    alert('Error processing request.');
+                    showErrorToast('Error exporting stock. Please try again.');
                 }
             });
         });
@@ -266,7 +269,7 @@
                 }
             });
         }
-        // Handle form submissions for editing inventory
+        // Handle form submissions for editing inventory (Save Edit)
         $('#editInventoryForm').on('submit', function(event) {
     event.preventDefault();
     console.log($(this).serialize()); // Log dữ liệu gửi đi
@@ -279,11 +282,12 @@
             $('#editInventoryModal').modal('hide');
             updateInventoryTable(); // Update the inventory table without reloading the page
             removeModalBackdrop(); // Remove modal backdrop
+            showSuccessToast('Inventory updated successfully!');
         },
         error: function(xhr, status, error) {
             console.error("Error: " + error); // Log lỗi
             console.error("Response: " + xhr.responseText); // Log phản hồi lỗi
-            alert('Error processing request.');
+            showErrorToast('Error updating inventory. Please try again.');
         }
     });
 });
@@ -332,17 +336,16 @@
                     method: 'POST',
                     data: { inventoryId: inventoryId },
                     success: function(response) {
-                        alert("Inventory item deleted successfully.");
-                        updateInventoryTable(); // Cập nhật lại bảng sản phẩm
+                        updateInventoryTable(); // Update the inventory table without reloading the page
+                        showSuccessToast('Inventory item deleted successfully!');
                     },
-                    error: function(xhr, status, error) {
-                        console.error("Error: " + error); // Log lỗi
-                        console.error("Response: " + xhr.responseText); // Log phản hồi lỗi
-                        alert('Error deleting inventory item.');
+                    error: function() {
+                        showErrorToast('Error deleting inventory item. Please try again.');
                     }
                 });
             }
         }
     </script>
+    <%@include file="popUpMessage.jsp" %>
 </body>
 </html>

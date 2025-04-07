@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/staffdashboard.css">
+    <link rel="stylesheet" href="./css/toast.css">
 </head>
 <body>
     <div class="container mt-5">
@@ -45,20 +46,17 @@
                         List<Consultation> consultationList = dao.getAllConsultations();
                         for (Consultation consultation : consultationList) {
                     %>
-                    <tr id="consultation-<%= consultation.getConsultationId() %>">
+                    <tr>
                         <td><%= consultation.getConsultationId() %></td>
                         <td><%= consultation.getMessage() %></td>
-                        <td><%= consultation.getName() %></td>
+                        <td><%= consultation.getConsultationName() %></td>
                         <td><%= consultation.getPhoneNumber() %></td>
                         <td><%= consultation.getDate() %></td>
                         <td><%= consultation.getTime() %></td>
-                        <td id="status-<%= consultation.getConsultationId() %>"><%= consultation.getConsultationStatus() %></td>
+                        <td id="status<%= consultation.getConsultationId() %>"><%= consultation.getConsultationStatus() %></td>
                         <td>
-                            <% if ("Pending".equals(consultation.getConsultationStatus())) { %>
-                                <button class="btn btn-primary confirmStatusBtn" data-id="<%= consultation.getConsultationId() %>">Confirm</button>
-                            <% } else { %>
-                                <span class="text-success">Confirmed</span>
-                            <% } %>
+                            <button class="btn btn-success" onclick="updateStatus(<%= consultation.getConsultationId() %>, 'Confirmed')">Confirm</button>
+                            <button class="btn btn-danger" onclick="updateStatus(<%= consultation.getConsultationId() %>, 'Cancelled')">Cancel</button>
                         </td>
                     </tr>
                     <% } %>
@@ -89,27 +87,6 @@
     <script src="js/main.js"></script>
     <script>
         $(document).ready(function() {
-            // Xử lý sự kiện khi nhấn nút "Confirm"
-            $('.confirmStatusBtn').click(function () {
-                const consultationId = $(this).data('id'); // Lấy ID của consultation
-
-                // Gửi yêu cầu AJAX đến servlet
-                $.ajax({
-                    url: 'ConfirmConsultationServlet',
-                    method: 'GET',
-                    data: { consultationId: consultationId },
-                    success: function(response) {
-                        $('#status-' + consultationId).text('Confirm');
-                        $('#consultation-' + consultationId + ' .confirmStatusBtn').replaceWith('<span class="text-success">Confirmed</span>');
-                        alert('Consultation confirmed successfully!');
-                    },
-                    error: function() {
-                        alert('An error occurred while confirming the consultation.');
-                    }
-                });
-            });
-
-            // Xử lý sự kiện chuyển đổi giữa bảng Consultation và Appointment
             $('#viewAppointmentBtn').click(function() {
                 $.ajax({
                     url: 'appointment.jsp',
@@ -130,6 +107,26 @@
                 $('#viewAppointmentBtn').show();
             });
         });
+
+        function updateStatus(consultationId, status) {
+            $.ajax({
+                url: 'ConfirmConsultationServlet',
+                method: 'POST',
+                data: { consultationId: consultationId, status: status },
+                success: function(response) {
+                    // Hiển thị thông báo thành công
+                    showSuccessToast(response);
+
+                    // Cập nhật trạng thái trên giao diện
+                    $('#status' + consultationId).text(status);
+                },
+                error: function() {
+                    // Hiển thị thông báo lỗi nếu xảy ra lỗi kết nối
+                    showErrorToast('Failed to update consultation status. Please try again.');
+                }
+            });
+        }
     </script>
+    <%@include file="popUpMessage.jsp" %>
 </body>
 </html>

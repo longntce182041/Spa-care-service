@@ -1,11 +1,14 @@
 <!DOCTYPE html>
+<%
+    String username = (session != null) ? (String) session.getAttribute("user_fullname") : null;
+%>
 <html lang="en">
     <head>
         <title>Petique Spa</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" href="css/animate.css">
         <link rel="stylesheet" href="css/owl.carousel.min.css">
@@ -48,18 +51,32 @@
                 </button>
                 <div class="collapse navbar-collapse" id="ftco-nav">
                     <ul class="navbar-nav ml-auto">
+                        <% if (username != null){%>
+                        <li class="nav-item"><a href="homepage.jsp" class="nav-link">Home</a>
+                            <% } else {%>
                         <li class="nav-item"><a href="index.jsp" class="nav-link">Home</a></li>
-                        <li class="nav-item"><a href="Staffdashboard.jsp" class="nav-link">Staff</a></li>
+                            <%} %>
+                        <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
+                        <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
                         <li class="nav-item active"><a href="Shop.jsp" class="nav-link">Shop</a></li>
-                        <li class="nav-item dropdown position-relative">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-user"></i>
+                        <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
+                        <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
+                            <% if (username != null) { %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-user nav-item">  </i>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="login.jsp">Login</a>
-                                <a class="dropdown-item" href="register.jsp">Sign up</a>
+
+                            <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                                <a class="dropdown-item-text"> <%= username %> </a>
+                                <a class="dropdown-item" href="profile.jsp">Profile</a>
+                                <a class="dropdown-item" href="OrderHistoryServlet" class="nav-link">Order History</a>
+                                <a class="dropdown-item" href="index.jsp">Logout</a>
                             </div>
                         </li>
+                        <% } else { %>
+                        <li class="nav-item"><a href="login.jsp" class="nav-link">Login</a></li>
+                            <% } %>
                         <li class="nav-item position-relative cart-icon">
                             <a href="Cart.jsp" class="nav-link">
                                 <i class="fas fa-shopping-cart"></i>

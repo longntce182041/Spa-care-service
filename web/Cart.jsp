@@ -1,9 +1,16 @@
 <%@ page import="java.util.*, Model.CartItem" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <jsp:include page="header.jsp" />
 <link rel="stylesheet" href="css/shop.css"> <!-- Liên kết tệp CSS mới -->
+<link rel="stylesheet" href="./css/toast.css">
+<%@include file="popUpMessage.jsp" %>
 
 <%
+    Locale localeVN = new Locale("vi", "VN");
+    NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+
     List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
     if (cart == null) {
         cart = new ArrayList<>();
@@ -48,9 +55,9 @@
                     <td>
                         <img src="<%= item.getProduct().getimage_url() %>" alt="<%= item.getProduct().getName() %>" class="img-thumbnail" style="width: 100px; height: auto;">
                     </td>
-                    <td><%= String.format("%,.0f VNĐ", item.getProduct().getPrice()) %></td>
+                    <td><%= currencyVN.format(item.getProduct().getPrice()) %></td>
                     <td><%= item.getQuantity() %></td>
-                    <td class="product-total"><%= String.format("%,.0f VNĐ", itemTotal) %></td>
+                    <td class="product-total"><%= currencyVN.format(itemTotal) %></td>
                     <td>
                         <button type="button" class="btn btn-danger btn-remove" data-product-id="<%= item.getProduct().getProductId() %>">
                             <i class="fas fa-trash-alt"></i> Remove
@@ -63,7 +70,7 @@
             </tbody>
         </table>
         <div class="text-right">
-            <h4>Total: <span id="cart-total">0 VNĐ</span></h4>
+           
             <button id="checkout-button" class="btn btn-success"><i class="fas fa-credit-card"></i> Proceed to Checkout</button>
         </div>
     </form>
@@ -103,23 +110,32 @@
             const productId = $(this).data('product-id');
             const row = $(this).closest('.product-row');
 
-            // Gửi yêu cầu xóa sản phẩm đến server (AJAX giả lập)
+            // Gửi yêu cầu xóa sản phẩm đến server
             $.ajax({
                 url: 'RemoveFromCartServlet',
                 type: 'POST',
                 data: { productId: productId },
                 success: function(response) {
-                    // Xóa sản phẩm khỏi giao diện
-                    row.remove();
+                    if (response.success) {
+                        // Xóa sản phẩm khỏi giao diện
+                        row.remove();
 
-                    // Cập nhật tổng tiền
-                    updateTotal();
+                        // Cập nhật tổng tiền
+                        updateTotal();
 
-                    // Cập nhật số lượng sản phẩm trên biểu tượng giỏ hàng
-                    updateCartCount();
+                        // Cập nhật số lượng sản phẩm trên biểu tượng giỏ hàng
+                        updateCartCount();
+
+                        // Hiển thị thông báo thành công
+                        showSuccessToast('Product removed from cart successfully!');
+                    } else {
+                        // Hiển thị thông báo lỗi
+                        showErrorToast('Failed to remove product from cart.');
+                    }
                 },
                 error: function() {
-                    alert('Failed to remove product. Please try again.');
+                    // Hiển thị thông báo lỗi nếu xảy ra lỗi kết nối
+                    showErrorToast('Failed to connect to the server. Please try again.');
                 }
             });
         });
@@ -130,7 +146,7 @@
 
             // Kiểm tra nếu giỏ hàng trống
             if ($('.product-row').length === 0) {
-                alert('Your cart is empty!');
+                showErrorToast('Your cart is empty!');
                 return;
             }
 
@@ -139,8 +155,12 @@
                 $('.product-checkbox').prop('checked', true).trigger('change');
             }
 
-            // Gửi form
-            $('#cart-form').submit();
+            // Hiển thị thông báo thành công trước khi chuyển đến trang Checkout
+            showSuccessToast('Proceeding to checkout...');
+            setTimeout(function() {
+                // Gửi form sau khi hiển thị thông báo
+                $('#cart-form').submit();
+            }, 1500); // Đợi 1.5 giây để hiển thị toast trước khi chuyển trang
         });
 
         // Cập nhật tổng tiền và số lượng sản phẩm ban đầu

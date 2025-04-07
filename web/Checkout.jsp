@@ -2,6 +2,15 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp" />
 <link rel="stylesheet" href="css/Checkout.css"> <!-- Liên kết tệp CSS mới -->
+<link rel="stylesheet" href="./css/toast.css">
+<%@include file="popUpMessage.jsp" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
+
+<%
+    Locale localeVN = new Locale("vi", "VN");
+    NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+%>
 
 <%
     List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
@@ -28,6 +37,22 @@
     }
 %>
 
+<%
+    String userId = (String) session.getAttribute("user_id");
+    String userFullName = "";
+    String userPhone = "";
+    String userEmail = "";
+    String userAddress = "";
+
+    if (userId != null) {
+        // Lấy thông tin người dùng từ session
+        userFullName = (String) session.getAttribute("user_fullname");
+        userPhone = (String) session.getAttribute("user_phone");
+        userEmail = (String) session.getAttribute("user_email");
+        userAddress = (String) session.getAttribute("user_address");
+    }
+%>
+
 <div class="checkout-container">
     <h1 class="text-center my-4">Checkout</h1>
     <div class="row">
@@ -37,20 +62,24 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="name">Full Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                        <input type="text" class="form-control" id="name" name="name" value="<%= userFullName %>" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="phone">Phone Number</label>
-                        <input type="text" class="form-control" id="phone" name="phone" required>
+                        <input type="text" class="form-control" id="phone" name="phone" value="<%= userPhone %>" required>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="address">Address</label>
-                    <input type="text" class="form-control" id="address" name="address" required>
+                    <input type="text" class="form-control" id="address" name="address" value="<%= userAddress %>" required>
                 </div>
                 <div class="mb-3">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                    <input type="email" class="form-control" id="email" name="email" value="<%= userEmail %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="promoCode">Promotion Code</label>
+                    <input type="text" class="form-control" id="promoCode" name="promoCode" placeholder="Enter promotion code">
                 </div>
                 <h4 class="mb-3">Payment</h4>
                 <div class="d-block my-3">
@@ -58,14 +87,15 @@
                         <input id="cod" name="paymentMethod" type="radio" class="custom-control-input" value="COD" required>
                         <label class="custom-control-label" for="cod">Cash on Delivery (COD)</label>
                     </div>
+                    
                     <div class="custom-control custom-radio">
-                        <input id="qr" name="paymentMethod" type="radio" class="custom-control-input" value="QR" required>
-                        <label class="custom-control-label" for="qr">QR Code/Banking</label>
+                        <input id="momo" name="paymentMethod" type="radio" class="custom-control-input" value="MOMO" required>
+                        <label class="custom-control-label" for="momo">Pay with MOMO QR Code</label>
                     </div>
-                </div>
-                <div id="qr-code-container" style="display: none;">
-                    <h4 class="mb-3">Scan this QR code to pay with MOMO</h4>
-                    <img id="qr-code" src="images/QRcode.jpg" alt="MOMO QR Code">
+                    <div id="momo-qr-container" style="display: none; text-align: center; margin-top: 20px;">
+                        <h5>Scan this QR Code to pay with MOMO</h5>
+                        <img src="images/QRcode.jpg" alt="MOMO QR Code" style="width: 200px; height: auto;">
+                    </div>
                 </div>
                 <!-- Gửi danh sách sản phẩm được chọn -->
                 <%
@@ -96,7 +126,7 @@
                         <small class="text-muted">Quantity: <%= item.getQuantity() %></small>
                     </div>
                     <!-- Hiển thị giá tiền theo định dạng VNĐ -->
-                    <span class="text-muted"><%= String.format("%,.0f VNĐ", itemTotal) %></span>
+                    <span class="text-muted"><%= currencyVN.format(itemTotal) %></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <img src="<%= item.getProduct().getimage_url() %>" alt="<%= item.getProduct().getName() %>" style="width: 100px; height: auto;">
@@ -107,28 +137,31 @@
                 <li class="list-group-item d-flex justify-content-between">
                     <span>Total (VNĐ)</span>
                     <!-- Hiển thị tổng tiền theo định dạng VNĐ -->
-                    <strong><%= String.format("%,.0f VNĐ", total) %></strong>
+                    <strong><%= currencyVN.format(total) %></strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Shipping Fee (VNĐ)</span>
+                    <strong><%= currencyVN.format(30_000) %></strong> <!-- Phí vận chuyển mặc định -->
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Total (VNĐ)</span>
+                    <strong><%= currencyVN.format(total + 30000) %></strong> <!-- Cộng phí vận chuyển -->
                 </li>
             </ul>
         </div>
     </div>
 </div>
 
+
+
 <jsp:include page="footer.jsp" />
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('input[name="paymentMethod"]').change(function () {
-            if ($(this).val() === 'QR') {
-                $('#qr-code-container').show();
-            } else {
-                $('#qr-code-container').hide();
-            }
-        });
-
-        // Validate form inputs
         $('form').on('submit', function (e) {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
             const name = $('#name').val().trim();
             const phone = $('#phone').val().trim();
             const address = $('#address').val().trim();
@@ -145,31 +178,52 @@
 
             // Validate Full Name
             if (!nameRegex.test(name) || name.length < 3 || name.length > 50) {
-                alert('Full Name is required, must be between 3 and 50 characters, and can only contain letters, spaces, and Vietnamese diacritics.');
-                e.preventDefault();
+                showErrorToast('Full Name is required, must be between 3 and 50 characters, and can only contain letters, spaces, and Vietnamese diacritics.');
                 return;
             }
 
             // Validate Phone Number
             if (!phoneRegex.test(phone)) {
-                alert('Phone Number must start with +84 or 0, followed by 9-10 digits, and match Vietnamese phone number formats.');
-                e.preventDefault();
+                showErrorToast('Phone Number must start with +84 or 0, followed by 9-10 digits, and match Vietnamese phone number formats.');
                 return;
             }
 
             // Validate Address
             if (address === '' || address.length < 5 || address.length > 100) {
-                alert('Address is required and must be between 5 and 100 characters.');
-                e.preventDefault();
+                showErrorToast('Address is required and must be between 5 and 100 characters.');
                 return;
             }
 
             // Validate Email
             if (!emailRegex.test(email)) {
-                alert('Invalid Email format.');
-                e.preventDefault();
+                showErrorToast('Invalid Email format.');
                 return;
+            }
+
+            // Hiển thị thông báo thành công trước khi gửi form
+            showSuccessToast('Placing your order...');
+            setTimeout(() => {
+                this.submit(); // Gửi form sau khi hiển thị thông báo
+            }, 1500); // Đợi 1.5 giây để hiển thị toast trước khi gửi form
+        });
+
+        // Hiển thị hoặc ẩn QR code khi chọn phương thức thanh toán
+        $('input[name="paymentMethod"]').change(function () {
+            if ($(this).val() === 'QR') {
+                $('#qr-code-container').show();
+                // Gửi form đến VnpayPaymentServlet khi chọn VNPAY
+                $('#vnpay-form').submit();
+            } else {
+                $('#qr-code-container').hide();
+            }
+
+            if ($(this).val() === 'MOMO') {
+                $('#momo-qr-container').show();
+            } else {
+                $('#momo-qr-container').hide();
             }
         });
     });
+
+    
 </script>

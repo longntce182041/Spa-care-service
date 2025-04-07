@@ -1,10 +1,15 @@
 <%@page import="Model.Order"%>
 <%@ page import="java.util.*, DAO.ProductDAO, Model.Product, Model.OrderDetail, DAO.OrderDAO" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <jsp:include page="header.jsp" />
 <link rel="stylesheet" href="css/OrderConfirmation.css">
 
 <%
+    Locale localeVN = new Locale("vi", "VN");
+    NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+
     // Lấy danh sách sản phẩm được chọn từ request
     String[] selectedProductIds = request.getParameterValues("selectedProducts");
     if (selectedProductIds == null || selectedProductIds.length == 0) {
@@ -12,21 +17,21 @@
         return;
     }
 
-    // Lấy thông tin đơn hàng
     Integer orderId = (Integer) request.getAttribute("orderId");
     if (orderId == null) {
         response.sendRedirect("Shop.jsp");
         return;
     }
-    OrderDAO orderDAO = new OrderDAO();
-    List<OrderDetail> orderDetails = orderDAO.getOrderDetails(orderId);
-    ProductDAO productDAO = new ProductDAO();
-    Order order = orderDAO.getOrderById(orderId);
 
+    OrderDAO orderDAO = new OrderDAO();
+    Order order = orderDAO.getOrderById(orderId);
     if (order == null) {
         response.sendRedirect("Shop.jsp");
         return;
     }
+
+    List<OrderDetail> orderDetails = orderDAO.getOrderDetails(orderId);
+    ProductDAO productDAO = new ProductDAO();
 
     // Lọc các sản phẩm được chọn
     List<OrderDetail> selectedOrderDetails = new ArrayList<>();
@@ -69,13 +74,31 @@
                         <small>Quantity: <%= detail.getQuantity() %></small>
                     </div>
                 </div>
-                <span class="price"><%= String.format("%,.0f VNĐ", itemTotal) %></span>
+                <span class="price"><%= currencyVN.format(itemTotal) %></span>
             </li>
             <%
                 }
             %>
             <li class="list-group-item total">
-                <strong>Total (VNĐ):</strong> <span><%= String.format("%,.0f VNĐ", total) %></span>
+                <strong>Subtotal (VNĐ):</strong> 
+                <span>
+                    <%
+                        double subtotal = 0;
+                        for (OrderDetail detail : selectedOrderDetails) {
+                            subtotal += detail.getPrice() * detail.getQuantity();
+                        }
+                        out.print(currencyVN.format(subtotal));
+                    %>
+                </span>
+            </li>
+            <li class="list-group-item">
+                <strong>Shipping Fee (VNĐ):</strong> <span><%= currencyVN.format(30_000) %></span> <!-- Phí vận chuyển mặc định -->
+            </li>
+            <li class="list-group-item">
+                <strong>Promotion Code:</strong> <span><%= order.getPromotionId() != null ? order.getPromotionId() : "None" %></span>
+            </li>
+            <li class="list-group-item total">
+                <strong>Total (VNĐ):</strong> <span><%= currencyVN.format(order.getTotalPrice()) %></span>
             </li>
         </ul>
     </div>
@@ -97,6 +120,9 @@
             </li>
             <li class="list-group-item">
                 <strong>Payment Method:</strong> <span><%= order.getPaymentMethod() %></span>
+            </li>
+            <li class="list-group-item">
+                <strong>User ID:</strong> <span><%= order.getUserId() %></span>
             </li>
         </ul>
     </div>

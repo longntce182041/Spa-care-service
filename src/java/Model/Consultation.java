@@ -6,16 +6,18 @@ import java.sql.Time;
 public class Consultation {
     private int consultationId;
     private String message;
-    private String name;
+    private String consultationName;
     private String phoneNumber;
     private Date date;
     private Time time;
-    private String consultationStatus; // Đổi tên thuộc tính
+    private String consultationStatus; // Thêm thuộc tính trạng thái
 
-    public Consultation(int consultationId, String message, String name, String phoneNumber, Date date, Time time, String consultationStatus) {
+    public Consultation() {}
+
+    public Consultation(int consultationId, String message, String consultationName, String phoneNumber, Date date, Time time, String consultationStatus) {
         this.consultationId = consultationId;
         this.message = message;
-        this.name = name;
+        this.consultationName = consultationName;
         this.phoneNumber = phoneNumber;
         this.date = date;
         this.time = time;
@@ -39,12 +41,12 @@ public class Consultation {
         this.message = message;
     }
 
-    public String getName() {
-        return name;
+    public String getConsultationName() {
+        return consultationName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setConsultationName(String consultationName) {
+        this.consultationName = consultationName;
     }
 
     public String getPhoneNumber() {

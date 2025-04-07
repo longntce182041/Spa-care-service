@@ -748,22 +748,15 @@
                     return;
                 }
 
-                if (!dateRegex.test(date)) {
-                    alert("Please enter a valid date in MM/dd/yyyy format.");
-                    event.preventDefault();
-                    return;
-                }
+                
+               
                 if (inputDate < today) {
                     alert("The date cannot be in the past.");
                     event.preventDefault();
                     return;
                 }
 
-                if (!timeRegex.test(time)) {
-                    alert("Please enter a valid time in HH:mm format.");
-                    event.preventDefault();
-                    return;
-                }
+                
                 const [hours, minutes] = time.split(":").map(Number);
                 if (hours < 8 || hours > 18) {
                     alert("The time must be between 08:00 and 18:00.");

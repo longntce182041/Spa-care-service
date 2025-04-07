@@ -8,6 +8,8 @@ public class OrderDetail {
     private int serviceId;
     private int quantity;
     private double price;
+    private String productName; // Tên sản phẩm
+    private String productImage; // URL hình ảnh sản phẩm
 
     // Getters and setters
     public int getOrderDetailId() {
@@ -56,5 +58,21 @@ public class OrderDetail {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
     }
 }

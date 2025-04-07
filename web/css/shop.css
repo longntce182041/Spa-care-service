@@ -30,8 +30,8 @@ h4 {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%; /* Äáº£m báº£o cĂ¡c tháº» card cĂ³ chiá»u cao Ä‘á»“ng Ä‘á»u */
-    margin-bottom: 20px!important; /* Khoáº£ng cĂ¡ch giá»¯a cĂ¡c tháº» card */
+    height: 100%; /* Đảm bảo các thẻ card có chiều cao đồng đều */
+    margin: 15px !important; /* Đảm bảo khoảng cách được áp dụng */
 }
 
 .product-card:hover {
@@ -53,7 +53,7 @@ h4 {
 
 .card-title {
     font-size: 1.25rem;
-    color: #28a745; /* Chuyá»ƒn mĂ u xanh biá»ƒn thĂ nh mĂ u xanh lá»¥c */
+    color: #28a745; /* Chuyển màu xanh biển thành màu xanh lục */
 }
 
 .card-text {
@@ -62,12 +62,12 @@ h4 {
 }
 
 .btn-outline-success {
-    border-color: #28a745; /* Chuyá»ƒn mĂ u xanh biá»ƒn thĂ nh mĂ u xanh lá»¥c */
-    color: #28a745; /* Chuyá»ƒn mĂ u xanh biá»ƒn thĂ nh mĂ u xanh lá»¥c */
+    border-color: #28a745; /* Chuyển màu xanh biển thành màu xanh lục */
+    color: #28a745; /* Chuyển màu xanh biển thành màu xanh lục */
 }
 
 .btn-outline-success:hover {
-    background-color: #28a745; /* Chuyá»ƒn mĂ u xanh biá»ƒn thĂ nh mĂ u xanh lá»¥c */
+    background-color: #28a745; /* Chuyển màu xanh biển thành màu xanh lục */
     color: #fff;
 }
 
@@ -89,7 +89,7 @@ h4 {
 }
 
 .navbar-light .navbar-nav .nav-link:hover {
-    color: #28a745; /* Chuyá»ƒn mĂ u xanh biá»ƒn thĂ nh mĂ u xanh lá»¥c */
+    color: #28a745; /* Chuyển màu xanh biển thành màu xanh lục */
 }
 
 .navbar-light .navbar-brand {
@@ -97,7 +97,7 @@ h4 {
 }
 
 .navbar-light .navbar-brand:hover {
-    color: #28a745; /* Chuyá»ƒn mĂ u xanh biá»ƒn thĂ nh mĂ u xanh lá»¥c */
+    color: #28a745; /* Chuyển màu xanh biển thành màu xanh lục */
 }
 
 .cart-icon {
@@ -128,43 +128,43 @@ h4 {
     border-radius: 0;
 }
 
-/* TĂ¹y chá»‰nh Ă´ nháº­p sá»‘ lÆ°á»£ng */
+/* Tùy chỉnh ô nhập số lượng */
 .quantity-input {
-    width: 60px; /* Giáº£m chiá»u rá»™ng */
-    padding: 5px; /* Giáº£m khoáº£ng cĂ¡ch bĂªn trong */
-    font-size: 14px; /* Giáº£m kĂ­ch thÆ°á»›c chá»¯ */
-    text-align: center; /* Canh giá»¯a ná»™i dung */
-    border: 1px solid #ced4da; /* Viá»n nháº¹ */
-    border-radius: 4px; /* Bo gĂ³c */
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Hiá»‡u á»©ng Ä‘á»• bĂ³ng bĂªn trong */
+    width: 60px; /* Giảm chiều rộng */
+    padding: 5px; /* Giảm khoảng cách bên trong */
+    font-size: 14px; /* Giảm kích thước chữ */
+    text-align: center; /* Canh giữa nội dung */
+    border: 1px solid #ced4da; /* Viền nhẹ */
+    border-radius: 4px; /* Bo góc */
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng bên trong */
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    margin-right: 10px; /* Khoáº£ng cĂ¡ch giá»¯a Ă´ nháº­p vĂ  nĂºt */
+    margin-right: 10px; /* Khoảng cách giữa ô nhập và nút */
 }
 
 .quantity-input:focus {
-    border-color: #80bdff; /* Äá»•i mĂ u viá»n khi focus */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Hiá»‡u á»©ng focus */
-    outline: none; /* Loáº¡i bá» viá»n máº·c Ä‘á»‹nh */
+    border-color: #80bdff; /* Đổi màu viền khi focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Hiệu ứng focus */
+    outline: none; /* Loại bỏ viền mặc định */
 }
 
-/* TĂ¹y chá»‰nh nĂºt thĂªm vĂ o giá» hĂ ng */
+/* Tùy chỉnh nút thêm vào giỏ hàng */
 .btn-primary.add-to-cart {
-    background-color: #28a745; /* MĂ u ná»n xanh lá»¥c */
-    color: #fff; /* MĂ u chá»¯ tráº¯ng */
-    border: none; /* Loáº¡i bá» viá»n */
-    padding: 10px 20px; /* Khoáº£ng cĂ¡ch bĂªn trong */
-    font-size: 16px; /* KĂ­ch thÆ°á»›c chá»¯ */
-    font-weight: bold; /* Chá»¯ Ä‘áº­m */
-    border-radius: 25px; /* Bo gĂ³c */
-    transition: background-color 0.3s ease; /* Hiá»‡u á»©ng chuyá»ƒn mĂ u */
+    background-color: #28a745; /* Màu nền xanh lục */
+    color: #fff; /* Màu chữ trắng */
+    border: none; /* Loại bỏ viền */
+    padding: 10px 20px; /* Khoảng cách bên trong */
+    font-size: 16px; /* Kích thước chữ */
+    font-weight: bold; /* Chữ đậm */
+    border-radius: 25px; /* Bo góc */
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
 }
 
 .btn-primary.add-to-cart:hover {
-    background-color: #218838; /* MĂ u ná»n khi hover */
+    background-color: #218838; /* Màu nền khi hover */
 }
 
 .btn-primary.add-to-cart i {
-    margin-right: 5px; /* Khoáº£ng cĂ¡ch giá»¯a icon vĂ  chá»¯ */
+    margin-right: 5px; /* Khoảng cách giữa icon và chữ */
 }
 
 #cart-total {
@@ -172,4 +172,8 @@ h4 {
     font-weight: bold;
     color: #000;
     display: inline-block;
+}
+
+.card {
+    margin: 0 !important; /* Quy tắc này sẽ xóa khoảng cách */
 }

@@ -13,10 +13,23 @@ public class ConfirmConsultationServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ConsultationDAO consultationDAO = new ConsultationDAO();
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int consultationId = Integer.parseInt(request.getParameter("consultationId"));
-        consultationDAO.updateConsultationStatus(consultationId, "Confirm");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
-        response.getWriter().write("Confirmed");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
+            int consultationId = Integer.parseInt(request.getParameter("consultationId"));
+            String status = request.getParameter("status");
+
+            // Cập nhật trạng thái tư vấn
+            consultationDAO.updateConsultationStatus(consultationId, status);
+
+            // Trả về thông báo thành công
+            response.getWriter().write("Consultation status updated to: " + status);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Trả về thông báo lỗi
+            response.getWriter().write("Failed to update consultation status.");
+        }
     }
 }
