@@ -46,21 +46,36 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String phone = request.getParameter("phone");
-        String email = request.getParameter("email");
-
         String userId = (String) session.getAttribute("user_id");
+        String name, address, phone, email;
 
         if (userId == null) {
-            userId = "GUEST"; // Gán giá trị mặc định cho khách vãng lai
+            // Người dùng chưa đăng nhập
+            userId = "GUEST";
+            name = request.getParameter("name");
+            address = request.getParameter("address");
+            phone = request.getParameter("phone");
+            email = request.getParameter("email");
         } else {
-            // Nếu người dùng đã đăng nhập, sử dụng thông tin từ session
-            name = (String) session.getAttribute("user_fullname");
-            address = (String) session.getAttribute("user_address");
-            phone = (String) session.getAttribute("user_phone");
-            email = (String) session.getAttribute("user_email");
+            // Người dùng đã đăng nhập, lấy thông tin từ session
+            name = (String) session.getAttribute("customer_full_name");
+            address = (String) session.getAttribute("customer_address");
+            phone = (String) session.getAttribute("customer_phone");
+            email = (String) session.getAttribute("customer_email");
+
+            // Kiểm tra nếu thông tin từ session bị thiếu
+            if (name == null || name.trim().isEmpty()) {
+                name = request.getParameter("name");
+            }
+            if (address == null || address.trim().isEmpty()) {
+                address = request.getParameter("address");
+            }
+            if (phone == null || phone.trim().isEmpty()) {
+                phone = request.getParameter("phone");
+            }
+            if (email == null || email.trim().isEmpty()) {
+                email = request.getParameter("email");
+            }
         }
 
         // Tạo đối tượng Order
@@ -69,79 +84,42 @@ public class CheckoutServlet extends HttpServlet {
         order.setAddress(address);
         order.setPhone(phone);
         order.setEmail(email);
-        order.setUserId(userId); // Nếu không đăng nhập, userId sẽ là "guest"
+        order.setUserId(userId);
         order.setPaymentMethod(request.getParameter("paymentMethod"));
-
-        order.setTotalPrice(cart.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum());
         order.setStatus("Pending");
-        order.setPromotionId(null); // Giả sử không có promotion
-        order.setProductId(cart.get(0).getProduct().getProductId()); // Lấy product_id từ sản phẩm đầu tiên trong giỏ hàng
 
-        // Tính phí vận chuyển mặc định
-        double shippingFee = calculateShippingFee(address);
-        order.setShippingFee(shippingFee);
+        String customerId = (String) session.getAttribute("customer_id");
+        if (customerId != null) {
+            order.setCustomerId(customerId);
+        }
 
-        // Lấy mã giảm giá từ request
-        String promoCode = request.getParameter("promoCode");
-        System.out.println("Promo code: " + promoCode);
+        // Log thông tin đơn hàng
+        System.out.println("⚙️ [DEBUG] Order Name: " + order.getName());
+        System.out.println("⚙️ [DEBUG] Order Address: " + order.getAddress());
+        System.out.println("⚙️ [DEBUG] Order Phone: " + order.getPhone());
+        System.out.println("⚙️ [DEBUG] Order Email: " + order.getEmail());
 
-        // Kiểm tra mã giảm giá
-        double discount = 0;
-        if (promoCode != null && !promoCode.trim().isEmpty()) {
-            PromotionDAO promotionDAO = new PromotionDAO();
-            Promotion promotion = promotionDAO.getPromotionByCode(promoCode);
+        // Tiếp tục xử lý lưu đơn hàng và các bước khác...
+        ProductDAO productDAO = new ProductDAO();
 
-            if (promotion != null && promotion.isActive() && promotion.isValid(order.getTotalPrice())) {
-                if ("fixed".equalsIgnoreCase(promotion.getDiscountType())) {
-                    discount = promotion.getDiscountValue();
-                } else if ("percent".equalsIgnoreCase(promotion.getDiscountType())) {
-                    discount = order.getTotalPrice() * (promotion.getDiscountValue() / 100);
-                }
-
-                // Áp dụng giới hạn giảm giá tối đa
-                if (promotion.getMaxDiscount() != null && discount > promotion.getMaxDiscount()) {
-                    discount = promotion.getMaxDiscount();
-                }
-
-                // Gán mã giảm giá vào đơn hàng
-                order.setPromotionId(promoCode);
-                System.out.println("Promotion applied: " + promoCode + ", Discount: " + discount);
-            } else {
-                System.out.println("Invalid or expired promotion code: " + promoCode);
+        // Kiểm tra số lượng sản phẩm trong kho trước khi checkout
+        List<String> insufficientStockProducts = new ArrayList<>();
+        for (CartItem cartItem : cart) {
+            Product product = productDAO.getProductById(cartItem.getProduct().getProductId());
+            if (cartItem.getQuantity() > product.getStockQuantity()) {
+                insufficientStockProducts.add(product.getName());
             }
         }
 
-        // Cộng phí vận chuyển vào tổng giá trị ban đầu
-        double totalPriceWithShipping = order.getTotalPrice() + shippingFee;
-
-        // Áp dụng giảm giá vào tổng giá trị đã bao gồm phí vận chuyển
-        double totalPriceAfterDiscount = totalPriceWithShipping - discount;
-
-        // Cập nhật tổng giá trị vào đối tượng Order
-        order.setTotalPrice(totalPriceAfterDiscount);
-
-        // In ra console để kiểm tra
-        System.out.println("Original total price: " + order.getTotalPrice());
-        System.out.println("Shipping fee: " + shippingFee);
-        System.out.println("Total price with shipping: " + totalPriceWithShipping);
-        System.out.println("Discount applied: " + discount);
-        System.out.println("Total price after discount: " + totalPriceAfterDiscount);
-        System.out.println("Order total price: " + order.getTotalPrice());
-
-        // Tạo danh sách OrderDetail từ giỏ hàng
-        List<OrderDetail> orderDetails = new ArrayList<>();
-        for (CartItem cartItem : cart) {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setProductId(cartItem.getProduct().getProductId());
-            orderDetail.setQuantity(cartItem.getQuantity());
-            orderDetail.setPrice(cartItem.getProduct().getPrice());
-            orderDetails.add(orderDetail);
+        if (!insufficientStockProducts.isEmpty()) {
+            String errorMessage = "The following products do not have enough stock: " + String.join(", ", insufficientStockProducts);
+            request.setAttribute("errorMessage", errorMessage);
+            request.getRequestDispatcher("Cart.jsp").forward(request, response);
+            return; // Dừng luồng xử lý hoàn toàn
         }
 
-        // In ra console để kiểm tra
-        for (OrderDetail detail : orderDetails) {
-            System.out.println("OrderDetail: " + detail);
-        }
+        // Tạo đối tượng Order
+        order.setPromotionId(null); // Giả sử không có promotion
 
         // Lấy danh sách sản phẩm được chọn từ request
         String[] selectedProductIds = request.getParameterValues("selectedProducts");
@@ -156,30 +134,104 @@ public class CheckoutServlet extends HttpServlet {
                 .map(Integer::parseInt)
                 .collect(Collectors.toSet());
 
-        // Lọc danh sách OrderDetail để chỉ giữ lại các sản phẩm được chọn
-        List<OrderDetail> selectedOrderDetails = orderDetails.stream()
-                .filter(detail -> selectedProductIdSet.contains(detail.getProductId()))
+        // Lọc danh sách CartItem để chỉ giữ lại các sản phẩm được chọn
+        List<CartItem> selectedCartItems = cart.stream()
+                .filter(item -> selectedProductIdSet.contains(item.getProduct().getProductId()))
                 .collect(Collectors.toList());
 
-        // Kiểm tra danh sách sản phẩm đã chọn
-        if (selectedOrderDetails.isEmpty()) {
-            System.out.println("No valid products selected for checkout");
-            response.sendRedirect("Cart.jsp");
-            return;
+        // Tính tổng giá trị của các sản phẩm được chọn
+        double totalPrice = selectedCartItems.stream()
+                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+                .sum();
+
+        // Gán tổng giá trị vào đối tượng Order
+        order.setTotalPrice(totalPrice);
+
+        // Tính phí vận chuyển mặc định
+        double shippingFee = calculateShippingFee(address);
+        order.setShippingFee(shippingFee);
+
+        // Lấy mã giảm giá từ request
+        String promoCode = request.getParameter("promoCode");
+        System.out.println("Promo code: " + promoCode);
+
+        // Áp dụng giảm giá (nếu có)
+        double discount = 0;
+        if (promoCode != null && !promoCode.trim().isEmpty()) {
+            PromotionDAO promotionDAO = new PromotionDAO();
+            Promotion promotion = promotionDAO.getPromotionByCode(promoCode);
+
+            if (promotion != null && promotion.isActive() && promotion.isValid(totalPrice)) {
+                if ("fixed".equalsIgnoreCase(promotion.getDiscountType())) {
+                    discount = promotion.getDiscountValue();
+                } else if ("percent".equalsIgnoreCase(promotion.getDiscountType())) {
+                    discount = totalPrice * (promotion.getDiscountValue() / 100);
+                }
+
+                // Áp dụng giới hạn giảm giá tối đa
+                if (promotion.getMaxDiscount() != null && discount > promotion.getMaxDiscount()) {
+                    discount = promotion.getMaxDiscount();
+                }
+
+                // Gán mã giảm giá và giá trị giảm giá vào đơn hàng
+                order.setPromotionId(promoCode);
+                order.setDiscountValue(discount); // Lưu giá trị giảm giá
+                System.out.println("Promotion applied: " + promoCode + ", Discount: " + discount);
+            } else {
+                System.out.println("Invalid or expired promotion code: " + promoCode);
+            }
+        } else {
+            order.setDiscountValue(0); // Không có giảm giá
+        }
+
+        // Cộng phí vận chuyển vào tổng giá trị đã bao gồm giảm giá
+        double totalPriceAfterDiscount = totalPrice + shippingFee - discount;
+
+        // Cập nhật tổng giá trị vào đối tượng Order
+        order.setTotalPrice(totalPriceAfterDiscount);
+
+        // In ra console để kiểm tra
+        System.out.println("Original total price: " + totalPrice);
+        System.out.println("Shipping fee: " + shippingFee);
+        System.out.println("Discount applied: " + discount);
+        System.out.println("Total price after discount: " + totalPriceAfterDiscount);
+
+        // Tạo danh sách OrderDetail từ các sản phẩm được chọn
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (CartItem cartItem : selectedCartItems) {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setProductId(cartItem.getProduct().getProductId());
+            orderDetail.setQuantity(cartItem.getQuantity());
+            orderDetail.setPrice(cartItem.getProduct().getPrice());
+            orderDetails.add(orderDetail);
+        }
+
+        // In ra console để kiểm tra
+        for (OrderDetail detail : orderDetails) {
+            System.out.println("OrderDetail: " + detail);
         }
 
         // Lưu thông tin đơn hàng và các mục đơn hàng đã chọn vào cơ sở dữ liệu
-        int orderId = orderDAO.saveOrder(order, selectedOrderDetails);
+        int orderId = orderDAO.saveOrder(order, orderDetails);
 
         // Kiểm tra orderId
         if (orderId == 0) {
             System.out.println("Failed to save order");
-            response.sendRedirect("Shop.jsp");
+            request.setAttribute("errorMessage", "Failed to place the order. Please try again.");
+            request.getRequestDispatcher("Cart.jsp").forward(request, response);
             return;
         }
 
         // Lấy lại thông tin đơn hàng từ cơ sở dữ liệu
         order = orderDAO.getOrderById(orderId);
+
+        // Kiểm tra nếu không lấy được thông tin đơn hàng
+        if (order == null) {
+            System.out.println("Order not found after saving. Order ID: " + orderId);
+            request.setAttribute("errorMessage", "Failed to retrieve order details. Please contact support.");
+            request.getRequestDispatcher("Cart.jsp").forward(request, response);
+            return;
+        }
 
         // Xóa giỏ hàng sau khi đặt hàng thành công
         session.removeAttribute("cart");
@@ -187,9 +239,10 @@ public class CheckoutServlet extends HttpServlet {
 
         // Gửi email hóa đơn chỉ với các sản phẩm đã chọn
         try {
-            sendOrderConfirmationEmail(order, selectedOrderDetails);
+            sendOrderConfirmationEmail(order, orderDetails);
         } catch (MessagingException e) {
             e.printStackTrace();
+            System.out.println("Failed to send order confirmation email.");
         }
 
         // Chuyển thông tin đơn hàng đến trang xác nhận đơn hàng
@@ -200,10 +253,17 @@ public class CheckoutServlet extends HttpServlet {
     }
 
     void sendOrderConfirmationEmail(Order order, List<OrderDetail> orderDetails) throws MessagingException {
+        if (order == null) {
+            throw new IllegalArgumentException("Order cannot be null.");
+        }
+
         ProductDAO productDAO = new ProductDAO();
         PromotionDAO promotionDAO = new PromotionDAO();
         StringBuilder emailContent = new StringBuilder();
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+        // Base URL cho hình ảnh (thay đổi theo domain của bạn)
+        String baseUrl = "http://localhost:8080/PetiqueSpa/images/";
 
         // Lấy thông tin mã giảm giá (nếu có)
         Promotion promotion = null;
@@ -241,7 +301,7 @@ public class CheckoutServlet extends HttpServlet {
 
             emailContent.append("<tr>");
             emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>")
-                    .append("<img src='").append(product.getimage_url()).append("' alt='").append(product.getName())
+                    .append("<img src='").append(baseUrl).append(product.getImageUrl()).append("' alt='").append(product.getName())
                     .append("' style='width: 50px; height: auto; margin-right: 10px;'>")
                     .append(product.getName()).append("</td>");
             emailContent.append("<td style='border: 1px solid #ddd; padding: 8px;'>").append(detail.getQuantity()).append("</td>");
@@ -262,14 +322,15 @@ public class CheckoutServlet extends HttpServlet {
         // Thông tin mã giảm giá (nếu có)
         if (promotion != null) {
             emailContent.append("<p><strong>Promotion Code:</strong> ").append(promotion.getPromotionId()).append("</p>");
-            
+            emailContent.append("<p><strong>Discount Value:</strong> ").append(currencyVN.format(order.getDiscountValue())).append("</p>");
         } else {
             emailContent.append("<p><strong>Promotion Code:</strong> None</p>");
+            emailContent.append("<p><strong>Discount Value:</strong> 0</p>");
         }
 
         // Phí vận chuyển
         emailContent.append("<p><strong>Shipping Fee:</strong> ")
-            .append(currencyVN.format(30_000)).append("</p>");
+                .append(currencyVN.format(30_000)).append("</p>");
 
         // Tổng tiền sau giảm giá và phí vận chuyển
         emailContent.append("<p><strong>Total (including shipping):</strong> ")

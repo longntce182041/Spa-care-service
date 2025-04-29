@@ -2,6 +2,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="DAO.RatingProductDAO, Model.Rating" %>
 <jsp:include page="header.jsp" />
 <link rel="stylesheet" href="css/shop.css"> <!-- Liên kết tệp CSS mới -->
 <link rel="stylesheet" href="./css/toast.css">
@@ -15,6 +16,9 @@
     ProductDAO productDAO = new ProductDAO();
     Product product = productDAO.getProductById(productId);
     List<Product> similarProducts = productDAO.getSimilarProducts(productId);
+
+    RatingProductDAO ratingDAO = new RatingProductDAO();
+    List<Rating> ratings = ratingDAO.getRatingsByProductId(productId);
 %>
 
 <div class="container mt-5">
@@ -28,17 +32,17 @@
 
     <div class="row">
         <div class="col-md-6">
-            <img src="<%= product.getimage_url()%>" class="img-fluid rounded" alt="<%= product.getName()%>">
+            <img src="<%= product.getImageUrl() %>" class="img-fluid rounded shadow-sm" alt="<%= product.getName() %>">
         </div>
         <div class="col-md-6">
-            <h2 class="my-3"><%= product.getName()%></h2>
+            <h2 class="my-3"><%= product.getName() %></h2>
             <h4 class="text-success"><%= currencyVN.format(product.getPrice()) %></h4>
-            <p><%= product.getDescription()%></p>
-            <p><%= product.getDescription_detail()%></p>
-            <p>Stock: <%= product.getStockQuantity()%></p>
+            <p><%= product.getDescription() %></p>
+            <p><%= product.getDescriptionDetail() %></p>
+            <p>Stock: <%= product.getStockQuantity() %></p>
             <% if (product.getStockQuantity() == 0) { %>
             <span class="badge badge-danger">Sold Out</span>
-            <% } else {%>
+            <% } else { %>
             <div class="form-group d-flex align-items-center">
                 <label for="quantity" class="mr-2">Quantity:</label>
                 <input 
@@ -48,40 +52,75 @@
                     name="quantity" 
                     value="1" 
                     min="1" 
-                    max="<%= product.getStockQuantity()%>" 
+                    max="<%= product.getStockQuantity() %>" 
                     step="1"
                     >
-                <button type="button" class="btn btn-success add-to-cart ml-3" data-product-id="<%= product.getProductId()%>">
-                    <i class="fas fa-shopping-cart"></i> add to cart
+                <button type="button" class="btn btn-success add-to-cart ml-3" data-product-id="<%= product.getProductId() %>">
+                    <i class="fas fa-shopping-cart"></i> Add to Cart
                 </button>
             </div>
             <% } %>
         </div>
     </div>
-
+    <div class="container mt-5">
+        <h2 class="text-center my-5">Customer Feedback</h2>
+        <div class="row">
+            <% if (ratings.isEmpty()) { %>
+                <p class="text-center">No feedback available for this product.</p>
+            <% } else { %>
+                <% for (Rating rating : ratings) { %>
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 50px; height: 50px;">
+                                        <%= rating.getCustomerName().substring(0, 1).toUpperCase() %>
+                                    </div>
+                                    <h5 class="card-title ml-3 mb-0"> <%= rating.getCustomerName() %></h5>
+                                </div>
+                                <p class="card-text">Rating: 
+                                    <% for (int i = 0; i < rating.getRatingStar(); i++) { %>
+                                        <i class="fas fa-star text-warning"></i>
+                                    <% } %>
+                                    <% for (int i = rating.getRatingStar(); i < 5; i++) { %>
+                                        <i class="far fa-star text-warning"></i>
+                                    <% } %>
+                                </p>
+                                <p class="card-text">Comment: <%= rating.getComment() %></p>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+    </div>
     <h2 class="text-center my-5">Similar Products</h2>
     <div class="row">
         <% int count = 0; %>
         <% for (Product similarProduct : similarProducts) { %>
-        <% if (count < 4) {%>
+        <% if (count < 4) { %>
         <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card mb-4 shadow-sm product-card" data-product-id="<%= similarProduct.getProductId()%>">
-                <img src="<%= similarProduct.getimage_url()%>" class="card-img-top" alt="<%= similarProduct.getName()%>">
+            <div class="card mb-4 shadow-sm product-card" data-product-id="<%= similarProduct.getProductId() %>">
+                <img src="<%= similarProduct.getImageUrl() %>" class="card-img-top" alt="<%= similarProduct.getName() %>">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title"><%= similarProduct.getName()%></h5>
-                    <p class="card-text"><%= similarProduct.getDescription()%></p>
+                    <h5 class="card-title"><%= similarProduct.getName() %></h5>
+                    <p class="card-text text-truncate"><%= similarProduct.getDescription() %></p>
                     <p class="card-text"><strong>Price: <%= currencyVN.format(similarProduct.getPrice()) %></strong></p>
                     <% if (similarProduct.getStockQuantity() == 0) { %>
                     <span class="badge badge-danger">Sold Out</span>
+                    <% } else { %>
+                    <a href="ProductDetail.jsp?productId=<%= similarProduct.getProductId() %>" class="btn btn-primary mt-auto">View Details</a>
                     <% } %>
                 </div>
             </div>
         </div>
         <% count++; %>
         <% } %>
-        <% }%>
+        <% } %>
     </div>
 </div>
+
+
 
 <jsp:include page="footer.jsp" />
 
@@ -109,7 +148,7 @@
                         $('#cart-count').text(response.cartCount);
 
                         // Đặt lại giá trị của ô nhập số lượng về 1
-                        $('#quantity').val(1);
+                        $('#quantity').val(0);
 
                         // Hiển thị thông báo thành công
                         showSuccessToast(response.message);

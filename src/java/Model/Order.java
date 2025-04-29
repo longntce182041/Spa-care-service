@@ -5,20 +5,21 @@ import java.util.Date;
 public class Order {
 
     private int orderId;
-    private Date orderDate; // Thêm thuộc tính orderDate
+    private Date orderDate;
     private double totalPrice;
     private String status;
-    private String promotionId; // Thay đổi từ Integer sang String
-    private String userId; // Thay đổi kiểu dữ liệu từ int sang String
-    private int productId;
+    private String promotionId;
+    private double discountValue;
+    private String userId;
+    private String customerId;
     private String name;
     private String phone;
     private String email;
     private String address;
     private String paymentMethod;
-    private double shippingFee; // Thêm thuộc tính shippingFee
+    private double shippingFee;
 
-    // Getters and setters
+    // Getters và setters
     public int getOrderId() {
         return orderId;
     }
@@ -59,6 +60,14 @@ public class Order {
         this.promotionId = promotionId;
     }
 
+    public double getDiscountValue() {
+        return discountValue;
+    }
+
+    public void setDiscountValue(double discountValue) {
+        this.discountValue = discountValue;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -67,12 +76,12 @@ public class Order {
         this.userId = userId;
     }
 
-    public int getProductId() {
-        return productId;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getName() {

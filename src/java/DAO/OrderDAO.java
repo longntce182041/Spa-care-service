@@ -23,7 +23,8 @@ public class OrderDAO {
             }
             conn.setAutoCommit(false);
 
-            String orderSql = "INSERT INTO Orders (order_date, total_price, status, promotion_id, user_id, product_id, name, phone, email, address, payment_method, shipping_fee) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            // Lưu thông tin đơn hàng
+            String orderSql = "INSERT INTO Orders (order_date, total_price, status, promotion_id, user_id, name, phone, email, address, payment_method, shipping_fee, discount_value, customer_id) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             orderStmt = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
             orderStmt.setDouble(1, order.getTotalPrice());
             orderStmt.setString(2, order.getStatus());
@@ -32,31 +33,37 @@ public class OrderDAO {
             } else {
                 orderStmt.setNull(3, Types.VARCHAR);
             }
-            orderStmt.setString(4, order.getUserId()); // Lưu user_id dưới dạng chuỗi
-            orderStmt.setInt(5, order.getProductId());
-            orderStmt.setString(6, order.getName());
-            orderStmt.setString(7, order.getPhone());
-            orderStmt.setString(8, order.getEmail());
-            orderStmt.setString(9, order.getAddress());
-            orderStmt.setString(10, order.getPaymentMethod());
-            orderStmt.setDouble(11, order.getShippingFee());
+            orderStmt.setString(4, order.getUserId());
+            orderStmt.setString(5, order.getName());
+            orderStmt.setString(6, order.getPhone());
+            orderStmt.setString(7, order.getEmail());
+            orderStmt.setString(8, order.getAddress());
+            orderStmt.setString(9, order.getPaymentMethod());
+            orderStmt.setDouble(10, order.getShippingFee());
+            orderStmt.setDouble(11, order.getDiscountValue());
+            orderStmt.setString(12, order.getCustomerId());
+
             orderStmt.executeUpdate();
 
+            // Lấy order_id vừa được tạo
             rs = orderStmt.getGeneratedKeys();
             if (rs.next()) {
                 orderId = rs.getInt(1);
             }
 
-            // In ra console để kiểm tra
-            System.out.println("Order ID: " + orderId);
-
-            String orderDetailSql = "INSERT INTO Order_Details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+            // Lưu thông tin chi tiết đơn hàng
+            String orderDetailSql = "INSERT INTO Order_Details (order_id, product_id, service_booking_id, quantity, price) VALUES (?, ?, ?, ?, ?)";
             orderDetailStmt = conn.prepareStatement(orderDetailSql);
             for (OrderDetail detail : orderDetails) {
                 orderDetailStmt.setInt(1, orderId);
                 orderDetailStmt.setInt(2, detail.getProductId());
-                orderDetailStmt.setInt(3, detail.getQuantity());
-                orderDetailStmt.setDouble(4, detail.getPrice());
+                if (detail.getServiceBookingId() != null) {
+                    orderDetailStmt.setInt(3, detail.getServiceBookingId());
+                } else {
+                    orderDetailStmt.setNull(3, Types.INTEGER);
+                }
+                orderDetailStmt.setInt(4, detail.getQuantity());
+                orderDetailStmt.setDouble(5, detail.getPrice());
                 orderDetailStmt.addBatch();
             }
             orderDetailStmt.executeBatch();
@@ -102,10 +109,10 @@ public class OrderDAO {
                 throw new SQLException("Unable to connect to database");
             }
 
-            String sql = "SELECT od.*, p.product_name, p.product_image_url " +
-                         "FROM Order_Details od " +
-                         "JOIN Products p ON od.product_id = p.product_id " +
-                         "WHERE od.order_id = ?";
+            String sql = "SELECT od.*, p.product_name, p.product_image_url "
+                    + "FROM Order_Details od "
+                    + "JOIN Products p ON od.product_id = p.product_id "
+                    + "WHERE od.order_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, orderId);
             rs = stmt.executeQuery();
@@ -125,8 +132,12 @@ public class OrderDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
                 DBConnect.closeConnection(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -159,12 +170,13 @@ public class OrderDAO {
                 order.setStatus(rs.getString("status"));
                 order.setPromotionId(rs.getString("promotion_id"));
                 order.setUserId(rs.getString("user_id")); // Lấy user_id dưới dạng chuỗi
-                order.setProductId(rs.getInt("product_id"));
+
                 order.setName(rs.getString("name"));
                 order.setPhone(rs.getString("phone"));
                 order.setEmail(rs.getString("email"));
                 order.setAddress(rs.getString("address"));
                 order.setPaymentMethod(rs.getString("payment_method"));
+                order.setDiscountValue(rs.getDouble("discount_value"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -203,7 +215,7 @@ public class OrderDAO {
                 order.setStatus(rs.getString("status"));
                 order.setPromotionId(rs.getString("promotion_id"));
                 order.setUserId(rs.getString("user_id"));
-                order.setProductId(rs.getInt("product_id"));
+
                 order.setName(rs.getString("name"));
                 order.setPhone(rs.getString("phone"));
                 order.setEmail(rs.getString("email"));
@@ -285,20 +297,52 @@ public class OrderDAO {
                 order.setAddress(rs.getString("address"));
                 order.setPaymentMethod(rs.getString("payment_method"));
                 order.setShippingFee(rs.getDouble("shipping_fee"));
+                order.setDiscountValue(rs.getDouble("discount_value"));
                 orders.add(order);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
                 DBConnect.closeConnection(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         return orders;
+    }
+
+    public OrderDetail getOrderDetailById(int orderDetailId) {
+        String sql = "SELECT od.order_detail_id, od.quantity, od.price, p.product_name, o.status " +
+                     "FROM Order_Details od " +
+                     "JOIN Products p ON od.product_id = p.product_id " +
+                     "JOIN Orders o ON od.order_id = o.order_id " +
+                     "WHERE od.order_detail_id = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, orderDetailId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                OrderDetail detail = new OrderDetail();
+                detail.setOrderDetailId(rs.getInt("order_detail_id"));
+                detail.setQuantity(rs.getInt("quantity"));
+                detail.setPrice(rs.getDouble("price"));
+                detail.setProductName(rs.getString("product_name"));
+                detail.setOrderStatus(rs.getString("status")); // Lưu trạng thái đơn hàng
+                return detail;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

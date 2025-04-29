@@ -33,10 +33,12 @@ public class LoginServlet extends HttpServlet {
         System.out.println("🔍 [DEBUG] Mật khẩu mã hóa: " + hashedPassword);
 
         // Check login information
-        String sql = "SELECT user_id, role, username, user_fullname, user_phone, user_email, user_address FROM users WHERE username = ? AND password = ?";
+        String sql = "SELECT u.user_id, u.role, u.username, c.customer_id, c.customer_address, c.customer_email, c.customer_fullname, c.customer_phone "
+                + "FROM Users u "
+                + "LEFT JOIN Customer c ON u.user_id = c.user_id "
+                + "WHERE u.username = ? AND u.password = ?";
 
-        try (Connection conn = DBConnect.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnect.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             if (conn == null) {
                 request.setAttribute("errorMessage", "Không thể kết nối đến database!");
@@ -52,28 +54,35 @@ public class LoginServlet extends HttpServlet {
                 // Login successful -> Save session
                 String userId = rs.getString("user_id");
                 String role = rs.getString("role");
-                username = rs.getString("username"); // Sử dụng lại biến username đã khai báo
-                String fullname = rs.getString("user_fullname");
-                String phone = rs.getString("user_phone");
-                String email = rs.getString("user_email");
-                String address = rs.getString("user_address");
+                String customerId = rs.getString("customer_id");
+                String customerAddress = rs.getString("customer_address");
+                String customerEmail = rs.getString("customer_email");
+                String customerFullname = rs.getString("customer_fullname");
+                String customerPhone = rs.getString("customer_phone");
 
                 HttpSession session = request.getSession();
                 session.setAttribute("user_id", userId);
                 session.setAttribute("role", role);
                 session.setAttribute("username", username);
-                session.setAttribute("user_fullname", fullname);
-                session.setAttribute("user_phone", phone);
-                session.setAttribute("user_email", email);
-                session.setAttribute("user_address", address);
-                session.setMaxInactiveInterval(60 * 60); // 1 tiếng (giây)
+
+                // Save customer-specific details in the session
+                if ("customer".equalsIgnoreCase(role)) {
+                    session.setAttribute("customer_id", customerId);
+                    session.setAttribute("customer_address", customerAddress);
+                    session.setAttribute("customer_email", customerEmail);
+                    session.setAttribute("customer_fullname", customerFullname);
+                    session.setAttribute("customer_phone", customerPhone);
+                }
+
+                session.setMaxInactiveInterval(60 * 60); // 1 hour (in seconds)
 
                 System.out.println("✅ [DEBUG] Đăng nhập thành công! Role: " + role);
                 System.out.println("✅ [DEBUG] Session created successfully for user_id: " + userId);
+
                 if ("admin".equalsIgnoreCase(role)) {
                     response.sendRedirect("admin_Dashboard.jsp"); // Redirect to admin dashboard
                 } else if ("staff".equalsIgnoreCase(role)) {
-                    response.sendRedirect("Staffdashboard.jsp");// Redirect to staff dashboard
+                    response.sendRedirect("Staffdashboard.jsp"); // Redirect to staff dashboard
                 } else {
                     response.sendRedirect("homepage.jsp"); // Redirect to customer home page
                 }

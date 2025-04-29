@@ -1,56 +1,36 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Controller;
 
-import DAO.OrderDAO;
-import Model.Order;
-import Model.OrderDetail;
-import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
-/**
- *
- * @author Tran Phan Trung Kien - CE180170
- */
+import java.io.IOException;
+import java.util.*;
+
 @WebServlet("/VnpayReturnServlet")
 public class VnpayReturnServlet extends HttpServlet {
 
+    private static final String VNP_HASHSECRET = "8RJFQ4F0G4MFSYGVYYA27XOABX8RJEW4";
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
-        String vnp_TxnRef = request.getParameter("vnp_TxnRef");
+        Map<String, String> fields = new HashMap<>();
+        for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+            fields.put(entry.getKey(), entry.getValue()[0]);
+        }
 
-        if ("00".equals(vnp_ResponseCode)) {
-            // Thanh toán thành công
-            int orderId = Integer.parseInt(vnp_TxnRef);
+        String vnp_SecureHash = fields.remove("vnp_SecureHash");
+        String hashData = VnpayUtils.createHashData(fields);
+        String calculatedHash = VnpayUtils.hmacSHA256(VNP_HASHSECRET, hashData);
 
-            // Cập nhật trạng thái đơn hàng
-            OrderDAO orderDAO = new OrderDAO();
-            orderDAO.updateOrderStatus(orderId, "Confirmed");
-
-            // Gửi email xác nhận đơn hàng
-            Order order = orderDAO.getOrderById(orderId);
-            List<OrderDetail> orderDetails = orderDAO.getOrderDetails(orderId);
-            try {
-                CheckoutServlet checkoutServlet = new CheckoutServlet();
-                checkoutServlet.sendOrderConfirmationEmail(order, orderDetails);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // Chuyển hướng đến trang xác nhận đơn hàng
-            request.setAttribute("orderId", orderId);
-            request.getRequestDispatcher("OrderConfirmation.jsp").forward(request, response);
+        if (calculatedHash.equals(vnp_SecureHash)) {
+            // Thành công
+            response.getWriter().println("Payment successful!");
         } else {
-            // Thanh toán thất bại
-            response.sendRedirect("Checkout.jsp?error=Payment failed");
+            // Thất bại
+            response.getWriter().println("Invalid payment signature!");
         }
     }
 }

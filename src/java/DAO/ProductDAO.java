@@ -17,7 +17,8 @@ public class ProductDAO {
         try {
             conn = DBConnect.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM Products");
+            String sql = "SELECT * FROM Products WHERE active = 1"; // Thêm điều kiện active = 1
+            rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
                 list.add(new Product(
@@ -27,7 +28,9 @@ public class ProductDAO {
                         rs.getDouble("product_price"),
                         rs.getInt("product_stock_quantity"),
                         rs.getString("product_image_url"),
-                        rs.getString("product_category_id")
+                        rs.getString("product_category_id"),
+                        rs.getString("product_description_detail"),
+                        rs.getBoolean("active")
                 ));
             }
         } catch (SQLException e) {
@@ -71,7 +74,8 @@ public class ProductDAO {
                         rs.getInt("product_stock_quantity"),
                         rs.getString("product_image_url"),
                         rs.getString("product_category_id"),
-                        rs.getString("product_description_detail")
+                        rs.getString("product_description_detail"),
+                        rs.getBoolean("active")
                 );
             }
         } catch (SQLException e) {
@@ -315,6 +319,21 @@ public class ProductDAO {
             }
         }
         return similarProducts;
+    }
+
+    public int getProductStockQuantity(int productId) {
+        String sql = "SELECT product_stock_quantity FROM Products WHERE product_id = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("product_stock_quantity");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }

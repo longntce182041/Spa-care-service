@@ -97,12 +97,33 @@ public class Promotion {
 
     public boolean isValid(double orderValue) {
         Date now = new Date();
-        System.out.println("Checking promotion validity:");
-        System.out.println("Current date: " + now);
-        System.out.println("Start date: " + startDate);
-        System.out.println("End date: " + endDate);
-        System.out.println("Order value: " + orderValue);
-        System.out.println("Min order value: " + minOrderValue);
-        return now.after(startDate) && now.before(endDate) && (minOrderValue == null || orderValue >= minOrderValue);
+
+        // Kiểm tra nếu ngày bắt đầu hoặc ngày kết thúc không hợp lệ
+        if (startDate == null || endDate == null) {
+            System.out.println("Start date or end date is null.");
+            return false;
+        }
+
+        // Kiểm tra nếu giá trị đơn hàng không hợp lệ
+        if (orderValue <= 0) {
+            System.out.println("Order value is invalid: " + orderValue);
+            return false;
+        }
+
+        // Kiểm tra ngày hiện tại có nằm trong khoảng thời gian hợp lệ
+        if (!now.after(startDate) || !now.before(endDate)) {
+            System.out.println("Current date is not within the promotion period.");
+            return false;
+        }
+
+        // Kiểm tra giá trị đơn hàng tối thiểu
+        if (minOrderValue != null && orderValue < minOrderValue) {
+            System.out.println("Order value does not meet the minimum order value.");
+            return false;
+        }
+
+        // Nếu tất cả các điều kiện đều hợp lệ
+        System.out.println("Promotion is valid.");
+        return true;
     }
 }

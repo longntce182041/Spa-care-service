@@ -1,43 +1,48 @@
 /* Định dạng chung */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
 }
 
 /* Container chính */
-.container {
+.containerOrder {
     max-width: 900px;
     margin: 40px auto;
     background: #ffffff;
-    padding: 20px;
+    padding: 30px;
+    /* Tăng padding để nội dung thoáng hơn */
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* Tăng bóng đổ để tạo chiều sâu */
 }
 
 /* Header xác nhận */
 .confirmation-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    /* Tăng khoảng cách với nội dung bên dưới */
 }
 
 .confirmation-header h1 {
     color: #007bff;
-    font-size: 28px;
+    font-size: 32px;
+    /* Tăng kích thước chữ */
     font-weight: bold;
 }
 
 .confirmation-header p {
-    font-size: 16px;
-    color: #555;
+    font-size: 18px;
+    /* Tăng kích thước chữ */
+    color: #6c757d;
 }
 
 /* Danh sách nhóm */
 .list-group {
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    /* Tăng khoảng cách giữa các phần */
 }
 
 .list-group-item {
@@ -47,12 +52,26 @@ body {
     border: none;
     padding: 15px 20px;
     font-size: 16px;
+    color: #343a40;
+    background-color: #f8f9fa;
+    /* Màu nền nhẹ */
 }
 
+/* Hiệu ứng hover cho danh sách sản phẩm */
+.list-group-item:hover {
+    background-color: #e9ecef;
+    /* Màu nền khi hover */
+    cursor: pointer;
+}
+
+/* Nhấn mạnh tổng tiền */
 .list-group-item.total {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
+    /* Tăng kích thước chữ */
     color: #28a745;
+    background-color: #d4edda;
+    /* Màu nền nhấn mạnh */
 }
 
 /* Thông tin sản phẩm */
@@ -67,6 +86,19 @@ body {
     margin-right: 15px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Bóng đổ nhẹ */
+}
+
+.product-info h6 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    color: #343a40;
+}
+
+.product-info small {
+    font-size: 14px;
+    color: #6c757d;
 }
 
 /* Nút điều hướng */
@@ -74,14 +106,60 @@ body {
     display: block;
     width: 100%;
     text-align: center;
-    padding: 12px;
+    padding: 15px;
+    /* Tăng padding để nút lớn hơn */
     font-size: 18px;
     font-weight: bold;
     border-radius: 5px;
     transition: background 0.3s ease;
-    margin-top: 20px;
+    margin-top: 30px;
+    /* Tăng khoảng cách với nội dung phía trên */
+    background-color: #28a745;
+    color: #fff;
+    border: none;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #218838;
+    /* Màu khi hover */
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    /* Tăng khoảng cách giữa nội dung và footer */
+    text-align: center;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .containerOrder {
+        padding: 20px;
+        /* Giảm padding trên màn hình nhỏ */
+    }
+
+    .confirmation-header h1 {
+        font-size: 24px;
+        /* Giảm kích thước chữ */
+    }
+
+    .confirmation-header p {
+        font-size: 14px;
+        /* Giảm kích thước chữ */
+    }
+
+    .list-group-item {
+        font-size: 14px;
+        /* Giảm kích thước chữ */
+        padding: 10px 15px;
+        /* Giảm padding */
+    }
+
+    .btn-primary {
+        font-size: 16px;
+        /* Giảm kích thước chữ */
+        padding: 12px;
+        /* Giảm padding */
+    }
 }

@@ -6,15 +6,19 @@
 <link rel="stylesheet" href="./css/toast.css">
 <%@include file="popUpMessage.jsp" %>
 
-<div class="container mt-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Shop</li>
-        </ol>
-    </nav>
+<section class="hero-wrap hero-wrap-2" style="background-image: url('images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row no-gutters slider-text align-items-end">
+                    <div class="col-md-9 ftco-animate pb-5">
+                        <p class="breadcrumbs mb-2"><span class="mr-2"><a href="index.jsp">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Shop <i class="ion-ios-arrow-forward"></i></span></p>
+                        <h1 class="mb-0 bread">Shop</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <h1 class="text-center my-4">Shop</h1>
+<div class="container mt-5">
     <div class="row">
         <div class="col-md-3">
             <h4>Categories</h4>
@@ -40,16 +44,18 @@
                     for (Product product : productList) {
                 %>
                 <div class="col-md-4 d-flex align-items-stretch">
-                    <div class="card mb-4 shadow-sm product-card" data-product-id="<%= product.getProductId()%>">
-                        <img src="<%= product.getimage_url()%>" class="card-img-top" alt="<%= product.getName()%>">
+                    <div class="card mb-4 shadow-sm product-card" data-product-id="<%= product.getProductId() %>">
+                        <img src="<%= product.getImageUrl() %>" class="card-img-top" alt="<%= product.getName() %>">
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title"><%= product.getName()%></h5>
-                            <p class="card-text"><%= product.getDescription()%></p>
+                            <h5 class="card-title"><%= product.getName() %></h5>
+                            <p class="card-text"><%= product.getDescription() %></p>
                             <p class="card-text"><strong>Price: <%= String.format("%,.0f VNĐ", product.getPrice()) %></strong></p>
                             <% if (product.getStockQuantity() == 0) { %>
                             <span class="badge badge-danger">Sold Out</span>
                             <% } else { %>
-                            <a href="javascript:void(0);" class="btn btn-outline-success add-to-cart mt-auto" data-product-id="<%= product.getProductId()%>"><i class="fa fa-shopping-cart"></i> Add to Cart</a>
+                            <a href="javascript:void(0);" class="btn btn-outline-success add-to-cart mt-auto" data-product-id="<%= product.getProductId() %>">
+                                <i class="fa fa-shopping-cart"></i> Add to Cart
+                            </a>
                             <% } %>
                         </div>
                     </div>
@@ -121,7 +127,12 @@
         });
 
         $('#search-input').on('input', function () {
-            var query = $(this).val();
+            var query = $(this).val().trim(); // Loại bỏ khoảng trắng thừa
+            if (query.length === 0) {
+                // Nếu chuỗi tìm kiếm rỗng sau khi loại bỏ khoảng trắng, không gửi yêu cầu
+                $('#product-list').html('<p>No products found.</p>'); // Hiển thị thông báo
+                return;
+            }
             $.ajax({
                 url: 'SearchProductsServlet',
                 type: 'GET',

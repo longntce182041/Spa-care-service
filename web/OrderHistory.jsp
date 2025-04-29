@@ -3,7 +3,15 @@
 <jsp:include page="header.jsp" />
 <link rel="stylesheet" href="css/OrderHistory.css">
 
-<div class="container">
+<div class="container mt-5">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="Shop.jsp">Shop</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order History</li>
+        </ol>
+    </nav>
+
     <h1 class="text-center my-4">Order History</h1>
 
     <%

@@ -25,7 +25,7 @@ public class RemoveFromCartServlet extends HttpServlet {
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
             if (cart == null || cart.isEmpty()) {
-                response.getWriter().write("{\"success\": false, \"message\": \"Your cart is empty.\"}");
+                response.getWriter().write("{\"success\": false, \"message\": \"Your cart is empty.\", \"cartCount\": 0, \"totalPrice\": \"0 VNĐ\"}");
                 return;
             }
 
@@ -37,11 +37,20 @@ public class RemoveFromCartServlet extends HttpServlet {
             }
 
             session.setAttribute("cart", cart);
-            session.setAttribute("cartCount", cart.size());
 
-            double totalPrice = cart.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum();
+            // Tính lại tổng tiền và số lượng sản phẩm trong giỏ hàng
+            int cartCount = 0;
+            double totalPrice = 0;
+            for (CartItem item : cart) {
+                if (item.getProduct() != null) { // Đảm bảo sản phẩm không null
+                    cartCount += item.getQuantity();
+                    totalPrice += item.getProduct().getPrice() * item.getQuantity();
+                }
+            }
 
-            response.getWriter().write("{\"success\": true, \"message\": \"Product removed successfully.\", \"cartCount\": " + cart.size() + ", \"totalPrice\": \"" + String.format("%,.0f VNĐ", totalPrice) + "\"}");
+            session.setAttribute("cartCount", cartCount);
+
+            response.getWriter().write("{\"success\": true, \"message\": \"Product removed successfully.\", \"cartCount\": " + cartCount + ", \"totalPrice\": \"" + String.format("%,.0f VNĐ", totalPrice) + "\"}");
         } catch (NumberFormatException e) {
             response.getWriter().write("{\"success\": false, \"message\": \"Invalid product ID.\"}");
         }

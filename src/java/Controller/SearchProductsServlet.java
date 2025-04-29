@@ -27,7 +27,7 @@ public class SearchProductsServlet extends HttpServlet {
         for (Product product : productList) {
             out.println("<div class='col-md-4 d-flex align-items-stretch'>");
             out.println("<div class='card mb-4 shadow-sm product-card' data-product-id='" + product.getProductId() + "'>");
-            out.println("<img src='" + product.getimage_url() + "' class='card-img-top' alt='" + product.getName() + "'>");
+            out.println("<img src='" + product.getImageUrl() + "' class='card-img-top' alt='" + product.getName() + "'>");
             out.println("<div class='card-body d-flex flex-column'>");
             out.println("<h5 class='card-title'>" + product.getName() + "</h5>");
             out.println("<p class='card-text'>" + product.getDescription() + "</p>");

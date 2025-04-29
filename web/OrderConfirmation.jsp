@@ -44,7 +44,7 @@
     }
 %>
 
-<div class="container">
+<div class="containerOrder">
     <div class="confirmation-header">
         <h1>Order Confirmation</h1>
         <p>Thank you for your order! Your order has been placed successfully.</p>
@@ -68,7 +68,7 @@
             %>
             <li class="list-group-item">
                 <div class="product-info">
-                    <img src="<%= product.getimage_url() %>" alt="<%= product.getName() %>" class="product-image">
+                    <img src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>" class="product-image">
                     <div>
                         <h6><%= product.getName() %></h6>
                         <small>Quantity: <%= detail.getQuantity() %></small>
@@ -96,6 +96,10 @@
             </li>
             <li class="list-group-item">
                 <strong>Promotion Code:</strong> <span><%= order.getPromotionId() != null ? order.getPromotionId() : "None" %></span>
+            </li>
+            <li class="list-group-item">
+                <strong>Discount Value (VNĐ):</strong> 
+                <span><%= currencyVN.format(order.getDiscountValue()) %></span>
             </li>
             <li class="list-group-item total">
                 <strong>Total (VNĐ):</strong> <span><%= currencyVN.format(order.getTotalPrice()) %></span>

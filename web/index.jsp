@@ -49,7 +49,7 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active"><a href="index.jsp" class="nav-link">Home</a></li>
                         <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
-                        <li class="nav-item"><a href="Staffdashboard.jsp" class="nav-link">Staff</a></li>
+                       
                         <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
                         <li class="nav-item"><a href="Shop.jsp" class="nav-link">Shop</a></li>
 
@@ -62,7 +62,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="login.jsp">Login</a>
-                                <a class="dropdown-item" href="register.jsp">Sign up</a>
+                                <a class="dropdown-item" href="register.jsp">Register</a>
                             </div>
                         </li>
                     </ul>
@@ -566,59 +566,7 @@
         </section>
 
 
-        ...
-        <section class="ftco-appointment ftco-section ftco-no-pt ftco-no-pb img" style="background-image: url(images/bg_3.jpg);">
-            <div class="overlay"></div>
-            <div class="container">
-                <div class="row d-md-flex justify-content-end">
-                    <div class="col-md-12 col-lg-6 half p-3 py-5 pl-lg-5 ftco-animate">
-                        <h2 class="mb-4">Free Consultation</h2>
-                        <form id="consultationForm" action="AddConsultationServlet" method="post" class="appointment">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="name" id="name" placeholder="Your Name">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Phone Number">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="input-wrap">
-                                            <div class="icon"><span class="fa fa-calendar"></span></div>
-                                            <input type="text" class="form-control appointment_date" name="date" placeholder="Date (MM/dd/yyyy)">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="input-wrap">
-                                            <div class="icon"><span class="fa fa-clock-o"></span></div>
-                                            <input type="text" class="form-control appointment_time" name="time" placeholder="Time (HH:mm)">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea name="message" id="message" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="submit" value="Send message" class="btn btn-primary py-3 px-4">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-        ...
-
+       
 
         <footer class="footer">
             <div class="container">
@@ -714,63 +662,6 @@
         <script src="js/google-map.js"></script>
         <script src="js/main.js"></script>
 
-        <script>
-            document.getElementById("consultationForm").addEventListener("submit", function (event) {
-                const name = document.querySelector("input[name='name']").value.trim();
-                const phoneNumber = document.querySelector("input[name='phoneNumber']").value.trim();
-                const date = document.querySelector("input[name='date']").value.trim();
-                const time = document.querySelector("input[name='time']").value.trim();
-                const message = document.querySelector("textarea[name='message']").value.trim();
-
-                const nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
-                const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
-                const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
-                const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-
-                const today = new Date();
-                const inputDate = new Date(date);
-
-                if (!name && !phoneNumber && !date && !time && !message) {
-                    alert("Please fill out all fields before submitting.");
-                    event.preventDefault();
-                    return;
-                }
-
-                if (!nameRegex.test(name)) {
-                    alert("Please enter a valid name (only letters and spaces are allowed).");
-                    event.preventDefault();
-                    return;
-                }
-
-                if (!phoneRegex.test(phoneNumber)) {
-                    alert("Please enter a valid Vietnamese phone number (e.g., 0968996035).");
-                    event.preventDefault();
-                    return;
-                }
-
-                
-               
-                if (inputDate < today) {
-                    alert("The date cannot be in the past.");
-                    event.preventDefault();
-                    return;
-                }
-
-                
-                const [hours, minutes] = time.split(":").map(Number);
-                if (hours < 8 || hours > 18) {
-                    alert("The time must be between 08:00 and 18:00.");
-                    event.preventDefault();
-                    return;
-                }
-
-                if (message === "") {
-                    alert("Please enter a message.");
-                    event.preventDefault();
-                    return;
-                }
-            });
-        </script>
-
+     
     </body>
 </html>

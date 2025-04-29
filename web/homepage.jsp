@@ -12,7 +12,7 @@
 <%
     
     String username = (session != null) ? (String) session.getAttribute("user_id") : null;
-    String fullname = (session != null) ? (String) session.getAttribute("user_fullname") : null;
+    String fullname = (session != null) ? (String) session.getAttribute("customer_fullname") : null;
     
 %>
 <!DOCTYPE html>
@@ -48,13 +48,19 @@
         <div class="wrap">
             <div class="container">
                 <div class="row">
+                    <div class="col-md-6 d-flex align-items-center">
+                        <p class="mb-0 phone pl-md-2">
+                            <a href="#" class="mr-2"><span class="fa fa-phone mr-1"></span> 0968996035</a> 
+                            <a href="#"><span class="fa fa-paper-plane mr-1"></span> petquespact@gmail.com</a>
+                        </p>
+                    </div>
                     <div class="col-md-6 d-flex justify-content-md-end">
                         <div class="social-media">
                             <p class="mb-0 d-flex">
-                                <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-facebook"><i class="sr-only">Facebook</i></span></a>
-                                <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-twitter"><i class="sr-only">Twitter</i></span></a>
-                                <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-instagram"><i class="sr-only">Instagram</i></span></a>
-                                <a href="#" class="d-flex align-items-center justify-content-center"><span class="fa fa-dribbble"><i class="sr-only">Dribbble</i></span></a>
+                                <a href="https://www.facebook.com/trung.kien.284391" class="d-flex align-items-center justify-content-center"><span class="fa fa-facebook"><i class="sr-only">Facebook</i></span></a>
+                                <a href="https://x.com/ilove_banhmi_15" class="d-flex align-items-center justify-content-center"><span class="fa fa-twitter"><i class="sr-only">Twitter</i></span></a>
+                                <a href="https://www.instagram.com/im_a_mf.st4rboiz/" class="d-flex align-items-center justify-content-center"><span class="fa fa-instagram"><i class="sr-only">Instagram</i></span></a>
+                                <a href="https://petservicehcm.com" class="d-flex align-items-center justify-content-center"><span class="fa fa-dribbble"><i class="sr-only">Dribbble</i></span></a>
                             </p>
                         </div>
                     </div>
@@ -63,7 +69,7 @@
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
             <div class="container">
-                <a class="navbar-brand" href="homePage.jsp"><span class="flaticon-pawprint-1 mr-2"></span>Petique Spa</a>
+                <a class="navbar-brand" href="homepage.jsp"><span class="flaticon-pawprint-1 mr-2"></span>Petique Spa</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="fa fa-bars"></span> Menu
                 </button>
@@ -73,7 +79,6 @@
                         <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
                         <li class="nav-item"><a href="services.jsp" class="nav-link">Services</a></li>
                         <li class="nav-item"><a href="Shop.jsp" class="nav-link">Shop</a></li>
-                        <li class="nav-item"><a href="appointment.jsp" class="nav-link">Appointment</a></li>
                         <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
                         <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
                             <% if (username != null) { %>
@@ -656,74 +661,7 @@
             </div>
         </section>
 
-        <section class="ftco-appointment ftco-section ftco-no-pt ftco-no-pb img" style="background-image: url(images/bg_3.jpg);">
-            <div class="overlay"></div>
-            <div class="container">
-                <div class="row d-md-flex justify-content-end">
-                    <div class="col-md-12 col-lg-6 half p-3 py-5 pl-lg-5 ftco-animate">
-                        <h2 class="mb-4">Free Consultation</h2>
-                        <form action="#" class="appointment">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <div class="form-field">
-                                            <div class="select-wrap">
-                                                <div class="icon"><span class="fa fa-chevron-down"></span></div>
-                                                <select name="" id="" class="form-control">
-                                                    <option value="">Select services</option>
-                                                    <option value="">Cat Sitting</option>
-                                                    <option value="">Dog Walk</option>
-                                                    <option value="">Pet Spa</option>
-                                                    <option value="">Pet Grooming</option>
-                                                    <option value="">Pet Daycare</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Your Name">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Vehicle number">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="input-wrap">
-                                            <div class="icon"><span class="fa fa-calendar"></span></div>
-                                            <input type="text" class="form-control appointment_date" placeholder="Date">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="input-wrap">
-                                            <div class="icon"><span class="fa fa-clock-o"></span></div>
-                                            <input type="text" class="form-control appointment_time" placeholder="Time">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="submit" value="Send message" class="btn btn-primary py-3 px-4">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        
         <footer class="footer">
             <div class="container">
                 <div class="row">

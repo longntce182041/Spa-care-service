@@ -28,27 +28,31 @@ public class OrderDetailsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String orderIdStr = request.getParameter("orderId");
         if (orderIdStr == null || orderIdStr.isEmpty()) {
-            response.sendRedirect("OrderHistoryServlet");
+            response.sendRedirect("OrderHistoryServlet"); // Chuyển hướng nếu `orderId` không hợp lệ
             return;
         }
 
-        int orderId = Integer.parseInt(orderIdStr);
+        try {
+            int orderId = Integer.parseInt(orderIdStr);
 
-        // Lấy thông tin đơn hàng và chi tiết đơn hàng
-        Order order = orderDAO.getOrderById(orderId);
-        List<OrderDetail> orderDetails = orderDAO.getOrderDetails(orderId);
+            // Lấy thông tin đơn hàng và chi tiết đơn hàng
+            Order order = orderDAO.getOrderById(orderId);
+            List<OrderDetail> orderDetails = orderDAO.getOrderDetails(orderId);
 
-        if (order == null || orderDetails.isEmpty()) {
-            response.sendRedirect("OrderHistoryServlet");
-            return;
+            if (order == null || orderDetails.isEmpty()) {
+                response.sendRedirect("OrderHistoryServlet"); // Chuyển hướng nếu không tìm thấy đơn hàng
+                return;
+            }
+
+            // Đặt thông tin vào request
+            request.setAttribute("order", order);
+            request.setAttribute("orderDetails", orderDetails);
+
+            // Chuyển tiếp đến trang JSP
+            request.getRequestDispatcher("OrderDetails.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("OrderHistoryServlet"); // Chuyển hướng nếu `orderId` không hợp lệ
         }
-
-        // Đặt thông tin vào request
-        request.setAttribute("order", order);
-        request.setAttribute("orderDetails", orderDetails);
-
-        // Chuyển tiếp đến trang hiển thị chi tiết đơn hàng
-        request.getRequestDispatcher("OrderDetails.jsp").forward(request, response);
     }
 }
 
