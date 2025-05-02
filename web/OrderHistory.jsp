@@ -1,8 +1,7 @@
 <%@ page import="java.util.*, Model.Order" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <jsp:include page="header.jsp" />
-<link rel="stylesheet" href="css/OrderHistory.css">
-
+<%@include file="popUpMessage.jsp" %>
 <div class="container mt-5">
     <!-- Breadcrumb Navigation -->
     <nav aria-label="breadcrumb">
@@ -30,6 +29,7 @@
                     <th>Total Price (VNĐ)</th>
                     <th>Status</th>
                     <th>Details</th>
+                    <th>Actions</th> <!-- Thêm cột Actions -->
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +42,13 @@
                     <td><%= String.format("%,.0f", order.getTotalPrice()) %></td>
                     <td><%= order.getStatus() %></td>
                     <td><a href="OrderDetailsServlet?orderId=<%= order.getOrderId() %>" class="btn btn-primary btn-sm">View</a></td>
+                    <td>
+                        <% if ("Pending".equalsIgnoreCase(order.getStatus())) { %>
+                            <button class="btn btn-danger btn-sm cancel-order-btn" data-order-id="<%= order.getOrderId() %>">Cancel</button>
+                        <% } else { %>
+                            <button class="btn btn-secondary btn-sm" disabled>Cannot Cancel</button>
+                        <% } %>
+                    </td>
                 </tr>
                 <%
                     }
@@ -53,4 +60,84 @@
     %>
 </div>
 
+<!-- Modal nhập lý do hủy -->
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelOrderModalLabel">Cancel Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="cancelOrderForm">
+                    <input type="hidden" id="modalOrderId" name="orderId">
+                    <div class="mb-3">
+                        <label for="cancelReason" class="form-label">Reason for cancellation</label>
+                        <textarea class="form-control" id="cancelReason" name="reason" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-danger" id="confirmCancelOrder">Confirm Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <jsp:include page="footer.jsp" />
+
+<script>
+    $(document).ready(function () {
+        let selectedOrderId = null;
+
+        // Khi nhấn nút "Cancel", mở modal
+        $('.cancel-order-btn').click(function () {
+
+            console.log("Cancel button clicked!"); // Log để kiểm tra sự kiện click
+            selectedOrderId = $(this).data('order-id'); // Lấy orderId từ nút
+            $('#modalOrderId').val(selectedOrderId); // Gán orderId vào modal
+            $('#cancelOrderModal').modal('show'); // Hiển thị modal
+        });
+
+        // Khi nhấn nút "Confirm Cancel", gửi yêu cầu AJAX
+        $('#confirmCancelOrder').click(function () {
+            console.log("Confirm Cancel button clicked!");
+            const orderId = $('#modalOrderId').val();
+            const reason = $('#cancelReason').val();
+
+            if (!reason.trim()) {
+                alert("Please provide a reason for cancellation.");
+                return;
+            }
+
+            console.log("Order ID: " + orderId + ", Reason: " + reason);
+            cancelOrder(orderId, reason);
+        });
+    });
+
+    function cancelOrder(orderId, reason) {
+        $.ajax({
+            url: 'CancelOrderServlet',
+            type: 'POST',
+            data: { orderId: orderId, reason: reason },
+            success: function (response) {
+                // Hiển thị thông báo thành công
+                showSuccessToast("Order canceled successfully!");
+
+                // Cập nhật trạng thái đơn hàng trong bảng
+                const row = $(`button[data-order-id="${orderId}"]`).closest('tr');
+                row.find('td:nth-child(4)').text('Canceled'); // Cập nhật cột "Status"
+                row.find('td:nth-child(6)').html('<button class="btn btn-secondary btn-sm" disabled>Cannot Cancel</button>'); // Thay nút "Cancel"
+
+                // Đóng modal
+                $('#cancelOrderModal').modal('hide');
+            },
+            error: function () {
+                // Hiển thị thông báo lỗi
+                showErrorToast("Failed to cancel the order. Please try again.");
+            }
+        });
+    }
+</script>
+

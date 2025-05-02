@@ -27,6 +27,10 @@
     <h1 class="text-center my-4">Shopping Cart</h1>
     <div id="cart-alert" class="alert alert-danger text-center" style="display: none;">Your cart is empty!</div>
     <form id="cart-form" action="Checkout.jsp" method="post">
+        <!-- Thêm nút "Chọn tất cả sản phẩm" ở đây -->
+        <div class="d-flex justify-content-between mb-3">
+            <button type="button" id="select-all-button" class="btn btn-primary">Select All Products</button>
+        </div>
         <table class="table table-hover" id="cart-table">
             <thead class="thead-light">
                 <tr>
@@ -43,10 +47,11 @@
                     for (CartItem item : cart) {
                         double itemTotal = item.getProduct().getPrice() * item.getQuantity();
                 %>
-                <tr class="product-row" 
+                <tr class="product-row"
                     data-product-id="<%= item.getProduct().getProductId() %>" 
                     data-product-price="<%= item.getProduct().getPrice() %>" 
-                    data-product-quantity="<%= item.getQuantity() %>">
+                    data-product-quantity="<%= item.getQuantity() %>" 
+                    data-product-stock="<%= item.getProduct().getStockQuantity() %>">
                     <td class="text-center">
                         <input type="checkbox" name="selectedProducts" value="<%= item.getProduct().getProductId() %>" class="product-checkbox">
                     </td>
@@ -190,28 +195,69 @@
             });
         });
 
+        // Xử lý nút "Chọn tất cả sản phẩm"
+        $('#select-all-button').on('click', function () {
+            $('.product-checkbox').prop('checked', true); // Chọn tất cả sản phẩm
+            updateTotal(); // Cập nhật tổng tiền
+            showSuccessToast('All products have been selected.');
+        });
+
         // Xử lý khi nhấn "Proceed to Checkout"
         $('#checkout-button').on('click', function (e) {
             e.preventDefault(); // Ngăn chặn hành vi mặc định của nút
 
-            const cartRows = $('.product-row'); // Lấy tất cả các sản phẩm trong giỏ hàng
-            const selectedProducts = $('input[name="selectedProducts"]:checked');
+            const cartRows = $('.product-row'); // Lấy tất cả các hàng sản phẩm trong giỏ hàng
+            const selectedProducts = $('input[name="selectedProducts"]:checked'); // Lấy các sản phẩm được chọn
 
             if (cartRows.length === 0) {
-                // Nếu giỏ hàng trống
                 showErrorToast('Your cart is empty! Please add products before proceeding to checkout.');
                 return;
             }
 
             if (selectedProducts.length === 0) {
-                // Nếu không có sản phẩm nào được chọn, tự động chọn tất cả
-                $('.product-checkbox').prop('checked', true);
-                updateTotal();
-                showSuccessToast('All products have been selected for checkout.');
+                showErrorToast('Please select at least one product before proceeding to checkout.');
+                return;
             }
 
-            // Gửi form sau khi kiểm tra
-            $('#cart-form').submit();
+            let outOfStock = false;
+            let pendingRequests = 0;
+
+            selectedProducts.each(function () {
+                const productId = $(this).val(); // Lấy ID sản phẩm từ checkbox
+                const row = $(this).closest('.product-row'); // Lấy hàng sản phẩm tương ứng
+
+                pendingRequests++;
+                $.ajax({
+                    url: 'CheckStockServlet',
+                    type: 'POST',
+                    data: { productId: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            const stockQuantity = response.stockQuantity;
+                            if (stockQuantity === 0) {
+                                outOfStock = true;
+                                const productName = row.find('td:nth-child(2)').text().trim();
+                                showErrorToast(`Product "${productName}" is out of stock! Please remove it from your cart.`);
+                            }
+                        } else {
+                            showErrorToast('Failed to check stock for some products.');
+                        }
+                    },
+                    error: function () {
+                        showErrorToast('Failed to connect to the server.');
+                    },
+                    complete: function () {
+                        pendingRequests--;
+                        console.log('Pending requests:', pendingRequests);
+                        if (pendingRequests === 0) {
+                            if (outOfStock) {
+                                return; // Ngăn không cho tiếp tục nếu có sản phẩm hết hàng
+                            }
+                            $('#cart-form').submit(); // Gửi form nếu tất cả sản phẩm hợp lệ
+                        }
+                    }
+                });
+            });
         });
     });
 </script>

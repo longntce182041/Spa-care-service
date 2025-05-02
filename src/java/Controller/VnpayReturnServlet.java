@@ -25,6 +25,10 @@ public class VnpayReturnServlet extends HttpServlet {
         String hashData = VnpayUtils.createHashData(fields);
         String calculatedHash = VnpayUtils.hmacSHA256(VNP_HASHSECRET, hashData);
 
+        System.out.println("Received fields: " + fields);
+        System.out.println("Received vnp_SecureHash: " + vnp_SecureHash);
+        System.out.println("Calculated hash: " + calculatedHash);
+
         if (calculatedHash.equals(vnp_SecureHash)) {
             // Thành công
             response.getWriter().println("Payment successful!");

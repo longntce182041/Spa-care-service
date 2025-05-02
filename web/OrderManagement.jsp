@@ -62,7 +62,7 @@
                                 <td><%= order.getEmail() %></td>
                                 <td id="orderStatus<%= order.getOrderId() %>"><%= order.getStatus()%></td>
                                 <td>
-                                    <button class="btn btn-success mt-2" onclick="updateOrderStatus(<%= order.getOrderId() %>, 'Confirmed')">Confirm</button>
+                                    <button class="btn btn-success mt-2" onclick="updateOrderStatus(<%= order.getOrderId() %>, 'Complete')">Complete</button>
                                 </td>
                             </tr>
                             <%

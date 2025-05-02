@@ -163,7 +163,7 @@
                         <td>
                             <% 
                                 // Kiểm tra trạng thái đơn hàng
-                                if ("confirmed".equalsIgnoreCase(order.getStatus())) {
+                                if ("Complete".equalsIgnoreCase(order.getStatus())) {
                                     // Kiểm tra nếu người dùng đã đánh giá sản phẩm trong đơn hàng này
                                     boolean hasRated = ratingDAO.hasRated(detail.getOrderDetailId(), customerId);
                                     if (hasRated) {
@@ -193,7 +193,7 @@
                                         </form>
                                     <% } %>
                                 <% } else { %>
-                                    <p class="text-danger">Rating is only available for confirmed orders.</p>
+                                    <p class="text-danger">Rating is only available for complete orders.</p>
                                 <% } %>
                         </td>
                     </tr>

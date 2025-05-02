@@ -92,13 +92,10 @@
                         <label class="custom-control-label" for="cod">Cash on Delivery (COD)</label>
                     </div>
                     
+                  
                     <div class="custom-control custom-radio">
-                        <input id="momo" name="paymentMethod" type="radio" class="custom-control-input" value="MOMO" required>
-                        <label class="custom-control-label" for="momo">Pay with QR Code</label>
-                    </div>
-                    <div id="momo-qr-container" style="display: none; text-align: center; margin-top: 20px;">
-                        <h5>Scan this QR Code to pay with MOMO</h5>
-                        <img src="images/QRcode.jpg" alt="MOMO QR Code" style="width: 200px; height: auto;">
+                        <input id="vnpay" name="paymentMethod" type="radio" class="custom-control-input" value="VNPAY" required>
+                        <label class="custom-control-label" for="vnpay">Pay with VNPAY</label>
                     </div>
                 </div>
                 <!-- Gửi danh sách sản phẩm được chọn -->
@@ -221,7 +218,7 @@
             const email = $('#email').val().trim();
 
             // Regex for full name (cho phép chữ cái có dấu và dấu cách)
-            const nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
+            const nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằ̉ẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
 
             // Regex for phone number (mã vùng Việt Nam: +84 hoặc 0, theo sau là 9-10 chữ số)
             const phoneRegex = /^(?:\+84|0)(?:[3|5|7|8|9])\d{8}$/;
@@ -268,18 +265,24 @@
 
         // Hiển thị hoặc ẩn QR code khi chọn phương thức thanh toán
         $('input[name="paymentMethod"]').change(function () {
-            if ($(this).val() === 'QR') {
-                $('#qr-code-container').show();
+            if ($(this).val() === 'VNPAY') {
                 // Gửi form đến VnpayPaymentServlet khi chọn VNPAY
-                $('#vnpay-form').submit();
-            } else {
-                $('#qr-code-container').hide();
-            }
+                const orderInfo = "Order Payment"; // Thông tin đơn hàng
+                const orderTotalText = $('#orderTotal').text().replace(/[^0-9]/g, ''); // Lấy tổng tiền
+                const orderTotal = parseInt(orderTotalText); // Chuyển đổi thành số nguyên
 
-            if ($(this).val() === 'MOMO') {
-                $('#momo-qr-container').show();
-            } else {
-                $('#momo-qr-container').hide();
+                // Tạo form ẩn để gửi dữ liệu đến VnpayPaymentServlet
+                const form = $('<form>', {
+                    action: 'VnpayPaymentServlet',
+                    method: 'POST'
+                });
+
+                form.append($('<input>', { type: 'hidden', name: 'orderInfo', value: orderInfo }));
+                form.append($('<input>', { type: 'hidden', name: 'amount', value: orderTotal }));
+                form.append($('<input>', { type: 'hidden', name: 'bankCode', value: '' })); // Bank code nếu cần
+
+                $('body').append(form);
+                form.submit();
             }
         });
     });

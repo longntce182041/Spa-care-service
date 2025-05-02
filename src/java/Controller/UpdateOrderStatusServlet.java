@@ -29,7 +29,7 @@ public class UpdateOrderStatusServlet extends HttpServlet {
             orderDAO.updateOrderStatus(orderId, status);
 
             // Nếu trạng thái là "Confirmed", trừ số lượng sản phẩm trong bảng Products
-            if ("Confirmed".equals(status)) {
+            if ("Complete".equals(status)) {
                 List<OrderDetail> orderDetails = orderDAO.getOrderDetails(orderId);
                 for (OrderDetail detail : orderDetails) {
                     productDAO.updateProductQuantity(detail.getProductId(), -detail.getQuantity());

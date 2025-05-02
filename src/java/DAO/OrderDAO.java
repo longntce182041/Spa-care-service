@@ -345,4 +345,36 @@ public class OrderDAO {
         return null;
     }
 
+    // Lấy trạng thái đơn hàng
+    public String getOrderStatus(int orderId) {
+        String status = null;
+        String query = "SELECT status FROM Orders WHERE order_id = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, orderId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    status = rs.getString("status");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
+
+    // Cập nhật trạng thái đơn hàng
+    public boolean cancelOrder(int orderId, String status, String reason) {
+    String query = "UPDATE Orders SET status = ?, cancel_reason = ? WHERE order_id = ?";
+    try (Connection conn = DBConnect.getConnection();
+         PreparedStatement ps = conn.prepareStatement(query)) {
+        ps.setString(1, status);
+        ps.setString(2, reason);
+        ps.setInt(3, orderId);
+        return ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 }

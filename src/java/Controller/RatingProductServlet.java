@@ -56,7 +56,7 @@ public class RatingProductServlet extends HttpServlet {
 
             // Kiểm tra trạng thái đơn hàng
             OrderDetail detail = orderDAO.getOrderDetailById(orderDetailId);
-            if (detail == null || !"confirmed".equalsIgnoreCase(detail.getOrderStatus())) {
+            if (detail == null || !"Complete".equalsIgnoreCase(detail.getOrderStatus())) {
                 response.getWriter().write("{\"status\":\"error\", \"message\":\"Order not confirmed\"}");
                 return;
             }
